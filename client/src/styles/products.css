@@ -1,0 +1,115 @@
+/* ---------- Icon cards: balanced rows (5 = 3 + 2 centered, 4 = one row) ---------- */
+.svc-cards { display: flex; flex-wrap: wrap; justify-content: center; }
+.svc-cards > .svc-card { flex: 0 1 calc((100% - 44px) / 3); }
+.svc-cards--4 > .svc-card { flex-basis: calc((100% - 66px) / 4); }
+.svc-cards--2 > .svc-card { flex-basis: calc((100% - 22px) / 2); }
+
+/* ---------- Hero eyebrow ---------- */
+.phero__eyebrow { margin-bottom: 18px; }
+
+/* ================= Vetri Products ================= */
+/* product cards */
+.vprod { display: grid; gap: 34px; }
+.vprod__card { position: relative; border-radius: 28px; padding: 30px; background: linear-gradient(160deg, #fff, var(--tint)); border: 1px solid var(--border); box-shadow: var(--shadow); overflow: hidden; }
+.vprod__card::before { content: ''; position: absolute; width: 320px; height: 320px; right: -120px; top: -140px; border-radius: 50%; background: radial-gradient(circle, rgba(231, 81, 12, 0.12), transparent 65%); animation: orbDrift 14s ease-in-out infinite alternate; pointer-events: none; }
+.vprod__head { position: relative; display: flex; align-items: flex-start; gap: 18px; padding-bottom: 24px; margin-bottom: 24px; border-bottom: 1px dashed var(--border); }
+.vprod__icon { flex-shrink: 0; display: grid; place-items: center; width: 60px; height: 60px; border-radius: 18px; background: linear-gradient(135deg, var(--navy), #1d4fb8); color: #fff; box-shadow: 0 14px 26px -12px rgba(0, 38, 115, 0.7); transition: transform 0.5s var(--ease); }
+.vprod__card:hover .vprod__icon { transform: rotate(-8deg) scale(1.06); background: linear-gradient(135deg, var(--orange), #f59e6b); }
+.vprod__id { flex: 1; min-width: 0; }
+.vprod__id h3 { font-size: 28px; font-weight: 800; letter-spacing: -0.8px; }
+.vprod__id p { margin-top: 6px; font-size: 15px; max-width: 560px; }
+.vprod__chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
+.vprod__chips span { padding: 5px 12px; border-radius: 999px; background: var(--orange-50); color: var(--orange); font-size: 12px; font-weight: 700; }
+.vprod__actions { flex-shrink: 0; display: flex; flex-direction: column; gap: 10px; align-items: stretch; }
+.vprod__media { position: relative; display: grid; grid-template-columns: 1fr 1fr; gap: 24px; align-items: center; }
+.vprod__card--flip .vprod__media { direction: rtl; }
+.vprod__card--flip .vprod__media > * { direction: ltr; }
+.vprod__screen, .vprod__video { margin: 0; border-radius: 18px; overflow: hidden; background: #fff; box-shadow: var(--shadow-lg); border: 1px solid var(--border); }
+.vprod__bar { display: flex; align-items: center; gap: 6px; padding: 10px 14px; background: var(--tint); border-bottom: 1px solid var(--border); }
+.vprod__bar i { width: 9px; height: 9px; border-radius: 50%; background: #ff5f57; }
+.vprod__bar i:nth-child(2) { background: #febc2e; }
+.vprod__bar i:nth-child(3) { background: #28c840; }
+.vprod__bar span { margin-left: 8px; font-size: 11.5px; font-weight: 600; color: var(--muted); }
+/* full screenshot at its natural ratio, never cropped (like the live site) */
+.vprod__screen img { display: block; width: 100%; height: auto; }
+.vprod__video { position: relative; background: #0b1530; }
+.vprod__video video { width: 100%; aspect-ratio: 16 / 9; display: block; background: #000; }
+.vprod__video-tag { position: absolute; z-index: 1; top: 12px; left: 12px; display: inline-flex; align-items: center; gap: 6px; padding: 5px 10px; border-radius: 999px; background: rgba(231, 81, 12, 0.92); color: #fff; font-size: 11.5px; font-weight: 700; pointer-events: none; animation: pulse 2.4s infinite; }
+/* screenshot slides in from the left, video from the right */
+.vprod__card.reveal .vprod__screen { transform: translateX(-30px) rotate(-1.5deg); opacity: 0; transition: transform 1s var(--ease) 0.2s, opacity 1s 0.2s; }
+.vprod__card.reveal .vprod__video { transform: translateX(30px) rotate(1.5deg); opacity: 0; transition: transform 1s var(--ease) 0.35s, opacity 1s 0.35s; }
+.vprod__card.reveal.in .vprod__screen, .vprod__card.reveal.in .vprod__video { transform: none; opacity: 1; }
+.vprod__card.reveal.in .vprod__screen.tilt:hover { transform: perspective(1000px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg)) translateY(-6px); transition: transform 0.18s ease-out; }
+
+/* ecosystem hub: products orbit around the company */
+.veco { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: center; }
+.veco .section-head { margin-bottom: 26px; }
+.veco__list { list-style: none; padding: 0; margin: 0; display: grid; gap: 14px; }
+.veco__list li { display: flex; gap: 14px; align-items: flex-start; padding: 16px 18px; border-radius: 16px; background: #fff; border: 1px solid var(--border); transition: border-color 0.3s, transform 0.4s var(--ease); }
+.veco__list li.in:hover { border-color: var(--orange); transform: translateX(6px); }
+.veco__list li:hover .icon-box { background: var(--orange); color: #fff; }
+.veco__list strong { color: var(--navy); font-family: var(--font-head); font-size: 16px; }
+.veco__list p { font-size: 14px; }
+.veco__hub { --r: 190px; position: relative; aspect-ratio: 1; max-width: 480px; width: 100%; margin: 0 auto; }
+.veco__ring { position: absolute; border-radius: 50%; border: 2px dashed rgba(0, 38, 115, 0.18); }
+.veco__ring--1 { inset: 10%; animation: spin 40s linear infinite; }
+.veco__ring--2 { inset: 28%; border-color: rgba(231, 81, 12, 0.35); animation: spin 26s linear infinite reverse; }
+.veco__center { position: absolute; inset: 35%; display: grid; place-content: center; text-align: center; border-radius: 50%; background: linear-gradient(135deg, var(--navy), #1d4fb8); color: #fff; box-shadow: 0 0 0 12px rgba(0, 38, 115, 0.08), 0 30px 60px -20px rgba(0, 38, 115, 0.7); animation: hubPulse 3s ease-in-out infinite; }
+.veco__center span { font-family: var(--font-head); font-size: 28px; font-weight: 800; }
+.veco__center small { font-size: 10.5px; opacity: 0.85; padding: 0 6px; }
+@keyframes hubPulse { 50% { box-shadow: 0 0 0 22px rgba(0, 38, 115, 0.05), 0 30px 60px -20px rgba(0, 38, 115, 0.7); } }
+/* the orbit rotates; each node counter-rotates so its label stays upright */
+.veco__orbit { position: absolute; left: 50%; top: 50%; width: 0; height: 0; animation: spin 50s linear infinite; }
+.veco__node { position: absolute; left: 0; top: 0; transform: rotate(calc(360deg / var(--n) * var(--i))) translateY(calc(-1 * var(--r))); }
+.veco__node-inner { translate: -50% -50%; transform: rotate(calc(-360deg / var(--n) * var(--i))); }
+.veco__node-inner { display: grid; justify-items: center; gap: 4px; width: 108px; padding: 12px 8px; border-radius: 18px; background: #fff; color: var(--navy); box-shadow: var(--shadow-lg); border: 1px solid var(--border); }
+.veco__node-inner { animation: nodeUpright 50s linear infinite reverse; }
+@keyframes nodeUpright { from { rotate: 0deg; } to { rotate: 360deg; } }
+.veco__node-inner svg { color: var(--orange); }
+.veco__node-inner b { font-size: 12px; font-weight: 800; text-align: center; line-height: 1.2; }
+.veco__hub.reveal { transform: scale(0.85); }
+.veco__hub.reveal.in { transform: none; transition: transform 1.2s var(--ease), opacity 1s; }
+
+/* split feature + animated code window */
+.vsplit { display: grid; grid-template-columns: 1.05fr 1fr; gap: 48px; align-items: center; padding: 50px; border-radius: 30px; background: linear-gradient(140deg, #fff 0%, var(--tint) 100%); border: 1px solid var(--border); box-shadow: var(--shadow); }
+.vsplit h2 { font-size: clamp(26px, 2.5vw, 36px); font-weight: 800; letter-spacing: -1px; margin: 16px 0 14px; }
+.vsplit__copy > p { font-size: 15px; }
+.vsplit__points { list-style: none; padding: 0; margin: 20px 0 28px; display: grid; gap: 10px; }
+.vsplit__points li { display: flex; gap: 10px; align-items: flex-start; font-weight: 600; color: var(--navy); font-size: 14.5px; }
+.vsplit__points li span { flex-shrink: 0; display: grid; place-items: center; width: 22px; height: 22px; border-radius: 50%; background: var(--orange); color: #fff; margin-top: 1px; }
+.vsplit__img { width: 100%; border-radius: 22px; box-shadow: var(--shadow-lg); }
+.vcode { position: relative; border-radius: 20px; background: #0b1530; box-shadow: 0 34px 60px -26px rgba(0, 22, 64, 0.7); animation: laptopFloat 7s ease-in-out infinite; }
+.vcode__bar { display: flex; align-items: center; gap: 6px; padding: 12px 16px; border-bottom: 1px solid rgba(255, 255, 255, 0.08); }
+.vcode__bar i { width: 10px; height: 10px; border-radius: 50%; background: #ff5f57; }
+.vcode__bar i:nth-child(2) { background: #febc2e; }
+.vcode__bar i:nth-child(3) { background: #28c840; }
+.vcode__bar span { margin-left: 8px; color: rgba(255, 255, 255, 0.5); font-size: 12px; }
+.vcode__body { display: grid; gap: 8px; padding: 22px 22px 34px; font-family: Consolas, 'Courier New', monospace; font-size: 14px; }
+.vcode__body code { justify-self: start; color: #c9d6ee; white-space: pre; overflow: hidden; max-width: 0; }
+.vsplit.in .vcode__body code { animation: typeLine 0.9s steps(30, end) forwards; animation-delay: calc(var(--i) * 0.7s + 0.5s); }
+.vcode__body code:nth-child(2), .vcode__body code:nth-child(3), .vcode__body code:nth-child(4) { color: #ffb38a; }
+.vcode__body code:last-child { color: #4ade80; }
+@keyframes typeLine { to { max-width: 100%; } }
+.vcode__chip { position: absolute; display: inline-flex; align-items: center; gap: 8px; padding: 10px 14px; border-radius: 14px; background: #fff; color: var(--navy); font-weight: 700; font-size: 13px; box-shadow: var(--shadow-lg); animation: chipFloat 5s ease-in-out infinite; }
+.vcode__chip svg { color: var(--orange); }
+.vcode__chip--1 { left: -26px; bottom: 26px; }
+.vcode__chip--2 { right: -18px; top: -18px; animation-delay: 1.5s; }
+
+@media (max-width: 960px) {
+  .vprod__head { flex-wrap: wrap; }
+  .vprod__actions { flex-direction: row; width: 100%; }
+  .veco, .vsplit { grid-template-columns: 1fr; }
+  .vsplit { padding: 30px 22px; }
+  .svc-cards > .svc-card, .svc-cards--4 > .svc-card { flex-basis: calc((100% - 22px) / 2); }
+}
+@media (max-width: 640px) {
+  .vprod__card { padding: 20px; }
+  .vprod__media { grid-template-columns: 1fr; }
+  .vprod__id h3 { font-size: 23px; }
+  .vprod__actions { flex-wrap: wrap; }
+  .svc-cards > .svc-card, .svc-cards--4 > .svc-card, .svc-cards--2 > .svc-card { flex-basis: 100%; }
+  .veco__hub { --r: 34vw; }
+  .veco__node-inner { width: 86px; padding: 9px 6px; }
+  .vcode__chip--1 { left: -6px; }
+  .vcode__chip--2 { right: -6px; }
+}

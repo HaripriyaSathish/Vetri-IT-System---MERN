@@ -1,0 +1,85 @@
+/* ================= Premium motion layer ================= */
+
+/* Scroll progress bar */
+.scroll-progress { position: fixed; inset: 0 0 auto; z-index: 70; height: 3px; transform-origin: 0 50%; transform: scaleX(var(--p, 0)); background: linear-gradient(90deg, var(--navy), var(--orange), #ffb38a); box-shadow: 0 0 10px rgba(231, 81, 12, 0.6); pointer-events: none; }
+
+/* Header slides in on load */
+/* "backwards" (not "both"): a transform kept after the animation would make the header the containing block of the fixed mobile menu */
+.header { animation: headerIn 0.8s var(--ease) backwards; }
+@keyframes headerIn { from { transform: translateY(-100%); opacity: 0; } }
+
+/* Word-by-word heading reveal (works inside any .reveal block) */
+.w { display: inline-block; overflow: hidden; vertical-align: bottom; padding-bottom: 0.12em; margin-bottom: -0.12em; }
+.w > span { display: inline-block; transform: translateY(110%) rotate(4deg); transform-origin: 0 100%; transition: transform 0.9s var(--ease); transition-delay: calc(var(--i, 0) * 55ms + 0.1s); }
+.reveal.in .w > span { transform: none; }
+.hero .w > span { transform: none; animation: wordUp 0.9s var(--ease) both; animation-delay: calc(var(--i, 0) * 70ms + 0.35s); }
+@keyframes wordUp { from { transform: translateY(110%) rotate(4deg); } }
+.w > .hl { background: linear-gradient(90deg, var(--orange), #ff8a4c, var(--orange)); background-size: 200% 100%; -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; animation: hlShift 4s linear infinite; }
+.hero .w > .hl { animation: wordUp 0.9s var(--ease) both, hlShift 4s linear infinite; animation-delay: calc(var(--i, 0) * 70ms + 0.35s), 0s; }
+@keyframes hlShift { to { background-position: -200% 0; } }
+
+/* Eyebrow pills get a soft shine */
+.eyebrow, .pill { position: relative; overflow: hidden; }
+.eyebrow::after, .pill::after { content: ''; position: absolute; inset: 0; background: linear-gradient(110deg, transparent 30%, rgba(255, 255, 255, 0.7) 50%, transparent 70%); transform: translateX(-120%); animation: pillShine 4.5s 1s ease-in-out infinite; }
+@keyframes pillShine { 0% { transform: translateX(-120%); } 35%, 100% { transform: translateX(120%); } }
+
+/* Image wipe reveal */
+.img-wipe img { clip-path: inset(0 100% 0 0 round 22px); transition: clip-path 1.3s var(--ease) 0.15s; }
+.reveal.in .img-wipe img, .img-wipe.reveal.in img { clip-path: inset(0 0 0 0 round 22px); }
+.img-wipe .about__img2 { transition-delay: 0.6s; }
+
+/* 3D tilt + cursor spotlight */
+.tilt { position: relative; transform-style: preserve-3d; }
+.tilt::before { content: ''; position: absolute; inset: 0; z-index: 2; border-radius: inherit; pointer-events: none; opacity: 0; transition: opacity 0.4s; background: radial-gradient(420px circle at var(--mx, 50%) var(--my, 50%), rgba(231, 81, 12, 0.12), transparent 45%); }
+.tilt:hover::before { opacity: 1; }
+.tilt.reveal.in:hover, .browser.tilt:hover { transform: perspective(1000px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg)) translateY(-8px); transition: transform 0.18s ease-out, box-shadow 0.4s, border-color 0.4s; }
+
+/* Ambient orbs drifting behind tinted sections */
+.section--tint { overflow: hidden; }
+.section--tint > .container { position: relative; z-index: 1; }
+.section--tint::after { content: ''; position: absolute; width: 420px; height: 420px; left: -160px; bottom: -160px; border-radius: 50%; background: radial-gradient(circle, rgba(231, 81, 12, 0.12), transparent 65%); animation: orbDrift 16s ease-in-out infinite alternate; pointer-events: none; }
+@keyframes orbDrift { to { transform: translate(160px, -120px) scale(1.2); } }
+.process-section::before { animation: orbDrift 20s ease-in-out infinite alternate-reverse; }
+
+/* Hero stats float gently after counting up */
+.hero__stat:nth-child(odd) { animation: heroIn 0.9s var(--ease) both, statFloat 6s 2s ease-in-out infinite; animation-delay: calc(var(--d, 0) * 0.12s + 0.15s), 2s; }
+.hero__stat:nth-child(even) { animation: heroIn 0.9s var(--ease) both, statFloat 6s 3s ease-in-out infinite; animation-delay: calc(var(--d, 0) * 0.12s + 0.15s), 3s; }
+@keyframes statFloat { 50% { transform: translateY(-6px); } }
+
+/* Buttons: arrow nudges on hover */
+.btn svg:last-child { transition: transform 0.35s var(--ease); }
+.btn:hover svg:last-child { transform: translate(3px, -3px); }
+
+/* Solution feature list items slide in one after another */
+.solution__features li { animation: featIn 0.7s var(--ease) both; }
+.solution__features li:nth-child(2) { animation-delay: 0.12s; }
+.solution__features li:nth-child(3) { animation-delay: 0.24s; }
+.solution__features li:nth-child(4) { animation-delay: 0.36s; }
+@keyframes featIn { from { opacity: 0; transform: translateX(-24px); } }
+.solution__features li:hover .icon-box { transform: scale(1.15) rotate(-8deg); }
+
+@media (prefers-reduced-motion: reduce) {
+  .w > span { transform: none !important; }
+  .img-wipe img { clip-path: none !important; }
+}
+
+/* Process cards reveal one by one, each arrow appearing after its card */
+.process.stagger > .reveal { opacity: 0; transform: translateX(-70px) scale(0.9) rotate(-2deg); transition: opacity 0.7s var(--ease), transform 0.9s var(--ease); }
+.process.stagger > .reveal.in { opacity: 1; transform: none; }
+.process.stagger > .reveal:nth-child(1) { transition-delay: 0s; }
+.process.stagger > .reveal:nth-child(2) { transition-delay: 0.45s; }
+.process.stagger > .reveal:nth-child(3) { transition-delay: 0.9s; }
+.process.stagger > .reveal:nth-child(4) { transition-delay: 1.35s; }
+.process.stagger > .reveal.done { transition-delay: 0s; }
+.process__arrow { opacity: 0; transition: opacity 0.4s; }
+.reveal.in .process__arrow { opacity: 1; }
+.process > :nth-child(1).in .process__arrow { transition-delay: 0.6s; }
+.process > :nth-child(2).in .process__arrow { transition-delay: 1.05s; }
+.process > :nth-child(3).in .process__arrow { transition-delay: 1.5s; }
+.process__step .process__no { transition: color 0.4s, transform 0.6s var(--ease); }
+.process__step.in .process__no { animation: noPop 0.7s var(--ease) both; animation-delay: inherit; }
+.process > :nth-child(1).in .process__no { animation-delay: 0.3s; }
+.process > :nth-child(2).in .process__no { animation-delay: 0.75s; }
+.process > :nth-child(3).in .process__no { animation-delay: 1.2s; }
+.process > :nth-child(4).in .process__no { animation-delay: 1.65s; }
+@keyframes noPop { from { transform: scale(0.4); opacity: 0; } 70% { transform: scale(1.15); } }

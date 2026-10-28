@@ -1,0 +1,7 @@
+node_modules/
+.env
+dist/
+*.log
+.DS_Store
+# admin uploads are kept in the database and rebuilt on demand
+server/media/uploads/
