@@ -46,6 +46,13 @@ All files live in **`server/media`** and are served at `/media/...`. No Cloudina
 3. Set the environment variables: `DATABASE_URL` (Neon), `ADMIN_PASSWORD` and the SMTP values. `JWT_SECRET` is generated for you.
 4. Deploy. On first boot the server creates the tables in Neon, creates the admin and seeds the content. The same service serves the website, `/admin`, `/api` and `/media`.
 
+**Copy your local content to Neon.** This copies pages, settings, SEO, enquiries, the admin login and the Media Library. It only reads local MySQL and replaces everything in Neon:
+```bash
+cd server
+TARGET_DATABASE_URL="postgresql://…neon.tech/neondb?sslmode=require" npm run copy-to-neon -- --yes
+```
+Once the live site is in use, edit content in the live admin instead. Running the copy again would overwrite live edits and live enquiries.
+
 ## Admin panel
 - **Explore VIS** in the sidebar lists every home section by name. Each opens its own tabbed editor, with no long scrolling forms.
 - **Contact** (/contact) – consultation form (saves to Admin → Enquiries), direct contact card, office map and FAQs from the Contact SEO document. The navbar Get in Touch button opens it.
