@@ -10,11 +10,12 @@ import WhyChoose from '../components/home/WhyChoose';
 import Process from '../components/home/Process';
 import Team from '../components/home/Team';
 import Cta from '../components/home/Cta';
+import { IconCards } from '../components/service/ServiceSections';
 
 // section_key (from MySQL) -> component. Order & visibility come from the admin panel.
 const registry = {
   hero: Hero, ticker: Ticker, about: About, services: Services, solutions: Solutions,
-  why_choose: WhyChoose, process: Process, team: Team, cta: Cta,
+  industries: IconCards, why_choose: WhyChoose, process: Process, team: Team, cta: Cta,
 };
 
 export default function Home() {

@@ -16,8 +16,9 @@ export default function About({ c }) {
           <h2><Highlight text={c.title} highlight={c.highlight} /></h2>
           {(c.paragraphs || []).map((p, i) => <p key={i}>{p}</p>)}
           <div className="about__cards stagger">
-            {(c.cards || []).map((card) => (
-              <Reveal className="mini-card" key={card.title}>
+            {(c.cards || []).map((card, i) => (
+              <Reveal className="mini-card" key={card.title} style={{ '--i': i }}>
+                <span className="mini-card__shine" aria-hidden="true" />
                 <span className="icon-box"><Icon name={card.icon} size={20} /></span>
                 <div>
                   <h3>{card.title}</h3>

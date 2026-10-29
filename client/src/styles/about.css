@@ -47,7 +47,7 @@
 .vmv__card--orange .vmv__no { color: #fde0d1; }
 .vmv__icon { display: grid; place-items: center; width: 52px; height: 52px; border-radius: 16px; background: var(--navy); color: #fff; transition: transform 0.5s var(--ease); }
 .vmv__card--orange .vmv__icon { background: var(--orange); }
-.vmv__card:hover .vmv__icon { transform: rotate(-10deg) scale(1.08); }
+.vmv__card:hover .vmv__icon { transform: scale(1.15); box-shadow: 0 12px 26px -10px rgba(231, 81, 12, 0.55); }
 .vmv__card h3 { font-size: 24px; font-weight: 800; margin-bottom: 8px; }
 .vmv__card p { font-size: 15px; }
 

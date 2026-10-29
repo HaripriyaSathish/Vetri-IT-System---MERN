@@ -35,7 +35,7 @@ export const siteSettings = {
 export const pages = [
   {
     slug: 'home', name: 'Explore VIS',
-    meta_title: 'Vetri IT Systems | Digital Solutions Built to Perform',
+    meta_title: 'Vetri IT Systems | IT Solutions Company in Tamil Nadu',
     meta_description: 'Vetri IT Systems is an IT company in Tamil Nadu offering website development, mobile app development, custom software and digital marketing. Request a quote.',
     meta_keywords: 'IT company in Tamil Nadu, website development, mobile app development, software development, digital marketing, Tenkasi, Surandai',
   },
@@ -54,8 +54,8 @@ export const homeSections = [
     key: 'hero', label: 'Hero Banner',
     content: {
       eyebrow: 'FULL VIDEO DEMONSTRATIONS AVAILABLE',
-      title: 'Digital Solutions Built to Perform. Watch Them Work.',
-      highlight: 'Perform.',
+      title: 'Smart IT Solutions to Power Your Business Growth. Watch Them Work.',
+      highlight: 'Business Growth.',
       description: 'Vetri IT Systems is an IT solutions company in Tamil Nadu, helping businesses grow with custom websites, mobile apps, business software and digital marketing services. Explore our solutions through live video demos and see how we bring ideas to life.',
       tags: ['Working Live Demos', 'Transparent Agile Code', 'Rapid Deployment'],
       stats: [
@@ -74,7 +74,7 @@ export const homeSections = [
     key: 'ticker', label: 'Services Ticker',
     content: {
       items: ['Custom Software Development', 'Digital Marketing Services', 'Website Development', 'Mobile App Development'],
-      separator: '🔶',
+      separator: '◆',
       speed: 40,
     },
   },
@@ -93,10 +93,10 @@ export const homeSections = [
       badge_value: '2+',
       badge_label: 'Years of Excellence',
       cards: [
-        { icon: '♧', title: 'Quality First', description: 'Every line of code is reviewed, every pixel is polished. We deliver nothing short of excellence.' },
-        { icon: '↗', title: 'On-Time Delivery', description: 'Our agile software development approach helps us ship fast without compromising on quality or scope.' },
-        { icon: '♙', title: 'Expert Team', description: 'A passionate team of developers, designers and strategists with deep industry experience.' },
-        { icon: '♡', title: 'Long-Term Support', description: 'We don’t just build and leave. Ongoing maintenance and support keep your product thriving.' },
+        { icon: 'Gem', title: 'Quality First', description: 'Every line of code is reviewed, every pixel is polished. We deliver nothing short of excellence.' },
+        { icon: 'Rocket', title: 'On-Time Delivery', description: 'Our agile software development approach helps us ship fast without compromising on quality or scope.' },
+        { icon: 'Users', title: 'Expert Team', description: 'A passionate team of developers, designers and strategists with deep industry experience.' },
+        { icon: 'HeartHandshake', title: 'Long-Term Support', description: 'We don’t just build and leave. Ongoing maintenance and support keep your product thriving.' },
       ],
     },
   },
@@ -120,6 +120,23 @@ export const homeSections = [
     },
   },
   {
+    key: 'industries', label: 'Industries We Serve',
+    content: {
+      eyebrow: 'INDUSTRIES WE SERVE',
+      title: 'Software and Website Solutions Built Around Your Industry',
+      highlight: 'Built Around Your Industry',
+      description: 'We provide website development, mobile app development and custom software solutions tailored to the needs of different industries.',
+      items: [
+        { icon: 'ShoppingCart', title: 'Retail & E-commerce', description: 'Ecommerce website development, GST billing software and inventory management for stores, distributors and online sellers.' },
+        { icon: 'GraduationCap', title: 'Education & Training', description: 'Websites, enquiry systems and learning-ready digital experiences for colleges, universities and training institutes.' },
+        { icon: 'HeartPulse', title: 'Healthcare & Wellness', description: 'Clear, easy-to-use websites and apps for clinics, wellness brands and care providers.' },
+        { icon: 'Truck', title: 'Logistics & Distribution', description: 'Workflow management software and warehouse management system software that keep stock, branches and teams in sync.' },
+        { icon: 'Plane', title: 'Travel & Tourism', description: 'Booking-ready travel websites and enquiry journeys that turn visitors into confirmed trips.' },
+        { icon: 'Building2', title: 'Startups & Enterprises', description: 'SaaS development, enterprise software development and business process automation for growing and established companies.' },
+      ],
+    },
+  },
+  {
     key: 'why_choose', label: 'Why Choose Us',
     content: {
       title: 'Why Businesses Choose Vetri IT Systems?',
@@ -127,11 +144,11 @@ export const homeSections = [
       description: 'More than just a service, we are your digital growth partner.',
       image: img('why.png', 'Illustration of a team celebrating a successful project with the message Let us build something great'),
       items: [
-        { icon: '♧', title: 'Experienced Team', description: 'Skilled professionals with real-world experience across web, mobile and software development.' },
-        { icon: '◷', title: 'On-Time Delivery', description: 'We value your time and deliver on schedule through structured agile sprints.' },
-        { icon: '⚒', title: 'Custom Solutions', description: 'Custom software built specifically around your unique business workflows and operational goals.' },
-        { icon: '♧', title: 'Affordable Pricing', description: 'High-quality engineering solutions at transparent, competitive rates.' },
-        { icon: '♡', title: 'Support & Maintenance', description: 'We are with you even after launch, ensuring uninterrupted uptime and continuous growth.' },
+        { icon: 'Award', title: 'Experienced Team', description: 'Skilled professionals with real-world experience across web, mobile and software development.' },
+        { icon: 'Clock', title: 'On-Time Delivery', description: 'We value your time and deliver on schedule through structured agile sprints.' },
+        { icon: 'Wrench', title: 'Custom Solutions', description: 'Custom software built specifically around your unique business workflows and operational goals.' },
+        { icon: 'BadgeIndianRupee', title: 'Affordable Pricing', description: 'High-quality engineering solutions at transparent, competitive rates.' },
+        { icon: 'LifeBuoy', title: 'Support & Maintenance', description: 'We are with you even after launch, ensuring uninterrupted uptime and continuous growth.' },
       ],
     },
   },
@@ -267,6 +284,18 @@ const insertMany = async (table, rows, jsonCols = []) => {
 const isEmpty = async (table, where = '', params = []) =>
   (await pool.query(`SELECT COUNT(*) c FROM ${table} ${where}`, params))[0][0].c === 0;
 
+// The home About cards first shipped with symbol glyphs: swap in the icon set once, and only while
+// the cards are still exactly the original ones
+const LEGACY_ABOUT_ICONS = ['♧', '↗', '♙', '♡'];
+const upgradeAboutCards = async () => {
+  const [[row]] = await pool.query("SELECT content FROM sections WHERE page_slug = 'home' AND section_key = 'about'");
+  const content = typeof row?.content === 'string' ? JSON.parse(row.content) : row?.content;
+  if ((content?.cards || []).map((c) => c.icon).join() !== LEGACY_ABOUT_ICONS.join()) return;
+  content.cards = homeSections.find((s) => s.key === 'about').content.cards;
+  await pool.query("UPDATE sections SET content = ? WHERE page_slug = 'home' AND section_key = 'about'", [JSON.stringify(content)]);
+  console.log('🌱 Home About cards upgraded to icons');
+};
+
 export const seedIfEmpty = async ({ force = false } = {}) => {
   if (force) {
     await pool.query("DELETE FROM sections WHERE page_slug = 'home'");
@@ -288,6 +317,7 @@ export const seedIfEmpty = async ({ force = false } = {}) => {
         ['home', s.key, s.label, JSON.stringify(s.content), i + 1, s.active === false ? 0 : 1]);
     console.log('🌱 Home page sections seeded');
   }
+  await upgradeAboutCards();
   if (await isEmpty('services')) await insertMany('services', services, ['image']);
   if (await isEmpty('solutions')) await insertMany('solutions', solutions, ['features', 'stats', 'image']);
   // Graphic Designing: dropdown item only (added once, together with its page)

@@ -1,7 +1,7 @@
 // Admin form definitions per home-page section (section_key).
 // Each section is split into tabs so no editor becomes one long scrolling form.
 import {
-  Image, Repeat, Info, Briefcase, Package, ThumbsUp, Workflow, Users, Megaphone, LayoutTemplate,
+  Image, Repeat, Info, Briefcase, Package, ThumbsUp, Workflow, Users, Megaphone, LayoutTemplate, Building2,
 } from 'lucide-react';
 
 const heading = (extra = []) => [
@@ -23,7 +23,7 @@ const iconCards = (name, label, itemLabel) => ({
 
 export const sectionIcons = {
   hero: Image, ticker: Repeat, about: Info, services: Briefcase, solutions: Package,
-  why_choose: ThumbsUp, process: Workflow, team: Users,
+  industries: Building2, why_choose: ThumbsUp, process: Workflow, team: Users,
   cta: Megaphone,
 };
 export const SectionFallbackIcon = LayoutTemplate;
@@ -95,6 +95,11 @@ export const sectionSchemas = {
   solutions: [
     { tab: 'Heading', fields: heading() },
     { tab: 'Product Tabs', collection: 'solutions' },
+  ],
+
+  industries: [
+    { tab: 'Heading', fields: heading() },
+    { tab: 'Industries', fields: [iconCards('items', 'Industries', 'Industry')] },
   ],
 
   why_choose: [

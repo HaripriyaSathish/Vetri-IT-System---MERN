@@ -26,7 +26,7 @@
 .pstats__item { text-align: center; padding: 4px 10px; border-right: 1px solid var(--border); }
 .pstats__item:last-child { border-right: 0; }
 .pstats__item strong { display: block; font-family: var(--font-head); font-size: 30px; font-weight: 800; color: var(--navy); line-height: 1.3; }
-.pstats__item span { font-size: 12.5px; font-weight: 600; color: var(--orange); }
+.pstats__item .pstats__label { display: block; font-size: 12.5px; font-weight: 600; color: var(--orange); }
 
 /* ---------- Clients ---------- */
 .pclients { display: grid; grid-template-columns: repeat(2, 1fr); gap: 28px; }
@@ -63,7 +63,7 @@
 .pjourney__no { display: inline-grid; place-items: center; width: 36px; height: 36px; border-radius: 50%; background: var(--orange); color: #fff; font-family: var(--font-head); font-size: 13px; font-weight: 800; box-shadow: 0 0 0 6px #fff, 0 10px 20px -8px rgba(231, 81, 12, 0.7); position: relative; z-index: 1; }
 .pjourney__icon { display: grid; place-items: center; width: 72px; height: 72px; margin: 20px auto 16px; border-radius: 22px; background: #fff; color: #2689ef; box-shadow: var(--shadow); transition: transform 0.5s var(--ease), background 0.4s, color 0.4s; }
 .pjourney__step--orange .pjourney__icon { color: var(--orange); }
-.pjourney__step:hover .pjourney__icon { transform: translateY(-8px) rotate(-6deg); background: var(--navy); color: #fff; }
+.pjourney__step:hover .pjourney__icon { transform: translateY(-8px) scale(1.1); box-shadow: 0 18px 32px -14px rgba(0, 38, 115, 0.55); background: var(--navy); color: #fff; }
 .pjourney__step--orange:hover .pjourney__icon { background: var(--orange); }
 .pjourney__step h3 { font-size: 18px; font-weight: 800; }
 .pjourney__step p { margin-top: 6px; font-size: 13.5px; color: var(--muted); }
@@ -80,8 +80,9 @@
 .pcaps__icon { flex-shrink: 0; display: grid; place-items: center; width: 34px; height: 34px; border-radius: 10px; background: var(--blue-50); color: #2689ef; transition: all 0.35s var(--ease); }
 .pcaps__item:nth-child(3n + 2) .pcaps__icon { background: var(--orange-50); color: var(--orange); }
 .pcaps__item:nth-child(3n) .pcaps__icon { background: #efe9ff; color: #7c3aed; }
-.pcaps__item:hover .pcaps__icon { transform: rotate(-10deg) scale(1.1); }
+.pcaps__item:hover .pcaps__icon { transform: scale(1.18); background: var(--orange); color: #fff; }
 .pcaps__label { flex: 1; font-size: 13px; font-weight: 600; color: var(--navy); line-height: 1.35; }
+.pcaps__desc { display: block; margin-top: 3px; font-size: 11.5px; font-weight: 500; color: var(--muted); line-height: 1.45; }
 .pcaps__chev { color: var(--muted); transition: transform 0.3s; }
 .pcaps__item:hover .pcaps__chev { transform: translateX(3px); color: var(--orange); }
 .pcaps__cards { display: grid; grid-template-columns: repeat(2, 1fr); gap: 18px; margin-top: 26px; }
@@ -159,26 +160,34 @@
 .pprice--3 { grid-template-columns: repeat(3, 1fr); }
 .pprice--2 { grid-template-columns: repeat(2, 1fr); max-width: 1040px; margin: 0 auto; }
 .pprice--1 { grid-template-columns: minmax(0, 520px); justify-content: center; }
-.pprice__card { position: relative; display: flex; flex-direction: column; padding: 30px 28px; border-radius: 26px; background: #fff; border: 1.6px solid var(--border); box-shadow: var(--shadow); transition: box-shadow 0.4s; }
-.pprice__card:hover { box-shadow: var(--shadow-lg); }
-.pprice__card--featured { border-color: transparent; background: linear-gradient(#fff, #fff) padding-box, conic-gradient(from var(--angle), var(--navy), var(--orange), #ffb38a, var(--navy-700), var(--navy)) border-box; animation: spin-angle 5s linear infinite; }
+/* Live-site "leaf" shape: square top-left / bottom-right corners, big curves on the other two,
+   and a leaf-shaped navy price badge that pokes out past the card's left edge. Padding keeps text
+   and buttons clear of the two curves. */
+.pprice { column-gap: 40px; }
+.pprice__card { --leaf: 110px; position: relative; display: flex; flex-direction: column; padding: 34px 44px 36px 30px; border-radius: 0 var(--leaf); background: #fff; border: 1px solid #ffc4a8; box-shadow: 0 0 6px rgba(255, 113, 51, 0.22), 0 14px 36px -14px rgba(0, 38, 115, 0.28); transition: box-shadow 0.4s, border-color 0.4s; }
+.pprice__card:hover { box-shadow: 0 26px 50px -18px rgba(0, 38, 115, 0.4); }
+.pprice__card--featured { border: 1.6px solid transparent; background: linear-gradient(#fff, #fff) padding-box, conic-gradient(from var(--angle), var(--navy), var(--orange), #ffb38a, var(--navy-700), var(--navy)) border-box; animation: spin-angle 5s linear infinite; }
 .pprice__tag { align-self: flex-start; margin-bottom: 14px; padding: 5px 12px; border-radius: 999px; background: var(--orange); color: #fff; font-size: 11px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; animation: pulse 2.4s infinite; }
-.pprice__card h3 { font-size: 21px; font-weight: 800; letter-spacing: -0.3px; }
-.pprice__sub { margin-top: 4px; color: var(--orange); font-size: 12.5px; font-weight: 700; letter-spacing: 0.04em; }
-.pprice__price { position: relative; align-self: flex-start; margin: 18px 0 4px -40px; padding: 12px 26px 12px 40px; border-radius: 0 999px 999px 0; background: linear-gradient(90deg, var(--navy-900), var(--navy)); color: #fff; font-family: var(--font-head); font-size: 24px; font-weight: 800; box-shadow: 0 14px 26px -14px rgba(0, 38, 115, 0.8); }
+.pprice__card h3 { font-size: 23px; font-weight: 800; letter-spacing: -0.4px; line-height: 1.2; }
+.pprice__sub { margin-top: 8px; color: var(--orange); font-size: 14px; font-weight: 700; letter-spacing: 0.02em; }
+.pprice__price { position: relative; align-self: flex-start; margin: 20px 0 6px -46px; padding: 18px 30px 18px 46px; border-radius: 0 54px; background: linear-gradient(120deg, var(--navy-900), var(--navy)); color: #fff; font-family: var(--font-head); font-size: 26px; font-weight: 800; line-height: 1.2; box-shadow: 0 16px 28px -14px rgba(0, 38, 115, 0.85); transition: transform 0.4s var(--ease), box-shadow 0.4s; }
 .pprice__note-price { color: var(--muted); font-size: 12.5px; }
 .pprice__desc { margin-top: 12px; font-size: 14px; }
-.pprice__features { list-style: none; padding: 0; margin: 18px 0 0; display: grid; gap: 9px; }
-.pprice__features li { display: flex; align-items: flex-start; gap: 10px; padding: 9px 12px; border-radius: 10px; background: var(--tint); font-size: 13.5px; font-weight: 500; color: var(--navy); transition: transform 0.3s var(--ease); }
-.pprice__features li:hover { transform: translateX(4px); }
-.pprice__features li > span { flex-shrink: 0; display: grid; place-items: center; width: 20px; height: 20px; margin-top: 1px; border-radius: 50%; background: var(--orange-50); color: var(--orange); }
+.pprice__features { list-style: none; padding: 0; margin: 18px 0 0 14px; display: grid; gap: 10px; }
+.pprice__features li { display: flex; align-items: flex-start; gap: 10px; padding: 10px 12px; border-radius: 6px; background: #f0f3f7; font-size: 14px; font-weight: 600; color: var(--navy-900); transition: transform 0.3s var(--ease), background 0.3s; }
+.pprice__features li:hover { transform: scale(1.02); }
+.pprice__features li > span { flex-shrink: 0; display: grid; place-items: center; width: 20px; height: 20px; margin-top: 1px; border-radius: 50%; border: 1.6px solid var(--orange); color: var(--orange); transition: background 0.3s, color 0.3s; }
 .pprice__features li.no { color: var(--muted); }
-.pprice__features li.no > span { background: #f1f3f8; color: var(--muted); }
+.pprice__features li.no > span { border-color: #c3cad8; color: var(--muted); }
 .pprice__benefits { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; }
 .pprice__benefits span { padding: 6px 12px; border-radius: 999px; background: var(--blue-50); color: var(--navy); font-size: 12px; font-weight: 700; }
 .pprice__note { margin-top: 14px; padding: 10px 12px; border-left: 3px solid var(--orange); border-radius: 0 10px 10px 0; background: var(--orange-50); font-size: 12px; line-height: 1.6; }
 .pprice__actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: auto; padding-top: 22px; }
+.pprice__actions .btn { border-radius: 10px; }
 .pprice__actions .btn--primary { min-width: 150px; }
+/* regular cards: stacked buttons, indented past the bottom-left curve */
+.pprice__card:not(.pprice__card--wide) .pprice__actions { flex-direction: column; margin-left: 18px; }
+.pprice__card:not(.pprice__card--wide) .pprice__actions .btn { justify-content: center; }
 
 /* ---------- Brochure ---------- */
 .pbroch { position: relative; overflow: hidden; display: grid; grid-template-columns: 1.3fr 1fr; align-items: center; gap: 30px; padding: 54px 60px; border-radius: 30px; color: #fff; background: radial-gradient(circle at 85% 20%, rgba(42, 155, 255, 0.35), transparent 40%), linear-gradient(120deg, var(--navy-900), var(--navy) 60%, #1a4bb0); }
@@ -198,7 +207,7 @@
 .svc-card::after { content: ''; position: absolute; left: 0; bottom: 0; height: 3px; width: 100%; background: linear-gradient(90deg, var(--navy), var(--orange)); transform: scaleX(0); transform-origin: left; transition: transform 0.5s var(--ease); }
 .svc-card:hover { box-shadow: var(--shadow-lg); border-color: transparent; }
 .svc-card:hover::after { transform: scaleX(1); }
-.svc-card:hover .icon-box { background: var(--orange); color: #fff; transform: rotate(-8deg) scale(1.08); }
+.svc-card:hover .icon-box { background: var(--orange); color: #fff; transform: scale(1.15); }
 .svc-card h3 { font-size: 18px; font-weight: 700; margin: 18px 0 8px; }
 .svc-card p { font-size: 14px; }
 
@@ -254,13 +263,18 @@
   .pjourney { grid-template-columns: repeat(2, 1fr); }
   .mock--app { height: 340px; }
   .mock-phone { width: 160px; height: 320px; }
-  .pprice__price { margin-left: -28px; font-size: 21px; }
+  .pprice__card:not(.pprice__card--wide) { --leaf: 72px; padding: 28px 30px 30px 22px; }
+  .pprice__card:not(.pprice__card--wide) .pprice__price { margin-left: -34px; padding: 14px 24px 14px 34px; }
+  .pprice__price { border-radius: 0 40px; font-size: 22px; }
+  .pprice__features { margin-left: 6px; }
 }
 
 /* ---------- Wide package cards (one per row: details left, checklist right) ---------- */
 .pprice--wide { grid-template-columns: 1fr; max-width: 1120px; margin: 0 auto; gap: 24px; }
-.pprice__card--wide { display: grid; grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.25fr); gap: 0; padding: 0; overflow: hidden; }
-.pprice__info { display: flex; flex-direction: column; padding: 30px 30px 28px; }
+/* same leaf shape; the card clips its two halves, so the price badge sits flush with the left edge */
+.pprice__card--wide { --leaf: 120px; display: grid; grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.25fr); gap: 0; padding: 0; overflow: hidden; }
+.pprice__info { display: flex; flex-direction: column; padding: 34px 30px 40px 46px; }
+.pprice__card--wide .pprice__features { margin-left: 0; }
 .pprice__info .pprice__actions { padding-top: 20px; }
 .pprice__incl { padding: 30px 30px 28px; background: linear-gradient(160deg, var(--tint), #fff); border-left: 1px dashed var(--border); }
 .pprice__incl h4 { margin-bottom: 14px; font-size: 15px; font-weight: 800; color: var(--navy); }
@@ -289,6 +303,9 @@
   .pprice__info { padding: 24px 20px 20px; }
   .pprice__incl { padding: 20px; }
   .pprice__info .pprice__desc { font-size: 13.5px; }
+  .pprice__card--wide { --leaf: 64px; }
+  .pprice__card--wide .pprice__price { margin-left: -20px; padding-left: 20px; }
+  .pprice__card--wide .pprice__incl { padding-bottom: 34px; }
 }
 @media (max-width: 520px) {
   .pprice__card--wide .pprice__features { grid-template-columns: 1fr 1fr; gap: 4px 10px; }
@@ -305,3 +322,66 @@
 .pclients__name:hover { color: var(--orange); background-size: 100% 2px; }
 .pclients__name:hover svg { transform: translate(3px, -3px); }
 @media (hover: none) { .pclients__visit { opacity: 1; transform: none; } }
+
+/* ---------- Website Development: quote-style plan cards ----------
+   Same look as the home About cards: a flowing pink → purple → blue band carries the plan name and
+   subtitle chip in white; the price sits in a white pill that overlaps the band's lower edge; the
+   features follow on white with a faint quote-mark watermark. The title box is a fixed two lines tall,
+   so every pill lands at the same height and one fixed-height band (--band) ends at its middle.
+   Each plan has its own corner shape; the featured plan is raised. Animation: the band wipes in, the
+   title slides in and the price pill pops, then the band keeps flowing and the pill pulses softly.
+   Hover stays a plain zoom. */
+:is(.service-page--website-development, .service-page--software-development) .pprice--3 { gap: 30px; max-width: 1120px; margin: 0 auto; }
+:is(.service-page--website-development, .service-page--software-development) .pprice__card:not(.pprice__card--wide) {
+  --band: 162px; --g1: #001a52; --g2: #1d4fb8; --acc: #002673; --tint-li: #eef3fc; isolation: isolate; align-items: center; text-align: center;
+  padding: 24px 24px 24px; border: 0; border-radius: 6px; background: #fff; overflow: hidden;
+  box-shadow: 0 22px 44px -28px rgba(0, 38, 115, 0.45);
+}
+:is(.service-page--website-development, .service-page--software-development) .pprice__card:not(.pprice__card--wide):nth-child(2) { border-radius: 28px; --g1: #c9450a; --g2: #ff8a4c; --acc: #e7510c; --tint-li: #fff1ea; }
+:is(.service-page--website-development, .service-page--software-development) .pprice__card:not(.pprice__card--wide):nth-child(3) { border-radius: 6px 6px 44px 44px; --g1: #002673; --g2: #e7510c; --acc: #002673; --tint-li: #f5f8fd; }
+:is(.service-page--website-development, .service-page--software-development) .pprice__card--featured:not(.pprice__card--wide) { border: 0; background: #fff; box-shadow: 0 30px 56px -26px rgba(231, 81, 12, 0.5); }
+:is(.service-page--website-development, .service-page--software-development) .pprice__card:not(.pprice__card--wide):hover { box-shadow: 0 32px 56px -26px rgba(0, 38, 115, 0.5); }
+:is(.service-page--website-development, .service-page--software-development) .pprice__card--featured:not(.pprice__card--wide):hover { box-shadow: 0 34px 60px -26px rgba(231, 81, 12, 0.55); }
+/* band */
+:is(.service-page--website-development, .service-page--software-development) .pprice__card:not(.pprice__card--wide)::before {
+  content: ''; display: block; position: absolute; z-index: -1; left: 0; right: 0; top: 0; height: var(--band); opacity: 1; border-radius: 0;
+  background: linear-gradient(90deg, var(--g1), var(--g2) 50%, var(--g1)) 0 0 / 200% 100%; transform-origin: left; pointer-events: none;
+}
+:is(.service-page--website-development, .service-page--software-development) .pprice__card.in:not(.pprice__card--wide)::before { animation: bandIn 0.8s var(--ease) backwards, bandFlow 8s linear infinite; animation-delay: calc(var(--k, 0) * 0.18s + 0.5s), 0s; }
+/* quote-mark watermark */
+:is(.service-page--website-development, .service-page--software-development) .pprice__card:not(.pprice__card--wide)::after { content: '\201C'; position: absolute; z-index: -1; inset: auto 16px -54px auto; width: auto; height: auto; font: 800 150px/1 Georgia, serif; color: color-mix(in srgb, var(--acc) 9%, transparent); background: none; pointer-events: none; }
+/* title + subtitle in the band */
+:is(.service-page--website-development, .service-page--software-development) .pprice__card:not(.pprice__card--wide) h3 { display: flex; align-items: center; justify-content: center; min-height: 54px; margin: 0; color: #fff; font-size: 21px; text-shadow: 0 1px 8px rgba(0, 0, 0, 0.12); }
+:is(.service-page--website-development, .service-page--software-development) .pprice__card.in:not(.pprice__card--wide) h3 { animation: titleIn 0.6s var(--ease) backwards; animation-delay: calc(var(--k, 0) * 0.18s + 0.8s); }
+:is(.service-page--website-development, .service-page--software-development) .pprice__card:not(.pprice__card--wide) .pprice__sub { align-self: center; margin-top: 10px; padding: 5px 12px; border-radius: 999px; background: rgba(255, 255, 255, 0.22); color: #fff; font-size: 11.5px; letter-spacing: 0.08em; text-transform: uppercase; }
+/* price pill overlapping the band edge */
+:is(.service-page--website-development, .service-page--software-development) .pprice__card:not(.pprice__card--wide) .pprice__price {
+  align-self: center; max-width: 100%; margin: 18px 0 0; padding: 14px 20px; border-radius: 999px; white-space: nowrap;
+  background: #fff; color: var(--acc); font-size: clamp(17px, 1.65vw, 22px); line-height: 1.2; text-align: center;
+  box-shadow: 0 12px 26px -12px rgba(0, 38, 115, 0.45);
+}
+:is(.service-page--website-development, .service-page--software-development) .pprice__card:not(.pprice__card--wide) .pprice__price::before,
+:is(.service-page--website-development, .service-page--software-development) .pprice__card:not(.pprice__card--wide) .pprice__price::after { content: none; }
+:is(.service-page--website-development, .service-page--software-development) .pprice__card--featured:not(.pprice__card--wide) .pprice__price { background: #fff; color: var(--acc); }
+:is(.service-page--website-development, .service-page--software-development) .pprice__card.in:not(.pprice__card--wide) .pprice__price { animation: d3Pop 0.7s var(--ease) backwards, softPulse 2.8s ease-out infinite; animation-delay: calc(var(--k, 0) * 0.18s + 0.95s), calc(var(--k, 0) * 0.7s + 1.8s); }
+:is(.service-page--website-development, .service-page--software-development) .pprice__card:not(.pprice__card--wide):hover .pprice__price { transform: none; }
+/* features + button */
+:is(.service-page--website-development, .service-page--software-development) .pprice__card:not(.pprice__card--wide) .pprice__features { align-self: stretch; margin: 24px 0 0; gap: 8px; text-align: left; }
+:is(.service-page--website-development, .service-page--software-development) .pprice__card:not(.pprice__card--wide) .pprice__features li { padding: 9px 12px; border-radius: 10px; background: var(--tint-li); }
+:is(.service-page--website-development, .service-page--software-development) .pprice__card:not(.pprice__card--wide) .pprice__features li > span { border-color: var(--acc); color: var(--acc); }
+:is(.service-page--website-development, .service-page--software-development) .pprice__card:not(.pprice__card--wide) .pprice__features li.no > span { border-color: #c3cad8; color: var(--muted); }
+:is(.service-page--website-development, .service-page--software-development) .pprice__card:not(.pprice__card--wide) .pprice__actions { align-self: stretch; margin-left: 0; padding-top: 20px; }
+:is(.service-page--website-development, .service-page--software-development) .pprice__card:not(.pprice__card--wide) .pprice__actions .btn { width: 100%; padding-block: 14px; border-radius: 12px; letter-spacing: 0.06em; }
+@media (min-width: 1101px) {
+  :is(.service-page--website-development, .service-page--software-development) .pprice--3 { padding-top: 18px; }
+  :is(.service-page--website-development, .service-page--software-development) .pprice__card--featured:not(.pprice__card--wide) { translate: 0 -18px; }
+}
+@media (max-width: 640px) {
+  :is(.service-page--website-development, .service-page--software-development) .pprice__card:not(.pprice__card--wide) { padding: 22px 18px 20px; --band: 156px; }
+  :is(.service-page--website-development, .service-page--software-development) .pprice__card:not(.pprice__card--wide) h3 { font-size: 19px; min-height: 50px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  :is(.service-page--website-development, .service-page--software-development) .pprice__card:not(.pprice__card--wide)::before,
+  :is(.service-page--website-development, .service-page--software-development) .pprice__card:not(.pprice__card--wide) h3,
+  :is(.service-page--website-development, .service-page--software-development) .pprice__card:not(.pprice__card--wide) .pprice__price { animation: none !important; }
+}

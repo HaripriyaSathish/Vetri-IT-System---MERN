@@ -28,16 +28,20 @@ export function PageHero({ c }) {
 }
 
 /* ---------- Stats strip overlapping the hero ---------- */
+const STAT_ICONS = ['Rocket', 'Timer', 'Users', 'Globe'];
 export function StatsStrip({ c }) {
   if (!c.items?.length) return null;
   return (
     <section className="pstats">
       <div className="container">
         <div className="pstats__card stagger">
-          {c.items.map((s) => (
-            <Reveal key={s.label} className="pstats__item">
+          <span className="pstats__sweep" aria-hidden="true" />
+          {c.items.map((s, i) => (
+            <Reveal key={s.label} className="pstats__item" style={{ '--i': i }}>
+              <span className="pstats__icon"><Icon name={s.icon || STAT_ICONS[i % STAT_ICONS.length]} size={20} /></span>
               <strong><CountUp value={s.value} /></strong>
-              <span>{s.label}</span>
+              <span className="pstats__label">{s.label}</span>
+              <i className="pstats__bar" aria-hidden="true" />
             </Reveal>
           ))}
         </div>
@@ -145,7 +149,7 @@ export function Capabilities({ c }) {
               {items.map((it) => (
                 <Reveal key={it.label} className="pcaps__item tilt">
                   <span className="pcaps__icon"><Icon name={it.icon} size={18} /></span>
-                  <span className="pcaps__label">{it.label}</span>
+                  <span className="pcaps__label">{it.label}{it.description && <small className="pcaps__desc">{it.description}</small>}</span>
                   {device && <ChevronRight size={15} className="pcaps__chev" />}
                 </Reveal>
               ))}
@@ -224,7 +228,7 @@ export function Pricing({ c }) {
   const wide = c.layout && c.layout !== 'auto' ? c.layout === 'wide' : plans.length <= 2;
 
   return (
-    <section className="section section--tint">
+    <section className="section section--tint" id="packages">
       <div className="container">
         <SectionHead c={c} />
         <div className={`pprice ${wide ? 'pprice--wide' : `pprice--${plans.length}`} stagger`}>
@@ -294,7 +298,7 @@ export function Brochure({ c }) {
     ? { target: '_blank', rel: 'noreferrer' }
     : { download: files[0]?.name || fileName(single) };
   return (
-    <section className="section">
+    <section className="section" id="brochure">
       <div className="container">
         <Reveal className="pbroch">
           <div className="pbroch__copy">

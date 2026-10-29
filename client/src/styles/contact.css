@@ -89,7 +89,7 @@
 .vquick__btn--wa span { background: #25d366; }
 .vquick__btn--map span { background: #2689ef; }
 .vquick__btn:hover { transform: translateY(-4px); background: rgba(255, 255, 255, 0.14); border-color: rgba(255, 255, 255, 0.3); }
-.vquick__btn:hover span { transform: rotate(-10deg) scale(1.08); }
+.vquick__btn:hover span { transform: scale(1.15); }
 
 .vdetails__list { display: grid; gap: 10px; }
 .vdetails__item { display: flex; gap: 12px; align-items: flex-start; padding: 14px; border-radius: 16px; background: rgba(255, 255, 255, 0.06); border: 1px solid rgba(255, 255, 255, 0.1); transition: background 0.3s, border-color 0.3s; }

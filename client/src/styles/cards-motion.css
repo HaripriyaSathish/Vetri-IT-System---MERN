@@ -1,0 +1,451 @@
+/* ================= Card motion & shape (site-wide) =================
+   Cards appear one by one in 3D as they scroll in (each family on each page has its own entrance),
+   every card family has its own non-rectangular shape, and hover is a zoom only: no background,
+   tint, fill, border or icon colour changes. Images never move on their own and icons never rotate.
+   Idle loops use the individual `translate` property so they never fight `transform`. */
+
+@keyframes iconBob { 50% { translate: 0 -5px; } }
+@keyframes barFill { from { transform: scaleX(0); } }
+
+/* ================= 3D entrances =================
+   Pick one per card family with `--enter`; `--k` is the card's position, so each card waits its
+   turn. Every keyframe carries its own perspective() (start and end use the same function list so
+   the motion interpolates cleanly), so no container needs `perspective`, which would break fixed
+   elements such as the mobile menu. Transform + opacity only. `backwards` fill only: until .in the
+   card is just the plain hidden .reveal (opacity 0, no flash), and once it has arrived the shared
+   .reveal.in / .tilt hover transforms apply again. --dir / --door flip the swing side for even cards. */
+@keyframes d3Door { from { opacity: 0; transform: perspective(1200px) rotateY(calc(var(--dir, 1) * -95deg)); transform-origin: var(--door, 0%) 50%; } 50% { opacity: 1; } to { opacity: 1; transform: perspective(1200px) rotateY(0deg); transform-origin: var(--door, 0%) 50%; } }
+@keyframes d3FlipUp { from { opacity: 0; transform: perspective(1200px) translateY(40px) rotateX(85deg); transform-origin: 50% 100%; } 50% { opacity: 1; } to { opacity: 1; transform: perspective(1200px) translateY(0) rotateX(0deg); transform-origin: 50% 100%; } }
+@keyframes d3Fold { from { opacity: 0; transform: perspective(1200px) rotateX(-95deg); transform-origin: 50% 0; } 45% { opacity: 1; } to { opacity: 1; transform: perspective(1200px) rotateX(0deg); transform-origin: 50% 0; } }
+@keyframes d3Turn { from { opacity: 0; transform: perspective(1200px) rotateY(-180deg) translateZ(80px); } 45% { opacity: 0; } 55% { opacity: 1; } to { opacity: 1; transform: perspective(1200px) rotateY(0deg) translateZ(0); } }
+@keyframes d3Depth { from { opacity: 0; transform: perspective(1200px) translate3d(0, 80px, -500px) rotateX(25deg); } to { opacity: 1; transform: perspective(1200px) translate3d(0, 0, 0) rotateX(0deg); } }
+@keyframes d3Drift { from { opacity: 0; transform: perspective(1200px) translate3d(calc(var(--dir, 1) * -60px), 30px, -260px) rotateX(30deg) rotateY(calc(var(--dir, 1) * 35deg)); } to { opacity: 1; transform: perspective(1200px) translate3d(0, 0, 0) rotateX(0deg) rotateY(0deg); } }
+@keyframes d3Cube { from { opacity: 0; transform: perspective(1200px) translateX(calc(var(--dir, 1) * -50%)) rotateY(calc(var(--dir, 1) * -90deg)); transform-origin: calc(100% - var(--door, 0%)) 50%; } to { opacity: 1; transform: perspective(1200px) translateX(0) rotateY(0deg); transform-origin: calc(100% - var(--door, 0%)) 50%; } }
+@keyframes d3Pop { from { opacity: 0; transform: perspective(1200px) translateZ(-600px) rotateX(-20deg); } 65% { opacity: 1; transform: perspective(1200px) translateZ(40px) rotateX(3deg); } to { opacity: 1; transform: perspective(1200px) translateZ(0) rotateX(0deg); } }
+@keyframes fadeOnly { from { opacity: 0; } }
+
+.stagger > :nth-child(2) { --k: 1; } .stagger > :nth-child(3) { --k: 2; } .stagger > :nth-child(4) { --k: 3; }
+.stagger > :nth-child(5) { --k: 4; } .stagger > :nth-child(6) { --k: 5; } .stagger > :nth-child(7) { --k: 6; }
+.stagger > :nth-child(8) { --k: 7; } .stagger > :nth-child(9) { --k: 8; } .stagger > :nth-child(10) { --k: 9; }
+.stagger > :nth-child(11) { --k: 10; } .stagger > :nth-child(12) { --k: 11; } .stagger > :nth-child(n + 13) { --k: 12; }
+.stagger > :nth-child(even) { --dir: -1; --door: 100%; }
+.vdetails__item:nth-child(2) { --k: 1; } .vdetails__item:nth-child(3) { --k: 2; } .vdetails__item:nth-child(4) { --k: 3; }
+.vdetails__item:nth-child(5) { --k: 4; } .vdetails__item:nth-child(6) { --k: 5; }
+
+.why-card.reveal.in, .svc-card.reveal.in, .service-card.reveal.in, .pclients__card.reveal.in, .pprice__card.reveal.in,
+.pcaps__item.reveal.in, .pchips__chip.reveal.in, .pfaq__item.reveal.in, .vlead__card.reveal.in, .vmv__card.reveal.in,
+.vdetails__item.reveal.in, .vprod__card.reveal.in, .vform.reveal.in, .vmap.reveal.in {
+  animation: var(--enter, d3Drift) var(--dur, 0.9s) var(--ease) backwards;
+  animation-delay: calc(var(--k, 0) * var(--step, 0.15s) + 0.1s);
+}
+/* the featured plan keeps its spinning gradient border */
+.pprice__card--featured.reveal.in { animation: var(--enter, d3Drift) var(--dur, 0.9s) var(--ease) backwards, spin-angle 5s linear infinite; animation-delay: calc(var(--k, 0) * var(--step, 0.15s) + 0.1s), 0s; }
+
+/* default entrance per family (home, products, about, contact, and any page not listed below) */
+.why-card { --enter: d3Turn; --step: 0.16s; }
+.service-card { --enter: d3FlipUp; --step: 0.2s; }
+.svc-card { --enter: d3Door; }
+.pclients__card { --enter: d3Cube; --step: 0.2s; }
+.pprice__card { --enter: d3FlipUp; --step: 0.18s; }
+.pcaps__item { --enter: d3Drift; --step: 0.08s; --dur: 0.7s; }
+.pchips__chip { --enter: d3Pop; --step: 0.07s; --dur: 0.7s; }
+.pfaq__item { --enter: d3Fold; --step: 0.12s; }
+.vlead__card { --enter: d3Door; --step: 0.22s; }
+.vmv__card { --enter: d3Cube; }
+.vdetails__item { --enter: d3Fold; --step: 0.12s; }
+.vform { --enter: d3Drift; }
+.vmap { --enter: d3Turn; --dur: 1.2s; }
+.vprod__card { --enter: d3Depth; --dur: 1.3s; }
+.service-page--solutions .svc-card { --enter: d3Drift; }
+
+/* every "Our Expertise" page gets its own mix */
+.service-page--website-development .pprice__card { --enter: d3Turn; }
+.service-page--website-development .pjourney { --enter-step: d3Door; }
+.service-page--app-development .svc-card { --enter: d3Fold; }
+.service-page--app-development .pclients__card { --enter: d3Door; }
+.service-page--app-development .pcaps__item { --enter: d3Pop; }
+.service-page--app-development .pprice__card { --enter: d3Drift; }
+.service-page--app-development .pchips__chip { --enter: d3Drift; }
+.service-page--app-development .pfaq__item { --enter: d3Cube; }
+.service-page--app-development .pjourney { --enter-step: d3FlipUp; }
+.service-page--software-development .svc-card { --enter: d3Depth; --dur: 1.1s; }
+.service-page--software-development .pclients__card { --enter: d3Drift; }
+.service-page--software-development .pcaps__item { --enter: d3Fold; }
+.service-page--software-development .pprice__card { --enter: d3Cube; }
+.service-page--software-development .pchips__chip { --enter: d3Door; }
+.service-page--software-development .pfaq__item { --enter: d3Drift; }
+.service-page--software-development .pjourney { --enter-step: d3Pop; }
+.service-page--digital-marketing .svc-card { --enter: d3FlipUp; }
+.service-page--digital-marketing .pcaps__item { --enter: d3Turn; }
+.service-page--digital-marketing .pprice__card { --enter: d3Door; }
+.service-page--digital-marketing .pchips__chip { --enter: d3Cube; }
+.service-page--digital-marketing .pfaq__item { --enter: d3Pop; }
+.service-page--digital-marketing .pjourney { --enter-step: d3Drift; }
+.service-page--graphic-designing .svc-card { --enter: d3Pop; }
+.service-page--graphic-designing .pcaps__item { --enter: d3Door; }
+.service-page--graphic-designing .pprice__card { --enter: d3Depth; --dur: 1.1s; }
+.service-page--graphic-designing .pchips__chip { --enter: d3Turn; }
+.service-page--graphic-designing .pfaq__item { --enter: d3FlipUp; }
+.service-page--graphic-designing .pjourney { --enter-step: d3Fold; }
+
+/* ---------- How we work: steps arrive one by one along the line ---------- */
+.pjourney .pjourney__line i { transition-duration: calc(var(--n, 5) * 0.32s + 0.4s); }
+.pjourney.in .pjourney__step { animation: var(--enter-step, d3Door) 0.9s var(--ease) backwards; animation-delay: calc(var(--i, 0) * 0.32s + 0.2s); }
+.pjourney.in .pjourney__no { animation: d3Pop 0.6s var(--ease) backwards; animation-delay: calc(var(--i, 0) * 0.32s + 0.45s); }
+.pjourney.in .pjourney__icon { animation: d3Drift 0.7s var(--ease) backwards, iconBob 3.6s ease-in-out infinite; animation-delay: calc(var(--i, 0) * 0.32s + 0.6s), calc(var(--i, 0) * -0.6s); }
+
+/* ---------- Home About: mini cards ---------- */
+/* plain white face with no border (the old rotating border and diagonal line loop are gone) */
+.about__cards .mini-card { overflow: hidden; background: #fff; border-color: transparent; }
+.about__cards .mini-card:nth-child(n) { animation: none; }
+/* entrance: one card after another */
+.about__cards .mini-card.in:nth-child(n) { animation: d3Drift 0.9s var(--ease) backwards; animation-delay: calc(var(--i, 0) * 0.2s + 0.15s); }
+.mini-card__shine { display: none; }
+.mini-card:nth-child(even) .icon-box { background: var(--orange-50); color: var(--orange); }
+
+/* ---------- Home "Why choose us" cards (original 3 + 2 grid) ---------- */
+.why__grid .why-card {
+  position: relative; overflow: hidden; padding: 24px 22px; border: 1.5px solid var(--border);
+  background: radial-gradient(circle at 100% 0%, rgba(38, 137, 239, 0.12), transparent 48%), #fff;
+  box-shadow: 0 6px 18px -12px rgba(0, 38, 115, 0.2);
+}
+.why__grid .why-card:nth-child(even) { background: radial-gradient(circle at 100% 0%, rgba(231, 81, 12, 0.12), transparent 48%), #fff; }
+.why-card .icon-box { width: 52px; height: 52px; border-radius: 16px; background: linear-gradient(135deg, #e6f0ff, #cfe2ff); color: #1d64d8; box-shadow: 0 8px 18px -10px rgba(29, 100, 216, 0.6); }
+.why-card:nth-child(3n + 2) .icon-box { background: linear-gradient(135deg, #fff1ea, #ffd9c4); color: var(--orange); box-shadow: 0 8px 18px -10px rgba(231, 81, 12, 0.6); }
+.why-card:nth-child(3n) .icon-box { background: linear-gradient(135deg, #f1ebff, #ddd0ff); color: #7c3aed; box-shadow: 0 8px 18px -10px rgba(124, 58, 237, 0.55); }
+.why-card h3 { font-size: 15px; }
+
+/* ================= Card shapes =================
+   Rounded shapes use asymmetric border-radius (borders and box-shadows follow it). Chamfered shapes
+   paint their face with four quadrant gradients, two of them with a transparent cut corner, and use
+   filter: drop-shadow so the shadow follows the cut (a clip-path would clip the shadow away). */
+.mini-card { border-radius: 24px 6px 24px 6px; }
+.why__grid .why-card { border-radius: 30px 8px 30px 8px; }
+.service-card { border-radius: 36px 6px 36px 6px; }
+.pclients__card { border-radius: 8px 44px 8px 44px; }
+.pcaps__item { border-radius: 20px 4px 20px 4px; }
+.pchips__chip { border-radius: 999px 999px 999px 4px; }
+.pfaq__item { border-radius: 22px 22px 22px 4px; }
+.vlead__card { border-radius: 120px 120px 24px 24px; }
+.vprod__card { border-radius: 56px 12px 56px 12px; }
+.vdetails__item { border-radius: 18px 4px 18px 4px; }
+.process__step { border-radius: 30px 30px 20px 6px; }
+.pjourney__icon { border-radius: 26px 8px 26px 8px; }
+/* expertise / industries icon cards: top-right and bottom-left corners cut off */
+.svc-card.reveal {
+  --cut: 26px; --face: #fff;
+  border: 0; border-radius: 22px 0 22px 0; box-shadow: none; overflow: visible;
+  background:
+    linear-gradient(var(--face), var(--face)) top left / 51% 51% no-repeat,
+    linear-gradient(225deg, transparent var(--cut), var(--face) calc(var(--cut) + 0.5px)) top right / 51% 51% no-repeat,
+    linear-gradient(var(--face), var(--face)) bottom right / 51% 51% no-repeat,
+    linear-gradient(45deg, transparent var(--cut), var(--face) calc(var(--cut) + 0.5px)) bottom left / 51% 51% no-repeat;
+  filter: drop-shadow(0 10px 18px rgba(0, 38, 115, 0.13)) drop-shadow(0 0 1px rgba(0, 38, 115, 0.25));
+}
+.svc-card.reveal::after { display: none; }
+/* mission & vision cards: the opposite corners (top-left and bottom-right) cut off */
+.vmv__card.reveal {
+  --cut: 30px; --face: #fff;
+  border: 0; border-radius: 0 24px 0 24px; box-shadow: none; overflow: visible;
+  background:
+    linear-gradient(135deg, transparent var(--cut), var(--face) calc(var(--cut) + 0.5px)) top left / 51% 51% no-repeat,
+    linear-gradient(var(--face), var(--face)) top right / 51% 51% no-repeat,
+    linear-gradient(315deg, transparent var(--cut), var(--face) calc(var(--cut) + 0.5px)) bottom right / 51% 51% no-repeat,
+    linear-gradient(var(--face), var(--face)) bottom left / 51% 51% no-repeat;
+  filter: drop-shadow(0 12px 22px rgba(0, 38, 115, 0.14)) drop-shadow(0 0 1px rgba(0, 38, 115, 0.25));
+}
+.process__corner { border-radius: 56px 0 20px 0; }
+
+/* ================= Hover: zoom only =================
+   One smooth scale per card (plus a slightly deeper shadow); the icon may grow a little. Everything
+   below also neutralises the older hover rules that changed colours, fills, borders or tilt. */
+.tilt::before { display: none; }
+.tilt.reveal.in:hover, .reveal.in.service-card:hover { transform: scale(1.04); transition: transform 0.45s var(--ease), box-shadow 0.45s var(--ease), filter 0.45s var(--ease); }
+.reveal.why-card, .reveal.pclients__card, .reveal.pcaps__item, .reveal.pprice__card, .reveal.vlead__card, .reveal.vmv__card, .reveal.pchips__chip, .reveal.pfaq__item, .reveal.vdetails__item, .reveal.vprod__card, .reveal.mini-card, .reveal.process__step {
+  transition: transform 0.45s var(--ease), box-shadow 0.45s var(--ease), filter 0.45s var(--ease);
+}
+.reveal.svc-card { transition: transform 0.45s var(--ease), filter 0.45s var(--ease); }
+.about__cards.stagger > .mini-card.in:hover, .reveal.in.pchips__chip:hover, .reveal.in.vdetails__item:hover, .reveal.in.process__step:hover { transform: scale(1.04) !important; }
+.reveal.in.pfaq__item:hover, .reveal.in.vprod__card:hover, .pprice .reveal.in.pprice__card--wide:hover { transform: scale(1.02); }
+/* deeper shadows (shape-following) */
+.reveal.in.svc-card:hover { filter: drop-shadow(0 20px 28px rgba(0, 38, 115, 0.2)) drop-shadow(0 0 1px rgba(0, 38, 115, 0.3)); }
+.reveal.in.vmv__card:hover { filter: drop-shadow(0 22px 32px rgba(0, 38, 115, 0.22)) drop-shadow(0 0 1px rgba(0, 38, 115, 0.3)); }
+.why__grid .reveal.in.why-card:hover, .reveal.in.pcaps__item:hover, .reveal.in.pclients__card:hover, .reveal.in.vlead__card:hover, .reveal.in.mini-card:hover, .reveal.in.process__step:hover, .reveal.in.pfaq__item:hover { box-shadow: 0 24px 44px -22px rgba(0, 38, 115, 0.4); }
+.pprice .reveal.pprice__card:hover { box-shadow: 0 26px 50px -18px rgba(0, 38, 115, 0.4); }
+/* neutralise colour / fill / border changes from the older hover rules */
+.why__grid .reveal.why-card:hover, .reveal.pclients__card:hover, .reveal.pcaps__item:hover { border-color: transparent; }
+.reveal.pfaq__item:hover { border-color: transparent; }
+.reveal.pchips__chip:hover { background: #fff; color: var(--navy); border-color: transparent; box-shadow: 0 12px 24px -14px rgba(0, 38, 115, 0.5); }
+.reveal.in.vdetails__item:hover { background: rgba(255, 255, 255, 0.06); border-color: rgba(255, 255, 255, 0.1); }
+.reveal.mini-card:hover::before { opacity: 0; }
+.service-card:hover .service-card__media::after, .reveal.pclients__card:hover .pclients__shine, .reveal.vlead__card:hover::before { transform: translateX(-100%); }
+.service-card:hover .round-btn { background: transparent; border-color: var(--border); color: var(--navy); }
+.reveal.in.vlead__card:hover .vlead__role { background: var(--orange-50); color: var(--orange); }
+.reveal.in.vlead__card:hover .vlead__ring { animation-duration: 4s; }
+.reveal.process__step:hover .process__no { color: #dbe5f7; }
+.reveal.process__step--orange:hover .process__no { color: #fde0d1; }
+.reveal.process__step:hover .process__corner { width: 56px; height: 56px; }
+.reveal.pcaps__item:hover .pcaps__chev { color: var(--muted); }
+.team__tags li:hover { border-color: var(--border); }
+/* icons: a small zoom, same colours */
+.reveal.mini-card:hover .icon-box, .reveal.why-card:hover .icon-box, .reveal.svc-card:hover .icon-box, .reveal.process__step:hover .icon-box { transform: scale(1.1); }
+.reveal.svc-card:hover .icon-box { background: var(--blue-50); color: var(--navy); }
+.reveal.pcaps__item:hover .pcaps__icon { transform: scale(1.1); background: var(--blue-50); color: #2689ef; }
+.reveal.pcaps__item:nth-child(3n + 2):hover .pcaps__icon { background: var(--orange-50); color: var(--orange); }
+.reveal.pcaps__item:nth-child(3n):hover .pcaps__icon { background: #efe9ff; color: #7c3aed; }
+.reveal.vmv__card:hover .vmv__icon { transform: scale(1.1); box-shadow: none; }
+.reveal.vprod__card:hover .vprod__icon { transform: scale(1.08); background: linear-gradient(135deg, var(--navy), #1d4fb8); }
+.veco__list li:hover .icon-box.icon-box { background: var(--blue-50); color: var(--navy); }
+.pjourney .pjourney__step:hover .pjourney__icon { transform: scale(1.1); background: #fff; box-shadow: var(--shadow); }
+.pjourney .pjourney__step--orange:hover .pjourney__icon { background: #fff; }
+.pjourney .pjourney__step { transition: transform 0.45s var(--ease); }
+.pjourney.in .pjourney__step:hover { transform: scale(1.04); }
+
+/* ================= Borders: only the home Why Choose and Industries cards =================
+   Every other card has no border lines (its shape, soft shadow and zoom-only hover stay). The two
+   home sections get a navy → blue → orange stroke that follows their shape and shimmers slowly; it
+   never changes on hover. Why Choose: a gradient ring on a free pseudo-element, cut down to 1.6px
+   with mask-composite so it follows the asymmetric radius. Industries (cut-corner cards): a gradient
+   chamfer shape plus a white face inset by 1.6px, so the stroke runs parallel to the cuts. */
+@keyframes bdShift { from { background-position: 0% 0%; } to { background-position: 100% 100%; } }
+/* no border lines on any other card */
+.reveal.why-card, .reveal.service-card, .reveal.pclients__card, .reveal.pcaps__item, .reveal.pchips__chip, .reveal.vprod__card, .reveal.vlead__card,
+.reveal.pfaq__item, .reveal.pfaq__item.open, .reveal.vdetails__item, .pprice .reveal.pprice__card, .hero__stats .hero__stat { border-color: transparent; }
+.pprice .reveal.pprice__card--featured { background: #fff; }
+/* home Why Choose: gradient ring */
+.why__grid .reveal.why-card { position: relative; }
+.why__grid .reveal.why-card::before {
+  content: ''; display: block; position: absolute; inset: 0; z-index: 3; border-radius: inherit; padding: 1.6px; pointer-events: none; opacity: 1; transform: none;
+  background: linear-gradient(135deg, var(--navy), #2f6fe0 30%, var(--orange) 65%, #ffb38a 82%, var(--navy)) 0 0 / 250% 250%;
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite: xor; mask-composite: exclude;
+  animation: bdShift 7s ease-in-out infinite alternate;
+}
+/* cut-corner cards (all pages): a white chamfer face drawn by the pseudo pair; only the home
+   Industries cards turn the outer layer into a gradient stroke */
+.svc-card.reveal, .vmv__card.reveal { background: none; isolation: isolate; }
+.svc-card.reveal > *, .vmv__card.reveal > * { position: relative; z-index: 1; }
+.svc-card.reveal::before, .svc-card.reveal::after, .vmv__card.reveal::before, .vmv__card.reveal::after {
+  content: ''; display: block; position: absolute; z-index: 0; width: auto; height: auto; border-radius: inherit; pointer-events: none; opacity: 1; transform: none;
+}
+.svc-card.reveal::before, .vmv__card.reveal::before { inset: 0; --c: var(--cut); background: #fff; }
+.svc-card.reveal::after, .vmv__card.reveal::after { inset: 1.6px; --c: calc(var(--cut) - 0.7px); background: #fff; }
+.site-main > .section .svc-card.reveal::before { background: linear-gradient(135deg, var(--navy), #2f6fe0 32%, var(--orange) 68%, #ffb38a) 0 0 / 250% 250%; animation: bdShift 7s ease-in-out infinite alternate; }
+.svc-card.reveal::before, .svc-card.reveal::after {
+  -webkit-mask: linear-gradient(#000 0 0) top left / 51% 51% no-repeat, linear-gradient(225deg, transparent var(--c), #000 calc(var(--c) + 0.5px)) top right / 51% 51% no-repeat, linear-gradient(#000 0 0) bottom right / 51% 51% no-repeat, linear-gradient(45deg, transparent var(--c), #000 calc(var(--c) + 0.5px)) bottom left / 51% 51% no-repeat;
+  mask: linear-gradient(#000 0 0) top left / 51% 51% no-repeat, linear-gradient(225deg, transparent var(--c), #000 calc(var(--c) + 0.5px)) top right / 51% 51% no-repeat, linear-gradient(#000 0 0) bottom right / 51% 51% no-repeat, linear-gradient(45deg, transparent var(--c), #000 calc(var(--c) + 0.5px)) bottom left / 51% 51% no-repeat;
+}
+.vmv__card.reveal::before, .vmv__card.reveal::after {
+  -webkit-mask: linear-gradient(135deg, transparent var(--c), #000 calc(var(--c) + 0.5px)) top left / 51% 51% no-repeat, linear-gradient(#000 0 0) top right / 51% 51% no-repeat, linear-gradient(315deg, transparent var(--c), #000 calc(var(--c) + 0.5px)) bottom right / 51% 51% no-repeat, linear-gradient(#000 0 0) bottom left / 51% 51% no-repeat;
+  mask: linear-gradient(135deg, transparent var(--c), #000 calc(var(--c) + 0.5px)) top left / 51% 51% no-repeat, linear-gradient(#000 0 0) top right / 51% 51% no-repeat, linear-gradient(315deg, transparent var(--c), #000 calc(var(--c) + 0.5px)) bottom right / 51% 51% no-repeat, linear-gradient(#000 0 0) bottom left / 51% 51% no-repeat;
+}
+/* soft shape-following shadows (no outline); the home Industries cards add a faint orange glow */
+.svc-card.reveal { filter: drop-shadow(0 10px 18px rgba(0, 38, 115, 0.14)); }
+.vmv__card.reveal { filter: drop-shadow(0 12px 22px rgba(0, 38, 115, 0.15)); }
+.reveal.in.svc-card:hover { filter: drop-shadow(0 20px 28px rgba(0, 38, 115, 0.2)); }
+.reveal.in.vmv__card:hover { filter: drop-shadow(0 22px 32px rgba(0, 38, 115, 0.22)); }
+.site-main > .section .svc-card.reveal { filter: drop-shadow(0 10px 18px rgba(0, 38, 115, 0.14)) drop-shadow(0 0 5px rgba(231, 81, 12, 0.12)); }
+.site-main > .section .reveal.in.svc-card:hover { filter: drop-shadow(0 20px 28px rgba(0, 38, 115, 0.2)) drop-shadow(0 0 5px rgba(231, 81, 12, 0.12)); }
+
+/* ================= Header "Get in Touch" button =================
+   Same asymmetric shape as the cards, a dashed inner outline, an idle light sweep and a soft pulsing
+   glow ring. Hover: smooth zoom with the arrow nudging diagonally; press: a quick squeeze down. */
+@keyframes ctaShine { 0%, 55% { transform: translateX(-130%) skewX(-20deg); } 85%, 100% { transform: translateX(130%) skewX(-20deg); } }
+@keyframes ctaPulse { 0% { box-shadow: 0 12px 26px -10px rgba(231, 81, 12, 0.6), 0 0 0 0 rgba(231, 81, 12, 0.45); } 70%, 100% { box-shadow: 0 12px 26px -10px rgba(231, 81, 12, 0.6), 0 0 0 11px rgba(231, 81, 12, 0); } }
+@keyframes arrowNudge { 50% { translate: 3px -3px; } }
+@keyframes chatBob { 50% { translate: 0 -2px; } }
+.btn.header__cta, .btn.nav__cta-mobile {
+  border-radius: 18px 4px 18px 4px; border: 0; padding: 12px 22px;
+  background: linear-gradient(135deg, #ff6a2b, var(--orange) 55%, #c9450a);
+  animation: ctaPulse 2.6s ease-out infinite; transition: transform 0.35s var(--ease);
+}
+.btn.header__cta::before, .btn.nav__cta-mobile::before { content: ''; position: absolute; inset: 3px; border-radius: 15px 2px 15px 2px; border: 1px dashed rgba(255, 255, 255, 0.5); pointer-events: none; }
+.btn.header__cta::after, .btn.nav__cta-mobile::after { background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.5), transparent); transition: none; animation: ctaShine 4.2s ease-in-out infinite; }
+.btn.header__cta svg:first-child, .btn.nav__cta-mobile svg { animation: chatBob 2.4s ease-in-out infinite; }
+.btn.header__cta:hover, .btn.nav__cta-mobile:hover { transform: scale(1.06); background: linear-gradient(135deg, #ff6a2b, var(--orange) 55%, #c9450a); }
+.btn.header__cta:hover svg:last-child { transform: none; animation: arrowNudge 0.8s ease-in-out infinite; }
+.btn.header__cta:active, .btn.nav__cta-mobile:active { transform: scale(0.95); transition-duration: 0.1s; }
+.btn.header__cta:focus-visible, .btn.nav__cta-mobile:focus-visible { outline: 3px solid rgba(0, 38, 115, 0.6); outline-offset: 3px; }
+
+/* ---------- Other card details (not hover) ---------- */
+.why-card.in .icon-box, .svc-card.in .icon-box, .pcaps__item.in .pcaps__icon, .vmv__card.in .vmv__icon { animation: iconBob 3.6s ease-in-out infinite; animation-delay: calc(var(--k, 0) * -0.7s); }
+/* optional one-line description under a capability label */
+.pcaps__item:has(.pcaps__desc) { align-items: flex-start; }
+.pcaps__desc { display: block; margin-top: 3px; font-size: 11.5px; font-weight: 500; line-height: 1.45; color: var(--muted); }
+.pchips__chip i { animation: pulse 2s ease-in-out infinite; }
+/* FAQ: no edge accent line (cards have no border lines; the + icon shows open/closed) */
+.pfaq__item.reveal { position: relative; }
+.pfaq__item::before { display: none; }
+.vprod__card.reveal.done { clip-path: none; }
+/* price ribbon: a still navy gradient (the first layer is a parked shine, kept off-screen) */
+.pprice__card > * { position: relative; }
+.pprice__card .pprice__price { background-image: linear-gradient(110deg, transparent 40%, rgba(255, 255, 255, 0.25) 50%, transparent 60%), linear-gradient(120deg, var(--navy-900), var(--navy)); background-size: 250% 100%, 100% 100%; background-repeat: no-repeat; background-position: 200% 0, 0 0; }
+/* enquiry and brochure banners lift and settle */
+.penq.reveal:not(.in), .pbroch.reveal:not(.in) { transform: translateY(50px) scale(0.97); }
+
+/* ---------- Hero stats (expertise strip + home hero) ----------
+   Each stat flips up in 3D one after another (numbers keep the plain CountUp), a ring draws itself
+   round the icon while the number counts, and a thin gradient divider grows over the original
+   border between stats. Layout is unchanged. Hover: zoom only. */
+@property --ring { syntax: '<angle>'; initial-value: 0deg; inherits: false; }
+@keyframes ringDraw { from { --ring: 0deg; } to { --ring: 360deg; } }
+@keyframes divGrow { from { transform: scaleY(0); } }
+@keyframes statFlip { from { opacity: 0; transform: perspective(700px) translateY(30px) rotateX(90deg); transform-origin: 50% 100%; } 55% { opacity: 1; } to { opacity: 1; transform: perspective(700px) translateY(0) rotateX(0deg); transform-origin: 50% 100%; } }
+.pstats .pstats__card {
+  position: relative; overflow: hidden; border: 0;
+  background: #fff;
+  animation: statsIn 1s var(--ease) 0.2s both;
+}
+@keyframes statsIn { from { opacity: 0; transform: perspective(1000px) translateY(40px) rotateX(-20deg); } to { opacity: 1; transform: perspective(1000px) translateY(0) rotateX(0deg); } }
+.pstats__sweep { display: none; }
+.pstats .pstats__item { position: relative; z-index: 1; --delay: calc(var(--i, 0) * 0.22s + 0.55s); }
+.pstats .pstats__item.reveal.in { animation: statFlip 0.9s var(--ease) backwards; animation-delay: calc(var(--i, 0) * 0.22s + 0.35s); }
+.pstats .pstats__item.done { transition: transform 0.45s var(--ease); }
+.pstats .pstats__item.in:hover { transform: scale(1.06); }
+.pstats__item::after { content: ''; position: absolute; right: -1px; top: 12%; bottom: 12%; width: 2px; border-radius: 2px; background: linear-gradient(transparent, var(--orange), var(--navy), transparent); transform: scaleY(0); }
+.pstats__item.in::after { transform: none; animation: divGrow 0.8s var(--ease) backwards; animation-delay: calc(var(--delay) + 0.3s); }
+.pstats__item:last-child::after { display: none; }
+.pstats__icon { position: relative; display: inline-grid; place-items: center; width: 42px; height: 42px; margin-bottom: 6px; border-radius: 50%; background: var(--blue-50); color: var(--navy); opacity: 0; transition: transform 0.45s var(--ease); }
+.pstats__item:nth-child(odd) .pstats__icon { background: var(--orange-50); color: var(--orange); }
+.pstats__item.in .pstats__icon { opacity: 1; animation: d3Pop 0.8s var(--ease) backwards; animation-delay: var(--delay); }
+.pstats__icon::before { content: ''; position: absolute; inset: -5px; border-radius: 50%; pointer-events: none; background: conic-gradient(var(--orange) var(--ring), transparent 0); -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 2.5px), #000 calc(100% - 2px)); mask: radial-gradient(farthest-side, transparent calc(100% - 2.5px), #000 calc(100% - 2px)); }
+.pstats__item:nth-child(odd) .pstats__icon::before { background: conic-gradient(var(--navy) var(--ring), transparent 0); }
+.pstats__item.in .pstats__icon::before { animation: ringDraw 1.8s cubic-bezier(0.18, 0.9, 0.22, 1) both; animation-delay: var(--delay); }
+.pstats__item:hover .pstats__icon { transform: scale(1.12); }
+.pstats__bar { display: block; width: 46px; height: 3px; margin: 8px auto 0; border-radius: 3px; background: var(--border); overflow: hidden; }
+.pstats__bar::after { content: ''; display: block; height: 100%; background: linear-gradient(90deg, var(--navy), var(--orange), #ffb38a, var(--navy)); transform: scaleX(0); transform-origin: left; }
+.pstats__item.in .pstats__bar::after { transform: none; animation: barFill 1.4s var(--ease) backwards; animation-delay: calc(var(--delay) + 0.4s); }
+/* home hero stats: the same 3D flip-up, one after another (replaces the old blur-in + idle float) */
+.hero__stats .hero__stat:nth-child(n) { animation: statFlip 0.9s var(--ease) backwards; animation-delay: calc(var(--d, 0) * 0.14s + 0.1s); }
+.hero__stats .hero__stat:hover { transform: scale(1.06); border-color: rgba(255, 255, 255, 0.18); background: rgba(0, 26, 82, 0.62); }
+
+@media (max-width: 640px) {
+  /* two stats per row (.pstats__sweep is child 1, so stats start at child 2) */
+  .pstats .pstats__item:nth-child(2) { border-right: 1px solid var(--border); }
+  .pstats .pstats__item:nth-child(3) { border-right: 0; }
+  .pstats .pstats__item:nth-child(3)::after { display: none; }
+  .svc-card.reveal { --cut: 20px; }
+  .vlead__card { border-radius: 90px 90px 22px 22px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  /* a plain fade instead of any 3D motion; hover zoom is dropped too */
+  .reveal.in, .hero__stats .hero__stat:nth-child(n), .pjourney.in .pjourney__step { animation: fadeOnly 0.5s ease backwards !important; }
+  .reveal.in *, .reveal.in::after, .mini-card__shine::before, .pstats__card, .pstats__card *::after, .pjourney.in .pjourney__step * { animation: none !important; }
+  .reveal.in:hover, .hero__stats .hero__stat:hover, .pjourney.in .pjourney__step:hover { transform: none !important; }
+  .reveal::before, .reveal::after, .reveal.vlead__card, .btn.header__cta, .btn.header__cta *, .btn.header__cta::after, .btn.nav__cta-mobile, .btn.nav__cta-mobile *, .btn.nav__cta-mobile::after { animation: none !important; }
+  .btn.header__cta:hover, .btn.nav__cta-mobile:hover { transform: none; }
+  .pstats__icon { opacity: 1; }
+  .pstats__icon::before { --ring: 360deg; }
+  .pstats__bar::after, .pstats__item::after { transform: none; }
+  .reveal:not(.in) { transform: none !important; filter: none !important; clip-path: none !important; }
+}
+
+/* ================= Home Why Choose: wave cards =================
+   White top with the icon centred and the title, then a colour panel with a wavy top edge holding
+   the description. Each card has its own gradient; two layered waves (a pale one behind) are SVG
+   masks painted in the panel's top colour. No border; hover stays a plain zoom. */
+.why__grid .reveal.why-card {
+  --w1: #8f6ad6; --w2: #e3a3e8;
+  --wave: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 40' preserveAspectRatio='none'><path d='M0 26 C80 6 150 6 220 20 S340 40 400 18 V40 H0 Z'/></svg>");
+  --wave2: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 40' preserveAspectRatio='none'><path d='M0 14 C60 30 140 34 210 18 S330 0 400 10 V40 H0 Z'/></svg>");
+  display: flex; flex-direction: column; align-items: center; text-align: center;
+  padding: 16px 0 0; border: 0; border-radius: 22px; overflow: hidden; background: #fff;
+  box-shadow: 0 14px 32px -18px rgba(0, 38, 115, 0.35);
+}
+.why__grid .reveal.why-card:nth-child(2) { --w1: #f0553a; --w2: #fbb262; }
+.why__grid .reveal.why-card:nth-child(3) { --w1: #0fb9cc; --w2: #2ee6c4; }
+.why__grid .reveal.why-card:nth-child(4) { --w1: #1d4fb8; --w2: #5aa6ff; }
+.why__grid .reveal.why-card:nth-child(5) { --w1: #e0457b; --w2: #ff9f8a; }
+.why__grid .reveal.why-card::before { display: none; }
+.why__grid .why-card .icon-box { width: 44px; height: 44px; border-radius: 50%; background: none; box-shadow: none; color: var(--w1); }
+.why__grid .why-card .icon-box svg { width: 26px; height: 26px; }
+.why__grid .why-card h3 { margin: 4px 16px 24px; font-size: 15px; color: var(--navy); }
+.why__grid .why-card p { position: relative; flex: 1; align-self: stretch; margin: 0; padding: 14px 18px 16px; background: linear-gradient(180deg, var(--w1), var(--w2)); color: #fff; font-size: 12px; line-height: 1.6; }
+.why__grid .why-card p::before, .why__grid .why-card p::after { content: ''; position: absolute; left: 0; right: 0; bottom: 100%; margin-bottom: -1px; background: var(--w1); pointer-events: none; }
+.why__grid .why-card p::before { height: 34px; opacity: 0.28; -webkit-mask: var(--wave2) center / 100% 100% no-repeat; mask: var(--wave2) center / 100% 100% no-repeat; }
+.why__grid .why-card p::after { height: 26px; -webkit-mask: var(--wave) center / 100% 100% no-repeat; mask: var(--wave) center / 100% 100% no-repeat; }
+.why__grid .reveal.in.why-card:hover { box-shadow: 0 26px 46px -20px rgba(0, 38, 115, 0.42); }
+
+/* ================= Home Industries: curved-gradient cards =================
+   Home only (.site-main > .section). A light grey face sits on a purple → pink gradient; the face is
+   a large ellipse anchored at the bottom-left corner, so the gradient sweeps in as a curve across the
+   top-right. A CSS counter prints the card number in that corner. Icon, title and text are centred.
+   Padding and the icon box keep their original sizes, so the card size is unchanged. No border;
+   hover stays a plain zoom. */
+.site-main > .section .svc-cards { counter-reset: industry; }
+.site-main > .section .svc-card.reveal { counter-increment: industry; border-radius: 8px; text-align: center; filter: drop-shadow(0 12px 22px rgba(0, 38, 115, 0.14)); }
+.site-main > .section .reveal.in.svc-card:hover { filter: drop-shadow(0 22px 30px rgba(0, 38, 115, 0.2)); }
+.site-main > .section .svc-card.reveal::before, .site-main > .section .svc-card.reveal::after { -webkit-mask: none; mask: none; inset: 0; z-index: -1; }
+.site-main > .section .svc-card.reveal::before { background: linear-gradient(200deg, #7b5cf0, #b44fc4 45%, #ec407a) 0 0 / 100% 100%; animation: none; }
+.site-main > .section .svc-card.reveal::after { background: radial-gradient(ellipse 108% 112% at 0% 100%, #f2f3f7 0 99%, transparent calc(99% + 1px)); }
+.site-main > .section .svc-card .icon-box { margin: 0 auto; background: none; box-shadow: none; color: var(--navy); }
+.site-main > .section .svc-card .icon-box svg { width: 34px; height: 34px; }
+.site-main > .section .reveal.svc-card:hover .icon-box { background: none; color: var(--navy); }
+.site-main > .section .svc-card.reveal > h3 { position: static; }
+.site-main > .section .svc-card.reveal > h3::after { content: counter(industry, decimal-leading-zero); position: absolute; z-index: 1; top: 18px; right: 20px; font: 700 13px/1 var(--font-body); color: #fff; letter-spacing: 0.04em; }
+.site-main > .section .svc-card p { color: #6b7487; }
+
+/* ================= Home About: quote-style cards =================
+   A pink → purple → blue band across the top carries the title in white; a white circle holding the
+   icon overlaps the band's lower edge; the description sits below with a faint quote-mark watermark.
+   Each of the four cards has its own corner shape. Animation: the card drifts in, then its band wipes
+   across, the icon circle pops and pulses softly, and the title slides in; the band's gradient keeps
+   flowing slowly. Hover stays a plain zoom (no colour changes). Card padding is kept tight so the
+   height stays close to the original. */
+@keyframes bandIn { from { transform: scaleX(0); } }
+@keyframes bandFlow { from { background-position: 0% 0; } to { background-position: 100% 0; } }
+@keyframes titleIn { from { opacity: 0; transform: translateX(-14px); } }
+@keyframes softPulse { 0% { box-shadow: 0 0 0 0 rgba(169, 112, 196, 0.45), 0 8px 18px -8px rgba(0, 38, 115, 0.35); } 70%, 100% { box-shadow: 0 0 0 10px rgba(169, 112, 196, 0), 0 8px 18px -8px rgba(0, 38, 115, 0.35); } }
+.about__cards .mini-card { --band: 42px; padding: 16px 18px 17px 16px; gap: 14px; }
+.about__cards .mini-card:nth-child(1) { border-radius: 6px; }
+.about__cards .mini-card:nth-child(2) { border-radius: 26px; }
+.about__cards .mini-card:nth-child(3) { border-radius: 6px 6px 34px 34px; }
+.about__cards .mini-card:nth-child(4) { border-radius: 26px 6px 26px 6px; }
+/* gradient band */
+.about__cards .mini-card::before, .about__cards .reveal.mini-card:hover::before {
+  content: ''; position: absolute; left: 0; right: 0; top: 0; inset: 0 0 auto; height: var(--band); border-radius: 0; opacity: 1; pointer-events: none;
+  background: linear-gradient(90deg, #e8178a, #a970c4 35%, #2aa8e0 70%, #e8178a) 0 0 / 200% 100%; transform-origin: left;
+}
+.about__cards .mini-card.in::before { animation: bandIn 0.7s var(--ease) backwards, bandFlow 8s linear infinite; animation-delay: calc(var(--i, 0) * 0.2s + 0.55s), 0s; }
+/* quote-mark watermark */
+.about__cards .mini-card::after { content: '\201C'; position: absolute; right: 12px; bottom: -46px; font: 800 120px/1 Georgia, serif; color: rgba(42, 168, 224, 0.08); pointer-events: none; }
+.about__cards .mini-card > div { position: relative; z-index: 1; }
+/* icon circle overlapping the band */
+.about__cards .mini-card:nth-child(n) .icon-box { position: relative; z-index: 1; width: 50px; height: 50px; margin-top: 2px; border-radius: 50%; background: #fff; color: #c0398f; box-shadow: 0 8px 18px -8px rgba(0, 38, 115, 0.35); }
+.about__cards .mini-card:nth-child(even) .icon-box { color: #2a8fd0; }
+.about__cards .mini-card.in .icon-box { animation: d3Pop 0.7s var(--ease) backwards, softPulse 2.8s ease-out infinite; animation-delay: calc(var(--i, 0) * 0.2s + 0.8s), calc(var(--i, 0) * 0.7s + 1.6s); }
+.about__cards .reveal.mini-card:nth-child(n):hover .icon-box { background: #fff; transform: scale(1.1); }
+.about__cards .reveal.mini-card:nth-child(odd):hover .icon-box { color: #c0398f; }
+.about__cards .reveal.mini-card:nth-child(even):hover .icon-box { color: #2a8fd0; }
+/* title in the band, text below */
+.about__cards .mini-card h3 { min-height: calc(var(--band) - 16px); display: flex; align-items: center; margin: 0 0 8px; color: #fff; font-size: 14px; text-shadow: 0 1px 6px rgba(0, 0, 0, 0.12); }
+.about__cards .mini-card.in h3 { animation: titleIn 0.6s var(--ease) backwards; animation-delay: calc(var(--i, 0) * 0.2s + 0.9s); }
+.about__cards .mini-card p { color: var(--text); }
+@media (prefers-reduced-motion: reduce) {
+  .about__cards .mini-card.in::before, .about__cards .mini-card.in .icon-box, .about__cards .mini-card.in h3 { animation: none !important; }
+}
+
+/* ================= About page cards: brand band style =================
+   Same band-and-circle language as the home About and pricing cards, in the theme navy and orange.
+   The bands are painted inside each card's existing face (the masked ::after layer), so the cut-corner
+   shapes and the card sizes stay exactly as they were. Hover stays a plain zoom. */
+@keyframes bandFlowA { from { background-position: 0% 0, 0 0; } to { background-position: 100% 0, 0 0; } }
+/* "Why choose us" icon cards: band across the top, icon in a white circle on its edge, centred text */
+:is(.service-page--about, .service-page--software-development, .service-page--digital-marketing) .svc-card.reveal { --band-bg: linear-gradient(90deg, #001a52, #1d4fb8 50%, #001a52); --acc: var(--navy); text-align: center; }
+:is(.service-page--about, .service-page--software-development, .service-page--digital-marketing) .svc-card.reveal:nth-child(3n + 2) { --band-bg: linear-gradient(90deg, #c9450a, #ff8a4c 50%, #c9450a); --acc: var(--orange); }
+:is(.service-page--about, .service-page--software-development, .service-page--digital-marketing) .svc-card.reveal:nth-child(3n) { --band-bg: linear-gradient(90deg, #002673, #e7510c 50%, #002673); --acc: var(--navy); }
+:is(.service-page--about, .service-page--software-development, .service-page--digital-marketing) .svc-card.reveal::after { background: var(--band-bg) 0 0 / 200% 60px no-repeat, #fff; animation: bandFlowA 8s linear infinite; }
+:is(.service-page--about, .service-page--software-development, .service-page--digital-marketing) .svc-card .icon-box { margin: 0 auto; border-radius: 50%; background: #fff; color: var(--acc); box-shadow: 0 10px 22px -10px rgba(0, 38, 115, 0.45); }
+:is(.service-page--about, .service-page--software-development, .service-page--digital-marketing) .reveal.svc-card:hover .icon-box { background: #fff; color: var(--acc); }
+:is(.service-page--about, .service-page--software-development, .service-page--digital-marketing) .svc-card.in .icon-box { animation: d3Pop 0.7s var(--ease) backwards, iconBob 3.6s ease-in-out infinite; animation-delay: calc(var(--k, 0) * 0.15s + 0.6s), calc(var(--k, 0) * -0.7s); }
+/* Mission & Vision: number and icon sit on a navy (vision) or orange (mission) band */
+.service-page--about .vmv__card.reveal { --band-bg: linear-gradient(90deg, #001a52, #1d4fb8 50%, #001a52); }
+.service-page--about .vmv__card--orange.reveal { --band-bg: linear-gradient(90deg, #c9450a, #ff8a4c 50%, #c9450a); }
+.service-page--about .vmv__card.reveal::after { background: var(--band-bg) 0 0 / 200% 86px no-repeat, #fff; animation: bandFlowA 8s linear infinite; }
+.service-page--about .vmv__card .vmv__no { color: rgba(255, 255, 255, 0.9); }
+.service-page--about .vmv__card .vmv__icon, .service-page--about .vmv__card--orange .vmv__icon { background: #fff; color: var(--navy); box-shadow: 0 10px 22px -10px rgba(0, 0, 0, 0.35); }
+.service-page--about .vmv__card--orange .vmv__icon { color: var(--orange); }
+.service-page--about .reveal.vmv__card:hover .vmv__icon { background: #fff; }
+/* Leaders: flowing navy → orange header and a faint quote-mark watermark */
+.service-page--about .reveal.vlead__card::before { content: '\201C'; inset: auto 22px -70px auto; z-index: 0; transform: none; background: none; font: 800 170px/1 Georgia, serif; color: rgba(0, 38, 115, 0.06); pointer-events: none; }
+.service-page--about .reveal.vlead__card:hover::before { transform: none; }

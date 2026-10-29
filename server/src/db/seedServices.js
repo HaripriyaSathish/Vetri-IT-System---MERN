@@ -1,5 +1,5 @@
-// "Our Expertise" pages. Website / App / Software content is copied exactly from the live site;
-// Digital Marketing has no live page, so it uses the Digital Marketing SEO content document.
+// "Our Expertise" pages: live-site layout with the copy from the October 2026 SEO content documents
+// (Website, App, Software Development and Digital Marketing).
 // Section keys map to shared section types (see client ServicePage + admin serviceSections).
 const LIVE = '/media';
 const img = (path, alt = '') => ({ url: `${LIVE}/${path}`, public_id: '', type: 'image', alt });
@@ -12,6 +12,8 @@ const STATS = {
     { value: '5+', label: 'Countries Served' },
   ],
 };
+
+const BUDGETS = ['Below ₹5,000', '₹5,000 – ₹15,000', '₹15,000 – ₹50,000', 'Above ₹50,000'];
 
 const JOURNEY = {
   title: 'How We Work',
@@ -62,8 +64,14 @@ const capItems = (list) => list.map(([icon, label]) => ({ icon, label }));
 export const servicePageMeta = {
   'graphic-designing': { meta_title: 'Graphic Designing | Vetri IT Systems Private Limited', meta_description: 'Graphic design services from Vetri IT Systems: logos, branding, social media creatives, brochures and marketing designs.' },
   'website-development': { meta_title: 'Website Development | Vetri IT Systems Private Limited', meta_description: 'Website Development — custom digital solutions from Vetri IT Systems Private Limited.' },
-  'app-development': { meta_title: 'App Development | Vetri IT Systems Private Limited', meta_description: 'App Development — custom digital solutions from Vetri IT Systems Private Limited.' },
-  'software-development': { meta_title: 'Software Development | Vetri IT Systems Private Limited', meta_description: 'Software Development — custom digital solutions from Vetri IT Systems Private Limited.' },
+  'app-development': {
+    meta_title: 'Mobile App Development Company | Vetri IT Systems',
+    meta_description: 'Vetri IT Systems builds custom Android business and e-commerce apps with clear pricing. Packages from ₹9,999 + GST. Explore options and get a quote.',
+  },
+  'software-development': {
+    meta_title: 'Software Development Services | Vetri IT Systems',
+    meta_description: 'Vetri IT Systems is a software development Services offering custom software, GST billing software and business management software. Get a quote.',
+  },
   'digital-marketing': {
     meta_title: 'Digital Marketing Services | Vetri IT Systems',
     meta_description: 'Vetri IT Systems offers SEO, social media marketing, Google Ads and content marketing to help businesses improve online visibility and generate enquiries.',
@@ -475,43 +483,172 @@ export const servicePages = {
     {
       key: 'hero', label: 'Hero Banner',
       content: {
-        title: 'Transforming Ideas into Enterprise-Grade Digital Reality', highlight: '', align: 'center',
-        description: 'We design, build, and scale custom web platforms, mobile apps, and enterprise cloud software that power measurable commercial growth.',
-        image: img('sections/Appbg.png', 'Transforming Ideas into Enterprise-Grade Digital Reality'),
-        button: { text: '', link: '' },
+        title: 'Your App Idea. Our Expertise. Your Next Big Move.', highlight: 'Your Next Big Move.', align: 'center',
+        description: 'We are an app development company that designs and builds custom mobile apps around your business, with web and app development under one team. Your business, in every customer’s pocket.',
+        image: img('sections/Appbg.png', 'Mobile app development team designing a custom Android business app'),
+        button: { text: 'Get a Quote and Explore Packages', link: '#packages' },
       },
     },
     { key: 'stats', label: 'Stats', content: STATS },
     {
-      key: 'clients', label: 'Our Clients',
+      key: 'services', label: 'Our Services',
       content: {
-        eyebrow: '/ Project Showcase', title: 'Our Clients', highlight: 'Clients',
+        eyebrow: 'Our Services', title: 'From Business Ideas to Powerful Custom Mobile Apps', highlight: 'Powerful Custom Mobile Apps',
+        description: 'From a simple business app to a full e-commerce store, we deliver mobile application development that is designed around your customers and built to bring you enquiries.',
         items: [
-          { image: img('reference/app-project-1.jpg', 'QUICKRETAIL POS'), name: 'QUICKRETAIL POS', location: '', category: 'Mobile Commerce', description: 'Sub-second checkout mobile POS with 42% order speed lift.', link: '' },
-          { image: img('reference/app-project-2.jpg', 'MEDPULSE TELEHEALTH'), name: 'MEDPULSE TELEHEALTH', location: '', category: 'Digital Healthcare', description: 'HIPAA-compliant telemedicine app serving 120,000+ monthly patients.', link: '' },
+          { icon: 'Smartphone', title: 'Android App Development', description: 'Custom Android apps built for the Google Play Store and for the phones your customers already use.' },
+          { icon: 'Briefcase', title: 'Custom Business Apps', description: 'A fully customised app for your business with your services, products, enquiry form, contact options and location in one place.' },
+          { icon: 'ShoppingCart', title: 'E-Commerce Mobile Apps', description: 'Product catalogue, categories, search, cart, order enquiry via WhatsApp and a web admin panel to manage your products.' },
+          { icon: 'Calendar', title: 'Business & Productivity Apps', description: 'Booking, enquiry and task tracking app solutions built around how your team and customers work.' },
+          { icon: 'PenTool', title: 'Mobile UI/UX Design', description: 'Mobile UI UX design that is clean, simple to use and matched to your brand, never copied from a template.' },
+          { icon: 'Rocket', title: 'Deployment & Support', description: 'Device testing, Google Play Store listing setup and support after launch.' },
         ],
       },
     },
-    { key: 'journey', label: 'How We Work', content: JOURNEY },
+    {
+      key: 'packages', label: 'Package Details',
+      content: {
+        eyebrow: 'App Development Packages', title: 'The Right App. The Right Starting Point.', highlight: 'The Right Starting Point.',
+        description: 'Choose the right plan for your business. One clear price, no surprises, and a custom Android app designed around your business.',
+        plans: [
+          {
+            tag: '2-Week Delivery', name: 'Custom Business Mobile App', subtitle: 'PACKAGE 1',
+            description: 'Your business, in every customer’s pocket. A fully customised Android app designed and built around your business, not copied from a template.',
+            price: '₹9,999 + GST', price_note: 'Delivery: 2 weeks to a ready-to-use app',
+            features: [
+              'Custom-built business mobile app for Android phones', 'Customised UI/UX design, no generic template-based design', 'App icon and splash screen with your logo',
+              'Enquiry and contact actions: Call, WhatsApp, Email, Map and Enquire', 'Google Maps integration', 'Client-provided content integrated (your text, images and details)',
+              'Device testing on multiple Android devices', 'Deployment included, with Google Play Store listing setup and support',
+            ],
+            benefits: ['Business Introduction', 'Products & Services', 'About Your Business', 'Why Choose Us', 'Customer Enquiry Form', 'Contact Information', 'Location Integration', 'Call-to-Action Buttons'],
+            note: 'Best for: local businesses, startups, service businesses, shops and stores, consultants, restaurants and cafés, clinics and healthcare, real estate and many other businesses. Good to know: ₹9,999 is exclusive of GST. Google Play Store publishing fees, if applicable, are separate.',
+            button_text: 'Get This Package', button_link: '#enquiry', secondary_text: 'Download Brochure', secondary_link: '#brochure', featured: true,
+          },
+          {
+            tag: 'Online Store Ready', name: 'E-Commerce Mobile App', subtitle: 'PACKAGE 2',
+            description: 'Your products. Your app. Your customers. A customised e-commerce Android app to showcase your products, receive customer enquiries and build a direct digital presence.',
+            price: '₹19,999 + GST', price_note: 'Starting price · Delivery: 30–45 working days from design approval and receipt of content · Payment: 50% advance to start, 50% before final delivery',
+            features: [
+              'Android mobile app', 'Customised UI/UX design (up to 2 design revisions)', 'Product categories and product search', 'Up to 25 products with images, details and price display',
+              'Add to cart and send order enquiry via WhatsApp', 'Customer login / registration', 'Customer enquiry, Call and WhatsApp integration', 'Customer address / delivery details',
+              'App icon and splash screen', 'Device testing', 'Basic web admin panel to manage products, categories, images, prices, banners and enquiries', 'Backend / server setup',
+              '1 year backend / server support (fair usage)', 'Play Store support', '1 month free bug-fix support after launch (new features are chargeable)',
+              'No online payment gateway integration (quoted separately)', 'No order management system (status updates, invoices)', 'No inventory / stock management', 'No delivery tracking',
+              'No coupon and discount system', 'No multiple admin roles', 'No advanced sales reports', 'No separate admin mobile app', 'No custom e-commerce workflows',
+            ],
+            benefits: ['Up to 25 Products', 'Cart & WhatsApp Orders', 'Web Admin Panel', '1 Year Backend Support'],
+            note: 'Product limit: the package covers setup and display of up to 25 products. Additional products or advanced e-commerce requirements are quoted separately. Best for: retail shops, fashion and clothing, jewellery, home and lifestyle stores, beauty and personal care, small product businesses, local e-commerce businesses, startups and new brands. Good to know: Google Play account fees, domain, SMS / WhatsApp API and other third-party charges are borne by the client. Server hosting after the first year is chargeable. Terms and conditions apply.',
+            button_text: 'Get This Package', button_link: '#enquiry', secondary_text: 'Download Brochure', secondary_link: '#brochure',
+          },
+        ],
+      },
+    },
+    {
+      key: 'why', label: 'Why Choose Us',
+      content: {
+        eyebrow: 'Why Choose Vetri IT Systems?', title: 'Built Around Your Business. Never Just a Template.', highlight: 'Never Just a Template.',
+        description: 'Get a custom-designed Android app with clear package scope, practical features and deployment support.',
+        items: [
+          { icon: 'Palette', title: 'Customised Design', description: 'Designed around your business and requirements, not a one-size-fits-all layout.' },
+          { icon: 'LayoutTemplate', title: 'No Generic Templates', description: 'We never drop your content into a recycled template.' },
+          { icon: 'Smartphone', title: 'Mobile-First Experience', description: 'Smooth, fast and easy to use on everyday smartphones.' },
+          { icon: 'MessageCircle', title: 'Enquiry-Focused', description: 'Call, WhatsApp, Email and Map actions built in from day one.' },
+          { icon: 'Timer', title: 'Quick Delivery', description: 'Your business app is ready in 2 weeks.' },
+          { icon: 'Rocket', title: 'Complete Deployment', description: 'Device testing and deployment included, end to end.' },
+          { icon: 'BadgeIndianRupee', title: 'One Clear Price', description: 'No hidden charges, with clear package scope.' },
+        ],
+      },
+    },
+    {
+      key: 'clients', label: 'Our Portfolio',
+      content: {
+        eyebrow: 'Our Portfolio', title: 'Mobile Apps Built by Our App Developers', highlight: 'Our App Developers',
+        description: 'Our mobile app developers build custom Android applications for businesses, from enquiry-focused business apps to product-based e-commerce apps.',
+        items: [
+          { image: img('reference/app-project-1.jpg', 'QuickRetail POS mobile app showing shopping cart and barcode scanning'), name: 'QUICKRETAIL POS', location: '', category: 'Mobile Commerce', description: 'Sub-second checkout mobile POS with 42% order speed lift.', link: '' },
+          { image: img('reference/app-project-2.jpg', 'MedPulse Telehealth mobile app showing consultation and health vitals'), name: 'MEDPULSE TELEHEALTH', location: '', category: 'Digital Healthcare', description: 'HIPAA-compliant telemedicine app serving 120,000+ monthly patients.', link: '' },
+        ],
+      },
+    },
+    {
+      key: 'journey', label: 'Our Process',
+      content: {
+        eyebrow: 'Our Process', title: 'Our Mobile Application Development Process', highlight: 'Development Process',
+        description: 'A clear five-step process takes your app from discovery and design through development, testing and launch.',
+        steps: [
+          { icon: 'Lightbulb', title: 'Discover', description: 'Share your business details, content and images, and tell us your goals and audience.' },
+          { icon: 'PenTool', title: 'Design', description: 'We create a customised mobile UI UX design with wireframes and visual screens, which you review and approve.' },
+          { icon: 'Code2', title: 'Develop', description: 'We build your mobile app with clean, fast code and regular progress updates.' },
+          { icon: 'ClipboardCheck', title: 'Test', description: 'We test every feature on multiple Android devices before release.' },
+          { icon: 'Rocket', title: 'Launch', description: 'Your app is deployed on Google Play Store and ready for customers.' },
+        ],
+      },
+    },
     {
       key: 'capabilities', label: 'Capabilities',
       content: {
-        title: 'Capabilities', highlight: '', variant: 'app',
-        items: capItems([
-          ['Apple', 'iOS Native (Swift)'], ['Smartphone', 'Android (Kotlin)'], ['Layers', 'Flutter Cross-Platform'], ['Atom', 'React Native'],
-          ['WifiOff', 'Offline-First SQLite'], ['Bell', 'Push Notifications (FCM/APNs)'], ['Fingerprint', 'Biometric Auth (Face / Touch ID)'],
-          ['Wallet', 'Razorpay / UPI Integration'], ['Radio', 'Real-time WebSockets'], ['MapPin', 'Mapbox & Live GPS'], ['Bluetooth', 'Bluetooth BLE Sync'],
-          ['Store', 'App Store Optimization (ASO)'], ['Zap', '60 FPS Micro-Interactions'],
-        ]),
+        eyebrow: 'Capabilities', title: 'What Can Your Android App Do?', highlight: 'Your Android App',
+        description: 'From customer enquiries and product catalogues to integrations and admin panels, we build features around your needs.',
+        variant: 'app',
+        items: [
+          { icon: 'Smartphone', label: 'Android (Kotlin)', description: 'Android app development and native app development for fast, smooth performance.' },
+          { icon: 'WifiOff', label: 'Offline-First SQLite', description: 'Apps that keep working with weak or no internet.' },
+          { icon: 'Bell', label: 'Push Notifications (FCM)', description: 'Send offers and updates straight to your customers’ phones.' },
+          { icon: 'Fingerprint', label: 'Biometric Auth', description: 'Face and fingerprint sign-in for secure access.' },
+          { icon: 'Wallet', label: 'Razorpay / UPI Integration', description: 'Payment options for apps that need online payments (quoted separately for packages).' },
+          { icon: 'Radio', label: 'Real-time WebSockets', description: 'Live updates for chats, orders and tracking.' },
+          { icon: 'MapPin', label: 'Mapbox & Live GPS', description: 'Maps, location and tracking features.' },
+          { icon: 'Bluetooth', label: 'Bluetooth BLE Sync', description: 'Connect your app with Bluetooth devices.' },
+          { icon: 'Store', label: 'Play Store Optimization', description: 'Help your app get found on Google Play.' },
+          { icon: 'Zap', label: '60 FPS Micro-Interactions', description: '' },
+          { icon: 'Palette', label: 'UI/UX Design Services', description: 'UI UX design services that keep every screen simple, clear and on brand.' },
+        ],
         stats: [{ value: '100+', label: 'Apps Delivered' }, { value: '99.9%', label: 'Uptime' }, { value: '50+', label: 'Happy Clients' }, { value: '24/7', label: 'Support' }],
       },
     },
     {
-      key: 'cta', label: 'Call To Action',
+      key: 'tools', label: 'Technologies We Use',
       content: {
-        eyebrow: 'Let’s Collaborate', title: 'YOUR NEXT BIG IDEA BELONGS IN AN APP', subtitle: 'Bring Your App Idea to Life.',
-        description: 'We build mobile experiences that feel natural, perform reliably, and help your business connect with customers.',
-        image: img('reference/app-cta.png', ''), primary_button: { text: 'Build Your App', link: '/contact' }, secondary_button: { text: '', link: '' },
+        eyebrow: 'Technologies We Use', title: 'The Technology Behind Your App', highlight: 'Your App',
+        description: 'We use suitable development tools, platforms and services to build, test, deploy and support Android applications.',
+        items: ['Kotlin', 'Flutter', 'React Native', 'SQLite', 'Firebase Cloud Messaging'],
+      },
+    },
+    {
+      key: 'industries', label: 'Industries We Serve',
+      content: {
+        eyebrow: 'Industries We Serve', title: 'Mobile App Developed for the Way Your Industry Works', highlight: 'Your Industry Works',
+        description: 'Custom Android app solutions for retailers, startups, service businesses and other industries across Tamil Nadu.',
+        items: ['Local Businesses', 'Startups', 'Service Businesses', 'Shops & Stores', 'Consultants & Professionals', 'Restaurants & Cafés', 'Clinics & Healthcare', 'Real Estate', 'Retail & Fashion', 'Jewellery', 'Beauty & Personal Care'],
+      },
+    },
+    {
+      key: 'faq', label: 'FAQs',
+      content: {
+        title: 'Your App Development Questions, Answered', highlight: 'Questions, Answered',
+        items: [
+          { question: 'Which mobile app development company should I choose for my business?', answer: 'Choose one that designs around your business and includes testing and deployment. Vetri IT Systems builds custom Android apps with clear pricing and no generic templates, so you know what you get.' },
+          { question: 'How much does mobile app development cost?', answer: 'Our Custom Business Mobile App package is ₹9,999 + GST, and our E-Commerce Mobile App starts at ₹19,999 + GST. Advanced features are quoted separately.' },
+          { question: 'How fast will my app be ready?', answer: 'The Custom Business Mobile App is ready in 2 weeks. The E-Commerce Mobile App takes 30–45 working days from design approval and receipt of content.' },
+          { question: 'Do I need to provide content?', answer: 'Yes. You share your business content, images and details, and we design and build the app around them.' },
+          { question: 'Is this a template-based app?', answer: 'No. Your app is custom designed around your business. We never simply drop your content into a recycled template.' },
+          { question: 'Is GST included in the price?', answer: 'No. The package prices are exclusive of GST.' },
+          { question: 'Can I publish the app on Google Play Store?', answer: 'Yes. We provide Google Play Store listing setup and deployment support for your Android app. Google Play publishing fees, if applicable, are separate.' },
+          { question: 'How many products can I add in the e-commerce app?', answer: 'The package supports up to 25 products. Additional products are quoted separately.' },
+          { question: 'Is an admin panel included?', answer: 'Yes. A basic web admin panel is included to manage products, categories, images, prices, banners and enquiries. A separate admin mobile app can be added as an extra.' },
+        ],
+      },
+    },
+    {
+      key: 'enquiry', label: 'Final CTA & Enquiry Form',
+      content: {
+        title: 'Have an App Idea? Let’s Make It Happen. Bring Your App Idea to Life with Our App Development Team', highlight: 'Let’s Make It Happen.',
+        description: 'Looking for app development, a mobile development company you can trust or a custom Android app for your business? Tell us your requirement and we will help you choose the right package.',
+        image: img('reference/app-cta.png', 'App developers collaborating on a mobile app idea'),
+        requirements: ['Custom Business Mobile App', 'E-Commerce Mobile App', 'Custom App Requirement', 'Other'],
+        budgets: BUDGETS,
+        button_text: 'Build Your App', whatsapp_text: 'WhatsApp Us',
+        success_message: 'Thank you! Our team will contact you shortly.',
       },
     },
   ],
@@ -520,42 +657,133 @@ export const servicePages = {
     {
       key: 'hero', label: 'Hero Banner',
       content: {
-        title: 'Transforming Business Operations into High-Throughput Custom Software', highlight: '', align: 'left',
-        description: 'We architect, engineer, and scale custom ERPs, cloud platforms, automated billing engines, and robust business systems built for zero downtime and measurable commercial growth.',
-        image: img('sections/softbg.png', 'Transforming Business Operations into High-Throughput Custom Software'),
-        button: { text: '', link: '' },
+        title: 'Custom Software Development Built Around Your Business', highlight: 'Built Around Your Business', align: 'left',
+        description: 'We offer custom software development and enterprise software development, from GST billing software to business management software, built around the way your team works.',
+        image: img('sections/softbg.png', 'Software development team building custom business software and digital solutions'),
+        button: { text: 'Get a Quote', link: '#enquiry' },
       },
     },
+    { key: 'stats', label: 'Stats', content: STATS },
     {
-      key: 'clients', label: 'Our Clients',
+      key: 'services', label: 'Our Services',
       content: {
-        eyebrow: '/ Project Showcase', title: 'Our Clients', highlight: 'Clients',
+        eyebrow: 'Our Services', title: 'Custom Software Development Services for Real Business Needs', highlight: 'Real Business Needs',
+        description: 'From everyday billing tools to enterprise platforms, we build software that fits your workflow and grows with your business.',
         items: [
-          { image: img('items/vift.png', 'VETRI BILLING'), name: 'VETRI BILLING', location: '', category: 'ERP & Billing', description: '', link: '' },
-          { image: img('items/Ak.png', 'Akash Photography'), name: 'Akash Photography', location: '', category: 'Projects Tracking', description: '', link: '' },
+          { icon: 'Settings2', title: 'Custom Business Software', description: 'Tailor-made software for your own processes, reports and users.' },
+          { icon: 'Building2', title: 'Enterprise Software', description: 'ERP and enterprise software for managing operations across teams and branches.' },
+          { icon: 'Receipt', title: 'Billing & GST Software', description: 'Billing software with GST invoicing and E-Way support for businesses.' },
+          { icon: 'ClipboardCheck', title: 'Project Management Software', description: 'Track projects, tasks, teams and deadlines in one place.' },
+          { icon: 'Users', title: 'HR Management Software', description: 'HRMS management for employee records, attendance and leave.' },
+          { icon: 'Cloud', title: 'SaaS Platforms', description: 'Multi-tenant SaaS products built to serve many customers on one platform.' },
         ],
       },
     },
-    { key: 'journey', label: 'How We Work', content: JOURNEY },
+    {
+      key: 'pricing', label: 'Pricing Packages',
+      content: {
+        eyebrow: 'Pricing Packages', title: 'Custom Software Development Pricing for Your Requirements', highlight: 'Your Requirements',
+        description: 'Software pricing depends on scope, users and features. Tell us what you need and we will prepare a clear quote.',
+        plans: [
+          { name: 'Ready-to-Use Business Software', subtitle: 'BILLING · PROJECTS · HR', price: 'Custom Quote', features: ['Billing, project management or HR management software', 'Set-up for your business', 'Training for your team'], button_text: 'Get a Quote', button_link: '#enquiry' },
+          { name: 'Custom Software', subtitle: 'BUILT AROUND YOUR WORKFLOW', price: 'Custom Quote', features: ['Software built around your workflow', 'Custom features and reports', 'Integrations based on scope'], button_text: 'Get a Quote', button_link: '#enquiry', featured: true },
+          { name: 'Enterprise & SaaS Platforms', subtitle: 'ERP · SAAS · CLOUD', price: 'Custom Quote', features: ['ERP and enterprise software', 'Multi-tenant SaaS products', 'Cloud setup based on scope'], button_text: 'Get a Quote', button_link: '#enquiry' },
+        ],
+      },
+    },
+    {
+      key: 'why', label: 'Why Choose Us',
+      content: {
+        eyebrow: 'Why Choose Vetri IT Systems?', title: 'Why Businesses Choose Vetri IT Systems for Software Development', highlight: 'for Software Development', description: '',
+        items: [
+          { icon: 'Timer', title: 'On-Time Delivery', description: 'Structured planning and clear milestones keep your project on schedule.' },
+          { icon: 'Workflow', title: 'Built Around Your Work', description: 'Software designed for your workflow, not the other way round.' },
+          { icon: 'MonitorSmartphone', title: 'Mobile-Friendly Design', description: 'Web-based software that works smoothly on mobile, tablet and desktop.' },
+          { icon: 'LifeBuoy', title: 'Post-Launch Support', description: 'Maintenance and updates based on your support plan.' },
+          { icon: 'Globe', title: 'Tamil Nadu and Dubai Experience', description: 'Software solutions delivered for businesses in India and the UAE.' },
+        ],
+      },
+    },
+    {
+      key: 'clients', label: 'Our Portfolio',
+      content: {
+        eyebrow: 'Our Portfolio', title: 'Business Software Built to Simplify Everyday Work', highlight: 'Simplify Everyday Work',
+        description: 'Explore the billing, project tracking and ERP solutions we have built for growing businesses.',
+        items: [
+          { image: img('items/vift.png', 'Vetri Billing GST billing software dashboard showing invoices and GST reports'), name: 'VETRI BILLING', location: '', category: 'ERP & Billing', description: 'GST billing software for invoices, GST reports and day-to-day billing.', link: '' },
+          { image: img('items/Ak.png', 'Projects Tracking project management software showing tasks and project progress'), name: 'Akash Photography', location: '', category: 'Projects Tracking', description: 'Project management software to plan work, assign tasks and follow progress.', link: '' },
+        ],
+      },
+    },
+    {
+      key: 'journey', label: 'Our Process',
+      content: {
+        eyebrow: 'Our Process', title: 'From Business Requirements to Reliable Software', highlight: 'Reliable Software',
+        steps: [
+          { icon: 'Lightbulb', title: 'Discover', description: 'Understand your workflow and find where business process automation can save time.' },
+          { icon: 'PenTool', title: 'Design', description: 'Plan the screens, features and user journey.' },
+          { icon: 'Code2', title: 'Develop', description: 'Build clean, reliable software with regular progress updates.' },
+          { icon: 'ClipboardCheck', title: 'Test', description: 'Check every feature, device and browser before release.' },
+          { icon: 'Rocket', title: 'Launch', description: 'Go live, train your team and support you after launch.' },
+        ],
+      },
+    },
     {
       key: 'capabilities', label: 'Capabilities',
       content: {
-        title: 'Our Capabilities', highlight: 'Capabilities', variant: 'software',
-        items: capItems([
-          ['Building2', 'Enterprise ERP'], ['Receipt', 'Custom Billing POS'], ['Cloud', 'Cloud Architecture'], ['Layers', 'Multi-Tenant SaaS'],
-          ['Cpu', 'High-Concurrency Go / Node'], ['Database', 'PostgreSQL & TimescaleDB'], ['Container', 'Docker & Kubernetes'], ['FileCheck2', 'Automated GST / E-Way'],
-          ['Lock', 'Role-Based Access (RBAC)'], ['RefreshCw', 'Offline-First Sync'], ['ShieldCheck', 'SOC2 & ISO 27001'], ['Activity', '99.99% Uptime SLA'],
-          ['Network', 'Kafka Event Streams'], ['Timer', 'Sub-Second Latency'],
-        ]),
+        eyebrow: 'Capabilities', title: 'Explore Our Custom Software Development Capabilities', highlight: 'Development Capabilities', variant: 'software',
+        items: [
+          { icon: 'Building2', label: 'Enterprise ERP', description: 'Enterprise software development for operations, finance and reporting.' },
+          { icon: 'FileCheck2', label: 'GST & E-Way Billing', description: 'GST billing software with invoicing and E-Way bill support.' },
+          { icon: 'Layers', label: 'Multi-Tenant SaaS', description: 'A SaaS development company approach: one platform, many customers, separate data.' },
+          { icon: 'Cloud', label: 'Cloud Architecture', description: 'Cloud computing services for secure, scalable and reliable hosting.' },
+          { icon: 'Workflow', label: 'Workflow Automation', description: 'Workflow management software and business process automation to reduce manual work.' },
+          { icon: 'Boxes', label: 'Inventory Management', description: 'Stock tracking, purchases and sales in one system.' },
+          { icon: 'Sparkles', label: 'AI Solutions', description: 'AI solutions such as smart reports and automation, added where they help your business.' },
+          { icon: 'ShieldCheck', label: 'Secure & Scalable Backend', description: '' },
+        ],
         stats: CAP_STATS,
       },
     },
     {
-      key: 'cta', label: 'Call To Action',
+      key: 'tools', label: 'Technologies We Use',
       content: {
-        eyebrow: 'Let’s Collaborate', title: 'BUILT AROUND THE WAY YOU WORK', subtitle: 'Stop Adapting Your Business to Software.',
-        description: 'Get custom-built software designed around your processes, challenges, and ambitions — not someone else’s template.',
-        image: img('reference/software-cta.png', ''), primary_button: { text: 'Build Your Solution', link: '/contact' }, secondary_button: { text: '', link: '' },
+        eyebrow: 'Technologies We Use', title: 'The Technologies Behind Our Software Solutions', highlight: 'Our Software Solutions', description: '',
+        items: ['React', 'Node.js', 'PHP'],
+      },
+    },
+    {
+      key: 'industries', label: 'Industries We Serve',
+      content: {
+        eyebrow: 'Industries We Serve', title: 'Custom Software Development for Your Industry', highlight: 'Your Industry', description: '',
+        items: ['Retail & Trading', 'Manufacturing', 'Healthcare', 'Education', 'Real Estate', 'Logistics & Trade', 'IT Services'],
+      },
+    },
+    {
+      key: 'faq', label: 'FAQs',
+      content: {
+        title: 'Software Development FAQs', highlight: 'FAQs',
+        items: [
+          { question: 'How much does custom software development cost?', answer: 'The cost depends on the features, number of users and integrations you need. Share your requirement and we will send a quote.' },
+          { question: 'How long does software development take?', answer: 'The timeline depends on the size of the software, the features and how quickly content and feedback are shared.' },
+          { question: 'What is a bespoke software development service?', answer: 'It means software built specifically for your business and your workflow, instead of using a ready-made tool that only partly fits.' },
+          { question: 'Do you build GST billing software?', answer: 'Yes. We build GST billing software with invoicing and GST reporting, and can customise it for your business.' },
+          { question: 'Can you add AI solutions to my software?', answer: 'Yes. We can add AI solutions and automation where they save time, such as smart reports and workflow automation.' },
+          { question: 'Do you provide hosting and maintenance?', answer: 'Yes. Cloud hosting, security support and annual maintenance are available based on the selected plan.' },
+          { question: 'Do you provide SEO and content support?', answer: 'Yes. SEO and content writing are available as add-on services.' },
+        ],
+      },
+    },
+    {
+      key: 'enquiry', label: 'Final CTA & Enquiry Form',
+      content: {
+        title: 'Need Custom Business Software for Your Workflow?', highlight: 'Your Workflow?',
+        description: 'Need workflow management software, a bespoke software development service or custom business software? Tell us your requirement and our team will help you find the right solution.',
+        image: img('reference/software-cta.png', 'Software development team collaborating on custom business solutions'),
+        requirements: ['Ready-to-Use Business Software', 'Custom Software', 'Enterprise & SaaS Platform', 'Other'],
+        budgets: BUDGETS,
+        button_text: 'Get a Quote', whatsapp_text: 'WhatsApp Us',
+        success_message: 'Thank you! Our team will contact you shortly.',
       },
     },
   ],
@@ -716,8 +944,8 @@ const brochure = (slug, topic, highlight) => ({
   },
 });
 const BROCHURE_BEFORE = {
-  'app-development': ['App Development', 'Development Brochure', 'cta'],
-  'software-development': ['Software Development', 'Development Brochure', 'cta'],
+  'app-development': ['App Development', 'Development Brochure', 'why'],
+  'software-development': ['Software Development', 'Development Brochure', 'why'],
   'digital-marketing': ['Digital Marketing', 'Marketing Brochure', 'faq'],
   'graphic-designing': ['Graphic Designing', 'Designing Brochure', 'enquiry'],
 };

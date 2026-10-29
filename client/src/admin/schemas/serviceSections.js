@@ -17,7 +17,7 @@ const iconItems = (name, label, itemLabel, withDesc = true) => ({
   name, label, type: 'list', itemLabel, titleKey: withDesc ? 'title' : 'label',
   fields: withDesc
     ? [{ name: 'icon', label: 'Icon', type: 'icon' }, { name: 'title', label: 'Title', type: 'text' }, { name: 'description', label: 'Description', type: 'textarea', rows: 2 }]
-    : [{ name: 'icon', label: 'Icon', type: 'icon' }, { name: 'label', label: 'Label', type: 'text' }],
+    : [{ name: 'icon', label: 'Icon', type: 'icon' }, { name: 'label', label: 'Label', type: 'text' }, { name: 'description', label: 'Short description (optional)', type: 'text' }],
 });
 
 const statsList = (name = 'items', label = 'Stats') => ({
