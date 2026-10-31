@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { NavLink, Link, useLocation } from 'react-router-dom';
-import { Compass, Briefcase, ChevronDown, LayoutGrid, Info, Mail, MessageSquare, ArrowUpRight, Menu, X } from 'lucide-react';
+import { Compass, Briefcase, ChevronDown, LayoutGrid, Info, Mail, MessageSquare, ArrowUpRight, Menu, X, FolderKanban } from 'lucide-react';
 import { useSite } from '../../context/SiteContext';
 import { Media, Icon } from '../common/Common';
 
@@ -12,7 +12,20 @@ export default function Header() {
   const { pathname } = useLocation();
 
   useEffect(() => { setOpen(false); }, [pathname]);
-  const pickExpertise = (e) => { setDropShut(true); e.currentTarget.blur(); };
+  // Esc closes the mobile menu
+  useEffect(() => {
+    if (!open) return undefined;
+    const onKey = (e) => { if (e.key === 'Escape') setOpen(false); };
+    document.addEventListener('keydown', onKey);
+    return () => document.removeEventListener('keydown', onKey);
+  }, [open]);
+  // any link tapped in the menu closes it, even one for the page already open (no route change then)
+  const closeOnLink = (e) => { if (e.target.closest('a')) setOpen(false); };
+  // desktop hover dropdown: hide it after a pick until hovered again (not in the mobile menu, where the list is always shown)
+  const pickExpertise = (e) => {
+    if (window.matchMedia('(hover: hover) and (min-width: 961px)').matches) setDropShut(true);
+    e.currentTarget.blur();
+  };
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 10);
     onScroll();
@@ -29,7 +42,7 @@ export default function Header() {
           <Media m={s.logo} width={200} loading="eager" />
         </Link>
 
-        <nav className={`nav${open ? ' nav--open' : ''}`}>
+        <nav className={`nav${open ? ' nav--open' : ''}`} onClick={closeOnLink}>
           <NavLink to="/" end className="nav__link"><Compass size={17} />Explore VIS</NavLink>
           <div className={`nav__drop${expertiseActive ? ' active' : ''}${dropShut ? ' nav__drop--shut' : ''}`}>
             <button className="nav__link" type="button" onMouseEnter={() => setDropShut(false)} onFocus={() => setDropShut(false)}><Briefcase size={17} />Our Expertise<ChevronDown size={15} className="nav__chev" /></button>
@@ -43,6 +56,7 @@ export default function Header() {
             </div>
           </div>
           <NavLink to="/solutions" className="nav__link"><LayoutGrid size={17} />Vetri Products</NavLink>
+          <NavLink to="/projects" className="nav__link"><FolderKanban size={17} />Our Projects</NavLink>
           <NavLink to="/about" className="nav__link"><Info size={17} />About</NavLink>
           <NavLink to="/contact" className="nav__link"><Mail size={17} />Contact</NavLink>
           <Link to={s.header_button_link || '/contact'} className="btn btn--primary nav__cta-mobile">
@@ -53,7 +67,7 @@ export default function Header() {
         <Link to={s.header_button_link || '/contact'} className="btn btn--primary header__cta">
           <MessageSquare size={17} />{s.header_button_text || 'Get in Touch'}<ArrowUpRight size={16} />
         </Link>
-        <button className="header__burger" onClick={() => { setOpen(!open); setDropShut(false); }} aria-label="Toggle menu">
+        <button className="header__burger" onClick={() => { setOpen(!open); setDropShut(false); }} aria-label={open ? 'Close menu' : 'Open menu'} aria-expanded={open}>
           {open ? <X /> : <Menu />}
         </button>
       </div>

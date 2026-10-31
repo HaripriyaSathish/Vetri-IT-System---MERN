@@ -1,10 +1,12 @@
 // Applies the October 2026 SEO content documents to an existing database:
-//   npm run sync-seo
+//   npm run sync-seo                          (all pages below)
+//   npm run sync-seo -- website-development   (only the named page(s))
 // For each page below: meta title/description are updated, every section's text is replaced with the
 // seed copy, missing sections are added and sections follow the seed order. Images, videos, brochure
 // files and client website links already chosen in the admin are kept (only their alt text changes).
 // The old image CTA banners on these expertise pages are hidden: the enquiry form now ends those pages.
-// Website Development is deliberately not synced: it keeps its existing content.
+// Website Development follows its revised SEO document, which also drops the separate brochure section
+// (the Single-Page package card links the brochure instead). Graphic Designing keeps its brochure section.
 import pool from '../config/db.js';
 import { pages, homeSections } from '../db/seed.js';
 import { servicePages, servicePageMeta } from '../db/seedServices.js';
@@ -13,8 +15,11 @@ const SYNC = {
   home: homeSections,
   'app-development': servicePages['app-development'],
   'software-development': servicePages['software-development'],
+  'website-development': servicePages['website-development'],
+  'graphic-designing': servicePages['graphic-designing'],
+  projects: servicePages.projects,
 };
-const RETIRE = { 'app-development': ['cta'], 'software-development': ['cta'] };
+const RETIRE = { 'app-development': ['cta'], 'software-development': ['cta'], 'website-development': ['cta', 'brochure'], 'graphic-designing': [] };
 const KEEP_AS_IS = ['files', 'link']; // brochure uploads and links edited in the admin
 
 const isMedia = (v) => v && typeof v === 'object' && !Array.isArray(v) && 'url' in v;
@@ -26,7 +31,10 @@ const merge = (fresh, old) => {
     if (!Array.isArray(old)) return fresh;
     return fresh.map((item, i) => {
       if (!item || typeof item !== 'object') return item;
-      const match = old.find((o) => keyOf(o) && keyOf(o) === keyOf(item)) || (keyOf(item) ? null : old[i]);
+      // same name, else same image (a renamed client keeps the website link set in the admin)
+      const match = old.find((o) => keyOf(o) && keyOf(o) === keyOf(item))
+        || (item.image?.url && old.find((o) => o?.image?.url === item.image.url))
+        || (keyOf(item) ? null : old[i]);
       return match ? merge(item, match) : item;
     });
   }
@@ -46,8 +54,12 @@ const merge = (fresh, old) => {
 const parse = (v) => (typeof v === 'string' ? JSON.parse(v) : v);
 const metaFor = (slug) => servicePageMeta[slug] || pages.find((p) => p.slug === slug);
 
-for (const [slug, list] of Object.entries(SYNC)) {
+const only = process.argv.slice(2);
+for (const [slug, list] of Object.entries(SYNC).filter(([slug]) => !only.length || only.includes(slug))) {
   const { meta_title, meta_description } = metaFor(slug);
+  // new pages (e.g. Our Projects) get their row first
+  const info = pages.find((p) => p.slug === slug);
+  if (info) await pool.query('INSERT IGNORE INTO pages (slug, name) VALUES (?, ?)', [slug, info.name]);
   await pool.query('UPDATE pages SET meta_title = ?, meta_description = ? WHERE slug = ?', [meta_title, meta_description, slug]);
 
   const [rows] = await pool.query('SELECT section_key, content, sort_order FROM sections WHERE page_slug = ?', [slug]);
@@ -58,12 +70,13 @@ for (const [slug, list] of Object.entries(SYNC)) {
     const row = existing.get(s.key);
     if (row) {
       const content = merge(s.content, parse(row.content));
-      await pool.query('UPDATE sections SET content = ?, label = ?, sort_order = ?, is_active = 1 WHERE page_slug = ? AND section_key = ?',
+      // sections marked inactive in the seed keep whatever visibility the admin chose
+      await pool.query(`UPDATE sections SET content = ?, label = ?, sort_order = ?${s.inactive ? '' : ', is_active = 1'} WHERE page_slug = ? AND section_key = ?`,
         [JSON.stringify(content), s.label, order, slug, s.key]);
     } else {
-      await pool.query('INSERT INTO sections (page_slug, section_key, label, content, sort_order, is_active) VALUES (?,?,?,?,?,1)',
-        [slug, s.key, s.label, JSON.stringify(s.content), order]);
-      console.log(`   + ${slug}: ${s.label}`);
+      await pool.query('INSERT INTO sections (page_slug, section_key, label, content, sort_order, is_active) VALUES (?,?,?,?,?,?)',
+        [slug, s.key, s.label, JSON.stringify(s.content), order, s.inactive ? 0 : 1]);
+      console.log(`   + ${slug}: ${s.label}${s.inactive ? ' (hidden)' : ''}`);
     }
   }
   // sections that are not in the documents keep their place after the synced ones

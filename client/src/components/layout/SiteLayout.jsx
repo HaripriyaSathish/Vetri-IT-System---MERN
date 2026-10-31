@@ -10,9 +10,19 @@ import '../../styles/motion.css';
 import '../../styles/cards-motion.css';
 
 export default function SiteLayout() {
-  const { pathname } = useLocation();
-  // instant, so the smooth-scroll setting doesn't glide past (and reveal) every section of the new page
-  useEffect(() => { window.scrollTo({ top: 0, behavior: 'instant' }); }, [pathname]);
+  const { pathname, hash } = useLocation();
+  // instant, so the smooth-scroll setting doesn't glide past (and reveal) every section of the new page.
+  // A link like "/#services" lands on that section once the page content has loaded.
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'instant' });
+    if (!hash) return;
+    let tries = 0;
+    const timer = setInterval(() => {
+      const el = document.querySelector(hash);
+      if (el || ++tries > 30) { clearInterval(timer); el?.scrollIntoView({ behavior: 'smooth' }); }
+    }, 100);
+    return () => clearInterval(timer);
+  }, [pathname, hash]);
   useTilt();
   return (
     <>

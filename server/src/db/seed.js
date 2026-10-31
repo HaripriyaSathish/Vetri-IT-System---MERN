@@ -46,6 +46,7 @@ export const pages = [
   { slug: 'digital-marketing', name: 'Digital Marketing' },
   { slug: 'graphic-designing', name: 'Graphic Designing' },
   { slug: 'solutions', name: 'Vetri Products' },
+  { slug: 'projects', name: 'Our Projects' },
   { slug: 'contact', name: 'Contact' },
 ];
 
@@ -325,8 +326,8 @@ export const seedIfEmpty = async ({ force = false } = {}) => {
     const [[{ next }]] = await pool.query('SELECT COALESCE(MAX(sort_order), 0) + 1 AS next FROM services');
     await pool.query('INSERT IGNORE INTO services SET ?', [{
       slug: 'graphic-designing', title: 'Graphic Designing', nav_label: 'Graphic Designing', badge: 'Creative Design',
-      description: 'Logos, branding, social media creatives and marketing designs.', link: '/graphic-designing',
-      link_title: 'Graphic design services', nav_icon: navIcons['graphic-designing'], sort_order: next, is_active: 1, show_on_home: 0,
+      description: 'Vetri IT Systems offers logo design services, professional visiting card design and business brochure design. Every design is created around your business name, industry and brand colours.', link: '/graphic-design-services',
+      link_title: 'Graphic design services', nav_icon: navIcons['graphic-designing'], sort_order: next, is_active: 1, show_on_home: 1,
     }]);
   }
   for (const [slug, icon] of Object.entries(navIcons))
@@ -359,8 +360,8 @@ const seedServicePages = async ({ force }) => {
       [meta_title, meta_description, slug, force ? 1 : 0]);
     if (!(await isEmpty('sections', 'WHERE page_slug = ?', [slug]))) { await addMissingSections(slug, list); continue; }
     for (const [i, s] of list.entries())
-      await pool.query('INSERT INTO sections (page_slug, section_key, label, content, sort_order) VALUES (?,?,?,?,?)',
-        [slug, s.key, s.label, JSON.stringify(s.content), i + 1]);
+      await pool.query('INSERT INTO sections (page_slug, section_key, label, content, sort_order, is_active) VALUES (?,?,?,?,?,?)',
+        [slug, s.key, s.label, JSON.stringify(s.content), i + 1, s.inactive ? 0 : 1]);
     console.log(`🌱 ${slug} sections seeded`);
   }
 };

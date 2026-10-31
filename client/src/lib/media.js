@@ -9,3 +9,6 @@ export const isFileUrl = (url = '') => /\.(pdf|zip)(\?|$)/i.test(url);
 export const isFile = (m) => m?.type === 'file' || isFileUrl(m?.url);
 
 export const isVideo = (m) => m?.type === 'video' || /\.(mp4|webm|mov)(\?|$)/i.test(m?.url || '');
+
+// Link that always saves the file (the server adds a download header), even when media is on another domain
+export const downloadUrl = (url = '') => (/^\/media\//.test(url) ? `${mediaUrl(url)}?download=1` : mediaUrl(url));

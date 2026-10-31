@@ -2,8 +2,15 @@
 // (section key -> type mapping lives in lib/sectionTypes.js).
 import {
   Image, BarChart3, Building2, Workflow, Sparkles, BadgeIndianRupee, BookOpen, Megaphone, LayoutGrid, Tags, HelpCircle, ClipboardList,
-  Boxes, Orbit, Wrench, Crown, Target, Mail, MapPinned,
+  Boxes, Orbit, Wrench, Crown, Target, Mail, MapPinned, Palette, FolderKanban, BookOpenCheck,
 } from 'lucide-react';
+import { DESIGN_ART_OPTIONS } from '../../components/service/DesignArt';
+
+// animated cartoon illustration (Graphic Designing) + its alt text
+const artFields = (label = 'Cartoon illustration') => [
+  { name: 'art', label, type: 'select', options: DESIGN_ART_OPTIONS, half: true },
+  { name: 'art_alt', label: 'Illustration alt text', type: 'text', half: true },
+];
 
 const heading = (extra = []) => [
   { name: 'eyebrow', label: 'Eyebrow label', type: 'text' },
@@ -28,7 +35,7 @@ const statsList = (name = 'items', label = 'Stats') => ({
 export const serviceTypeIcons = {
   hero: Image, stats: BarChart3, clients: Building2, journey: Workflow, capabilities: Sparkles, pricing: BadgeIndianRupee,
   brochure: BookOpen, cta: Megaphone, cards: LayoutGrid, chips: Tags, faq: HelpCircle, enquiry: ClipboardList,
-  products: Boxes, ecosystem: Orbit, split: Wrench, leaders: Crown, mission: Target, contact: Mail, map: MapPinned,
+  offerings: Palette, portfolio: FolderKanban, casestudies: BookOpenCheck, ctaband: Megaphone, products: Boxes, ecosystem: Orbit, split: Wrench, leaders: Crown, mission: Target, contact: Mail, map: MapPinned,
 };
 
 export const serviceSchemas = {
@@ -50,9 +57,18 @@ export const serviceSchemas = {
           options: [['center', 'Image background · centered text'], ['left', 'Image background · left text'], ['split', 'Light · text left, image right']],
         },
         { name: 'button', label: 'Button (optional)', type: 'button' },
+        { name: 'secondary_button', label: 'Second button (light layout)', type: 'button' },
       ],
     },
-    { tab: 'Image', fields: [{ name: 'image', label: 'Hero image', type: 'media' }] },
+    {
+      tab: 'Image', fields: [
+        { name: 'image', label: 'Hero image', type: 'media' }, ...artFields('Cartoon scene instead of the image (light layout)'),
+        {
+          name: 'screens', label: 'Project screenshots cycling in a laptop (light layout, replaces the image)', type: 'list', itemLabel: 'Screenshot', titleKey: 'name',
+          fields: [{ name: 'name', label: 'Project name', type: 'text' }, { name: 'image', label: 'Screenshot', type: 'media' }],
+        },
+      ],
+    },
   ],
 
   contact: [
@@ -159,7 +175,7 @@ export const serviceSchemas = {
       tab: 'Heading', fields: heading([
         {
           name: 'layout', label: 'Card layout', type: 'select', half: true,
-          options: [['auto', 'Auto (wide rows for 1–2 plans)'], ['cards', 'Cards side by side'], ['wide', 'Wide rows (shorter cards)']],
+          options: [['auto', 'Auto (wide rows for 1–2 plans)'], ['cards', 'Cards side by side'], ['wide', 'Wide rows (shorter cards)'], ['showcase', 'Showcase cards (tag, icon, two buttons)']],
         },
       ]),
     },
@@ -169,6 +185,7 @@ export const serviceSchemas = {
         fields: [
           { name: 'name', label: 'Plan name', type: 'text', half: true },
           { name: 'tag', label: 'Tag (optional)', type: 'text', half: true, placeholder: 'Special Offer' },
+          { name: 'icon', label: 'Icon (showcase cards)', type: 'icon', half: true },
           { name: 'subtitle', label: 'Sub label', type: 'text', half: true, placeholder: '1-PAGE' },
           { name: 'price', label: 'Price', type: 'text', half: true },
           { name: 'price_note', label: 'Price note', type: 'text' },
@@ -181,6 +198,7 @@ export const serviceSchemas = {
           { name: 'secondary_text', label: 'Second button text', type: 'text', half: true },
           { name: 'secondary_link', label: 'Second button link', type: 'text', half: true },
           { name: 'featured', label: 'Highlight this plan', type: 'switch' },
+          ...artFields('Cartoon on the card (wide layout)'),
         ],
       }],
     },
@@ -231,12 +249,12 @@ export const serviceSchemas = {
   ],
 
   cards: [
-    { tab: 'Heading', fields: heading() },
+    { tab: 'Heading', fields: heading([{ name: 'layout', label: 'Card style', type: 'select', half: true, options: [['', 'Standard cards'], ['tiles', 'Numbered tiles (fill on hover)']] }]) },
     { tab: 'Cards', fields: [iconItems('items', 'Cards', 'Card')] },
   ],
 
   chips: [
-    { tab: 'Heading', fields: heading() },
+    { tab: 'Heading', fields: heading(artFields('Cartoon beside the chips (optional)')) },
     { tab: 'Items', fields: [{ name: 'items', label: 'Items', type: 'tags' }] },
   ],
 
@@ -246,6 +264,85 @@ export const serviceSchemas = {
       tab: 'Questions', fields: [{
         name: 'items', label: 'Questions', type: 'list', itemLabel: 'Question', titleKey: 'question',
         fields: [{ name: 'question', label: 'Question', type: 'text' }, { name: 'answer', label: 'Answer', type: 'textarea', rows: 4 }],
+      }],
+    },
+  ],
+
+  portfolio: [
+    { tab: 'Heading', fields: heading([{ name: 'search_placeholder', label: 'Search box placeholder', type: 'text', half: true }, { name: 'all_label', label: 'First tab label', type: 'text', half: true, placeholder: 'All Projects' }]) },
+    {
+      tab: 'Industry tabs', fields: [{
+        name: 'filters', label: 'Industry filter tabs', type: 'list', itemLabel: 'Tab', titleKey: 'label',
+        hint: 'A project shows under a tab when its Industry matches the tab label exactly.',
+        fields: [{ name: 'icon', label: 'Icon', type: 'icon', half: true }, { name: 'label', label: 'Label', type: 'text', half: true }],
+      }],
+    },
+    {
+      tab: 'Projects', fields: [{
+        name: 'items', label: 'Project cards', type: 'list', itemLabel: 'Project', titleKey: 'name',
+        fields: [
+          { name: 'image', label: 'Screenshot', type: 'media' },
+          { name: 'name', label: 'Project name (H3)', type: 'text', half: true },
+          { name: 'location', label: 'Location', type: 'text', half: true },
+          { name: 'industry', label: 'Industry (must match a tab label)', type: 'text', half: true },
+          { name: 'case_study', label: 'Case study name (arrow opens it)', type: 'text', half: true },
+          { name: 'tags', label: 'Service tags', type: 'tags' },
+          { name: 'description', label: 'Description', type: 'textarea', rows: 2 },
+          { name: 'link', label: 'Live website link', type: 'text', placeholder: 'https://www.client-site.com', hint: 'Opens in a new tab with rel="nofollow noopener". Leave empty to hide the Live Website link.' },
+        ],
+      }],
+    },
+  ],
+
+  casestudies: [
+    { tab: 'Heading', fields: heading() },
+    {
+      tab: 'Case studies', fields: [{
+        name: 'items', label: 'Case study cards', type: 'list', itemLabel: 'Case study', titleKey: 'name',
+        fields: [
+          { name: 'image', label: 'Screenshot', type: 'media' },
+          { name: 'name', label: 'Client name (H3)', type: 'text', half: true },
+          { name: 'industry', label: 'Industry', type: 'text', half: true },
+          { name: 'industry_icon', label: 'Industry icon', type: 'icon', half: true },
+          { name: 'link', label: 'Live website link', type: 'text', half: true },
+          { name: 'heading', label: 'Card heading', type: 'text' },
+          { name: 'description', label: 'Card description', type: 'textarea', rows: 2 },
+          {
+            name: 'features', label: 'Card key features (3)', type: 'list', itemLabel: 'Feature', titleKey: 'label',
+            fields: [{ name: 'icon', label: 'Icon', type: 'icon', half: true }, { name: 'label', label: 'Label', type: 'text', half: true }],
+          },
+          { name: 'popup_description', label: 'Popup description', type: 'textarea', rows: 3 },
+          { name: 'challenge', label: 'The Challenge', type: 'textarea', rows: 3 },
+          { name: 'solution', label: 'Our Solution', type: 'textarea', rows: 3 },
+          { name: 'key_features', label: 'Popup key features', type: 'tags' },
+          { name: 'highlights', label: 'Project highlights', type: 'tags' },
+        ],
+      }],
+    },
+  ],
+
+  ctaband: [
+    {
+      tab: 'Content', fields: heading([
+        { name: 'button', label: 'Main button', type: 'button' },
+        { name: 'whatsapp_text', label: 'WhatsApp button text (empty hides it)', type: 'text', half: true },
+        { name: 'show_contact', label: 'Show phone, email and address from Site Settings', type: 'switch', half: true },
+      ]),
+    },
+  ],
+
+  offerings: [
+    { tab: 'Heading', fields: heading() },
+    {
+      tab: 'Services', fields: [{
+        name: 'items', label: 'Service cards', type: 'list', itemLabel: 'Service', titleKey: 'title',
+        fields: [
+          ...artFields(),
+          { name: 'icon', label: 'Icon (when no cartoon)', type: 'icon', half: true },
+          { name: 'title', label: 'Title', type: 'text', half: true },
+          { name: 'description', label: 'Description', type: 'textarea', rows: 3 },
+          { name: 'features', label: 'Feature list', type: 'tags' },
+        ],
       }],
     },
   ],
@@ -282,9 +379,17 @@ export const serviceSchemas = {
   ],
 
   enquiry: [
-    { tab: 'Content', fields: heading([{ name: 'whatsapp_text', label: 'WhatsApp button text', type: 'text', half: true }]) },
+    {
+      tab: 'Content', fields: heading([
+        { name: 'whatsapp_text', label: 'WhatsApp button text', type: 'text', half: true },
+        { name: 'brochure_text', label: 'Brochure button text (optional)', type: 'text', half: true },
+        { name: 'brochure_link', label: 'Brochure file / link', type: 'text', half: true, placeholder: '/media/brochures/...' },
+        ...artFields('Cartoon under the text (optional)'),
+      ]),
+    },
     {
       tab: 'Form', fields: [
+        { name: 'business_field', label: 'Ask for Business Name', type: 'switch', half: true },
         { name: 'requirement_label', label: 'Dropdown label', type: 'text', half: true, placeholder: 'Requirement' },
         { name: 'requirements', label: 'Dropdown options', type: 'tags' },
         { name: 'budgets', label: 'Budget options (leave empty to hide)', type: 'tags' },

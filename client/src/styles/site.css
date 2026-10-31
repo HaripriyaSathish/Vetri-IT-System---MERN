@@ -389,8 +389,14 @@ p { margin: 0; }
 }
 @media (max-width: 960px) {
   :root { --header-h: 76px; }
-  .hero { min-height: 0; }
-  .hero__inner { width: calc(100% - 48px); }
+  /* Stacked content makes the hero tall, and a cover-fit banner would show only a thin slice of it,
+     so the full banner sits on top at its own ratio and fades into the navy behind the text. */
+  .hero { min-height: 0; flex-direction: column; align-items: center; }
+  .hero__bg { position: relative; inset: auto; width: 100%; }
+  .hero__bg img, .hero__bg video { display: block; height: auto; object-fit: contain; }
+  .hero__bg::after { content: ''; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(0, 38, 115, 0) 55%, var(--navy) 100%); pointer-events: none; }
+  .hero__overlay { display: none; }
+  .hero__inner { width: calc(100% - 48px); padding-top: 28px; }
   .hero__stats { position: static; width: 100%; margin-top: 32px; }
   .ticker { margin-top: 48px; }
   .header__logo img { width: 54px; height: 54px; }
@@ -418,7 +424,7 @@ p { margin: 0; }
   .container, .container--narrow { width: calc(100% - 32px); }
   .section { padding: 60px 0; }
   .section-head { margin-bottom: 40px; }
-  .hero__inner { padding: 56px 0 40px; gap: 36px; }
+  .hero__inner { padding: 24px 0 40px; gap: 36px; }
   .hero__stat strong { font-size: 26px; }
   .services, .about__cards, .why__grid, .process, .field-row, .solution__stats { grid-template-columns: 1fr; }
   .about__media { padding: 0 20px 40px 0; }
@@ -464,3 +470,27 @@ html, body { overflow-x: clip; max-width: 100%; }
 /* inline field errors (enquiry forms) */
 .field--invalid input, .field--invalid select, .field--invalid textarea { border-color: #dc2626; background: #fff5f5; }
 .field__error { color: #dc2626; font-size: 12px; font-weight: 600; }
+
+/* Service card with an animated cartoon instead of a photo: same soft blue + orange backdrop as the
+   other cards' images */
+.service-card__art {
+  position: absolute; inset: 0; display: grid; place-items: center; overflow: hidden;
+  background: radial-gradient(circle at 86% 14%, #ff7a2f 0 17%, transparent 17.2%), radial-gradient(circle at 8% 92%, #2f56b8 0 14%, transparent 14.2%),
+    linear-gradient(135deg, #f4f7ff, #dde7fa);
+}
+/* sized by the panel height so the whole scene (desk included) always fits */
+.service-card__art .dart { position: absolute; inset: 3% 4%; width: auto; transition: transform 0.9s var(--ease); }
+.service-card__art .dart svg { width: 100%; height: 100%; } /* SVG keeps its proportions and scales to fit the box */
+.service-card:hover .service-card__art .dart { transform: scale(1.05); }
+
+/* Odd number of services: the last card keeps the same size as the others and sits centred on its
+   own row, so the grid doesn't end with a card stuck to the left */
+.services > .service-card:last-child:nth-child(odd) { grid-column: 1 / -1; justify-self: center; width: calc((100% - 28px) / 2); }
+@media (max-width: 640px) { .services > .service-card:last-child:nth-child(odd) { width: 100%; } }
+/* every service card the same height whenever they sit two per row */
+@media (min-width: 641px) { .services { grid-auto-rows: 1fr; } }
+/* mobile menu: the Our Expertise list always stays visible inside the open menu
+   (the "hide after a pick" state belongs to the desktop hover dropdown only) */
+@media (max-width: 960px) {
+  .nav--open .nav__drop--shut .nav__menu { opacity: 1; visibility: visible; transform: none; pointer-events: auto; }
+}

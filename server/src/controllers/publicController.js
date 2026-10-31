@@ -1,6 +1,6 @@
 import pool from '../config/db.js';
 import { asyncHandler, httpError } from '../utils/helpers.js';
-import { sendEnquiryMail } from '../utils/sendEmail.js';
+import { sendEnquiryMail, sendEnquiryConfirmation } from '../utils/sendEmail.js';
 
 const active = async (table, where = '', params = []) =>
   (await pool.query(`SELECT * FROM ${table} WHERE is_active = 1 ${where} ORDER BY sort_order, id`, params))[0];
@@ -52,5 +52,6 @@ export const createEnquiry = asyncHandler(async (req, res) => {
   sendEnquiryMail(e)
     .then((sent) => sent && console.log('📧 Enquiry email sent to', process.env.MAIL_TO || process.env.SMTP_USER))
     .catch((err) => console.error('❌ Enquiry email failed:', err.message));
+  sendEnquiryConfirmation(e).catch((err) => console.error('❌ Enquiry confirmation email failed:', err.message));
   res.status(201).json({ id: r.insertId, message: 'Thank you! Our team will contact you shortly.' });
 });

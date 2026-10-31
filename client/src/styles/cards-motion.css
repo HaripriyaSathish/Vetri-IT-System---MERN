@@ -255,13 +255,13 @@
 @keyframes chatBob { 50% { translate: 0 -2px; } }
 .btn.header__cta, .btn.nav__cta-mobile {
   border-radius: 18px 4px 18px 4px; border: 0; padding: 12px 22px;
-  background: linear-gradient(135deg, #ff6a2b, var(--orange) 55%, #c9450a);
+  background: #e7510c;
   animation: ctaPulse 2.6s ease-out infinite; transition: transform 0.35s var(--ease);
 }
 .btn.header__cta::before, .btn.nav__cta-mobile::before { content: ''; position: absolute; inset: 3px; border-radius: 15px 2px 15px 2px; border: 1px dashed rgba(255, 255, 255, 0.5); pointer-events: none; }
 .btn.header__cta::after, .btn.nav__cta-mobile::after { background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.5), transparent); transition: none; animation: ctaShine 4.2s ease-in-out infinite; }
 .btn.header__cta svg:first-child, .btn.nav__cta-mobile svg { animation: chatBob 2.4s ease-in-out infinite; }
-.btn.header__cta:hover, .btn.nav__cta-mobile:hover { transform: scale(1.06); background: linear-gradient(135deg, #ff6a2b, var(--orange) 55%, #c9450a); }
+.btn.header__cta:hover, .btn.nav__cta-mobile:hover { transform: scale(1.06); background: #e7510c; }
 .btn.header__cta:hover svg:last-child { transform: none; animation: arrowNudge 0.8s ease-in-out infinite; }
 .btn.header__cta:active, .btn.nav__cta-mobile:active { transform: scale(0.95); transition-duration: 0.1s; }
 .btn.header__cta:focus-visible, .btn.nav__cta-mobile:focus-visible { outline: 3px solid rgba(0, 38, 115, 0.6); outline-offset: 3px; }
@@ -367,7 +367,7 @@
 .why__grid .reveal.in.why-card:hover { box-shadow: 0 26px 46px -20px rgba(0, 38, 115, 0.42); }
 
 /* ================= Home Industries: curved-gradient cards =================
-   Home only (.site-main > .section). A light grey face sits on a purple → pink gradient; the face is
+   Home only (.site-main > .section). A light grey face sits on a site-colour gradient (orange on odd cards, navy on even ones); the face is
    a large ellipse anchored at the bottom-left corner, so the gradient sweeps in as a curve across the
    top-right. A CSS counter prints the card number in that corner. Icon, title and text are centred.
    Padding and the icon box keep their original sizes, so the card size is unchanged. No border;
@@ -376,7 +376,8 @@
 .site-main > .section .svc-card.reveal { counter-increment: industry; border-radius: 8px; text-align: center; filter: drop-shadow(0 12px 22px rgba(0, 38, 115, 0.14)); }
 .site-main > .section .reveal.in.svc-card:hover { filter: drop-shadow(0 22px 30px rgba(0, 38, 115, 0.2)); }
 .site-main > .section .svc-card.reveal::before, .site-main > .section .svc-card.reveal::after { -webkit-mask: none; mask: none; inset: 0; z-index: -1; }
-.site-main > .section .svc-card.reveal::before { background: linear-gradient(200deg, #7b5cf0, #b44fc4 45%, #ec407a) 0 0 / 100% 100%; animation: none; }
+.site-main > .section .svc-card.reveal::before { background: linear-gradient(200deg, #2f63d0, #002673) 0 0 / 100% 100%; animation: none; }
+.site-main > .section .svc-card.reveal:nth-child(odd)::before { background: linear-gradient(200deg, #ff8a4c, #e7510c 55%, #c9450a) 0 0 / 100% 100%; }
 .site-main > .section .svc-card.reveal::after { background: radial-gradient(ellipse 108% 112% at 0% 100%, #f2f3f7 0 99%, transparent calc(99% + 1px)); }
 .site-main > .section .svc-card .icon-box { margin: 0 auto; background: none; box-shadow: none; color: var(--navy); }
 .site-main > .section .svc-card .icon-box svg { width: 34px; height: 34px; }
@@ -404,19 +405,19 @@
 /* gradient band */
 .about__cards .mini-card::before, .about__cards .reveal.mini-card:hover::before {
   content: ''; position: absolute; left: 0; right: 0; top: 0; inset: 0 0 auto; height: var(--band); border-radius: 0; opacity: 1; pointer-events: none;
-  background: linear-gradient(90deg, #e8178a, #a970c4 35%, #2aa8e0 70%, #e8178a) 0 0 / 200% 100%; transform-origin: left;
+  background: linear-gradient(90deg, #002673, #1d4fb8 35%, #e7510c 70%, #002673) 0 0 / 200% 100%; transform-origin: left;
 }
 .about__cards .mini-card.in::before { animation: bandIn 0.7s var(--ease) backwards, bandFlow 8s linear infinite; animation-delay: calc(var(--i, 0) * 0.2s + 0.55s), 0s; }
 /* quote-mark watermark */
-.about__cards .mini-card::after { content: '\201C'; position: absolute; right: 12px; bottom: -46px; font: 800 120px/1 Georgia, serif; color: rgba(42, 168, 224, 0.08); pointer-events: none; }
+.about__cards .mini-card::after { content: '\201C'; position: absolute; right: 12px; bottom: -46px; font: 800 120px/1 Georgia, serif; color: rgba(0, 38, 115, 0.07); pointer-events: none; }
 .about__cards .mini-card > div { position: relative; z-index: 1; }
 /* icon circle overlapping the band */
-.about__cards .mini-card:nth-child(n) .icon-box { position: relative; z-index: 1; width: 50px; height: 50px; margin-top: 2px; border-radius: 50%; background: #fff; color: #c0398f; box-shadow: 0 8px 18px -8px rgba(0, 38, 115, 0.35); }
-.about__cards .mini-card:nth-child(even) .icon-box { color: #2a8fd0; }
-.about__cards .mini-card.in .icon-box { animation: d3Pop 0.7s var(--ease) backwards, softPulse 2.8s ease-out infinite; animation-delay: calc(var(--i, 0) * 0.2s + 0.8s), calc(var(--i, 0) * 0.7s + 1.6s); }
+.about__cards .mini-card:nth-child(n) .icon-box { position: relative; z-index: 1; width: 50px; height: 50px; margin-top: 2px; border-radius: 50%; background: #fff; color: var(--orange); box-shadow: 0 8px 18px -8px rgba(0, 38, 115, 0.35); }
+.about__cards .mini-card:nth-child(even) .icon-box { color: var(--navy); }
+.about__cards .mini-card.in .icon-box { animation: d3Pop 0.7s var(--ease) backwards, softPulseBrand 2.8s ease-out infinite; animation-delay: calc(var(--i, 0) * 0.2s + 0.8s), calc(var(--i, 0) * 0.7s + 1.6s); }
 .about__cards .reveal.mini-card:nth-child(n):hover .icon-box { background: #fff; transform: scale(1.1); }
-.about__cards .reveal.mini-card:nth-child(odd):hover .icon-box { color: #c0398f; }
-.about__cards .reveal.mini-card:nth-child(even):hover .icon-box { color: #2a8fd0; }
+.about__cards .reveal.mini-card:nth-child(odd):hover .icon-box { color: var(--orange); }
+.about__cards .reveal.mini-card:nth-child(even):hover .icon-box { color: var(--navy); }
 /* title in the band, text below */
 .about__cards .mini-card h3 { min-height: calc(var(--band) - 16px); display: flex; align-items: center; margin: 0 0 8px; color: #fff; font-size: 14px; text-shadow: 0 1px 6px rgba(0, 0, 0, 0.12); }
 .about__cards .mini-card.in h3 { animation: titleIn 0.6s var(--ease) backwards; animation-delay: calc(var(--i, 0) * 0.2s + 0.9s); }
@@ -449,3 +450,13 @@
 /* Leaders: flowing navy → orange header and a faint quote-mark watermark */
 .service-page--about .reveal.vlead__card::before { content: '\201C'; inset: auto 22px -70px auto; z-index: 0; transform: none; background: none; font: 800 170px/1 Georgia, serif; color: rgba(0, 38, 115, 0.06); pointer-events: none; }
 .service-page--about .reveal.vlead__card:hover::before { transform: none; }
+
+/* Project screenshot cards: each card reveals as it scrolls in, so its delay follows its column
+   (left 0, right 1) instead of its position in the whole list — otherwise cards further down
+   waited up to ~2.5s after coming into view. One column on phones: no delay at all. */
+.pclients.stagger > .pclients__card { --k: 0; --step: 0.12s; --dur: 0.7s; }
+.pclients.stagger > .pclients__card:nth-child(even) { --k: 1; }
+@media (max-width: 640px) { .pclients.stagger > .pclients__card:nth-child(even) { --k: 0; } }
+
+/* icon glow for the About cards in the site colours (the shared softPulse is purple) */
+@keyframes softPulseBrand { 0% { box-shadow: 0 0 0 0 rgba(231, 81, 12, 0.4), 0 8px 18px -8px rgba(0, 38, 115, 0.35); } 70%, 100% { box-shadow: 0 0 0 10px rgba(231, 81, 12, 0), 0 8px 18px -8px rgba(0, 38, 115, 0.35); } }

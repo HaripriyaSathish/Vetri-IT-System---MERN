@@ -34,36 +34,59 @@ const CAP_STATS = [
   { value: '24/7', label: 'Support' },
 ];
 
+// Live client websites (confirmed by the team), matched by project / case-study name.
+// Used for the Website Development portfolio, the Our Projects cards and the case-study popups.
+const LIVE_SITES = {
+  ironmeka: 'https://ironmeka.in/',
+  londonindiantamils: 'https://londonindiantamils.com/',
+  suseehyundai: 'https://www.suseehyundaitheni.in/',
+  globaltamiluniversity: 'https://www.globaltamiluniversity.in/',
+  ntts: 'https://newtrackindia.com/',
+  newtrackindiantts: 'https://newtrackindia.com/',
+  classiccomfortinteriors: 'https://classiccomfortinteriors.in/',
+  classiccomfortinteriorexterior: 'https://classiccomfortinteriors.in/',
+  varahitourstravels: 'https://www.varahitoursandtravels.com/',
+  varahitoursandtravels: 'https://www.varahitoursandtravels.com/',
+};
+const liveSite = (name = '') => LIVE_SITES[name.toLowerCase().replace(/[^a-z]/g, '')] || '';
+
+// Portfolio order, names, locations and alt text from the Website Development SEO content document
 const webClients = [
-  ['saswanthtravels.png', 'SASHWANTH TRAVELS', 'Tirunelveli'],
-  ['Csafe.png', 'CSAFE', 'Karur'],
-  ['Susee.png', 'SUSEE HYUNDAI', 'Theni'],
-  ['Travu.png', 'TRAVU', 'Coimbatore'],
-  ['mountdental.png', 'MOUNT DENTALCARE', 'Chennai'],
-  ['Dana_JvlKkYs.png', 'DHANALAKSHMI ENTERPRISES', 'Trichy'],
-  ['truetech.png', 'TRUETECS', 'Dubai'],
-  ['Lic.png', 'LIC AGENCY', 'Madurai'],
-  ['tsing.png', 'TS SINGING ARENA', 'Chennai'],
-  ['sjr.png', 'SJRGROUPS', 'Kovilpatti'],
-  ['Medex.png', 'MEDEX', 'Chennai'],
-  ['varahi.png', 'VARAHI TOURS & TRAVELS', 'Madurai'],
-  ['nammasu.png', 'NAMMA SURANDAI', 'Surandai'],
-  ['globalim.png', 'GLOBAL TAMIL UNIVERSITY', 'Coimbatore'],
-  ['ntts.png', 'NTTS', 'Chennai'],
-  ['Antex.png', 'ANTEX PRIVATE LIMITED', 'UAE'],
-  ['london.png', 'LONDON INDIAN TAMILS', 'London'],
-  ['classic.png', 'CLASSIC & COMFORT INTERIORS', 'Chennai'],
-  ['builders.png', 'NAGERCOIL BUILDERS', 'Nagercoil'],
-  ['Rushik.png', 'RUSHIK BIO ORGANIC', 'Surandai'],
-  ['olympus.png', 'OLYMPUS DIAGNOSTICS', 'Bangalore'],
-  ['cygmagm.png', 'CYGMAGM', 'UAE'],
-].map(([file, name, location]) => ({ image: img(`items/${file}`, name), name, location, category: '', description: '', link: '' }));
+  ['saswanthtravels.png', 'Sashwanth Travels', 'Tirunelveli', 'Sashwanth Travels website homepage'],
+  ['mountdental.png', 'Mount Dentalcare', 'Chennai', 'Mount Dentalcare dental clinic website homepage'],
+  ['truetech.png', 'TrueTecs', 'Dubai', 'TrueTecs IT infrastructure services website homepage'],
+  ['varahi.png', 'Varahi Tours & Travels', 'Madurai', 'Varahi Tours & Travels cab booking and tour packages website'],
+  ['Csafe.png', 'CSafe', 'Coimbatore', 'CSafe website homepage'],
+  ['Travu.png', 'Travu', 'Coimbatore', 'Travu cab booking and tour website homepage'],
+  ['Susee.png', 'Susee Hyundai', 'Theni', 'Susee Hyundai car dealership website homepage'],
+  ['Dana_JvlKkYs.png', 'Dhanalakshmi Enterprises', 'Trichy', 'Dhanalakshmi Enterprises business website homepage'],
+  ['Lic.png', 'LIC Agency', 'Madurai', 'LIC Agency insurance services website homepage'],
+  ['tsing.png', 'TS Singing Arena', 'Chennai', 'TS Singing Arena music and events website homepage'],
+  ['sjr.png', 'SJR Groups', 'Kovilpatti', 'SJR Groups business website homepage'],
+  ['Medex.png', 'Medex', 'Chennai', 'Medex healthcare technology website homepage'],
+  ['nammasu.png', 'Namma Surandai', 'Surandai', 'Namma Surandai local community portal homepage'],
+  ['globalim.png', 'Global Tamil University', 'Coimbatore', 'Global Tamil University website homepage'],
+  ['ntts.png', 'NTTS', 'Chennai', 'NTTS ride booking website homepage'],
+  ['Antex.png', 'Antex Private Limited', 'UAE', 'Antex Private Limited global trade solutions website'],
+  ['london.png', 'London Indian Tamils', 'London', 'London Indian Tamils community website homepage'],
+  ['classic.png', 'Classic & Comfort Interiors', 'Chennai', 'Classic & Comfort Interiors interior design website homepage'],
+  ['builders.png', 'Nagercoil Builders', 'Nagercoil', 'Nagercoil Builders home construction website homepage'],
+  ['Rushik.png', 'Rushik Bio Organic', 'Surandai', 'Rushik Bio Organic agriculture products online store'],
+  ['olympus.png', 'Olympus Diagnostics', 'Bangalore', 'Olympus Diagnostics laboratory testing website homepage'],
+  ['cygmagm.png', 'Cygmagm', 'UAE', 'Cygmagm medical supplies website homepage'],
+].map(([file, name, location, alt]) => ({ image: img(`items/${file}`, alt), name, location, category: '', description: '', link: liveSite(name) }));
 
 const capItems = (list) => list.map(([icon, label]) => ({ icon, label }));
 
 export const servicePageMeta = {
-  'graphic-designing': { meta_title: 'Graphic Designing | Vetri IT Systems Private Limited', meta_description: 'Graphic design services from Vetri IT Systems: logos, branding, social media creatives, brochures and marketing designs.' },
-  'website-development': { meta_title: 'Website Development | Vetri IT Systems Private Limited', meta_description: 'Website Development — custom digital solutions from Vetri IT Systems Private Limited.' },
+  'graphic-designing': {
+    meta_title: 'Logo, Visiting Card & Brochure Design | Vetri IT Systems',
+    meta_description: 'Custom logo, visiting card and brochure design services from Vetri IT Systems. Get all three in one customized business design package for ₹2,000.',
+  },
+  'website-development': {
+    meta_title: 'Website Development Services | Vetri IT Systems',
+    meta_description: 'Vetri IT Systems offers website development services for business websites, e-commerce stores and custom web applications. Plans start at ₹3,000 + GST.',
+  },
   'app-development': {
     meta_title: 'Mobile App Development Company | Vetri IT Systems',
     meta_description: 'Vetri IT Systems builds custom Android business and e-commerce apps with clear pricing. Packages from ₹9,999 + GST. Explore options and get a quote.',
@@ -84,6 +107,10 @@ export const servicePageMeta = {
     meta_title: 'About Vetri IT Systems | IT Solutions Company in Surandai, Tamil Nadu',
     meta_description: 'Vetri IT Systems is an IT solutions company in Tenkasi, Tamil Nadu, building websites, mobile apps, custom software and Digital Marketing Services for growing businesses.',
   },
+  projects: {
+    meta_title: 'Digital Projects Portfolio & Case Studies | Vetri IT Systems',
+    meta_description: 'Explore Vetri IT Systems’ website development projects and digital portfolio, including apps, custom software and graphic design solutions for businesses.',
+  },
   solutions: {
     meta_title: 'Business Software & Software Solutions | Vetri Products',
     meta_description: 'Explore Vetri Products by Vetri IT Systems: Vetri Bills for GST invoices, VTMS for training management and Vetri Files for online PDF tools.',
@@ -100,6 +127,212 @@ export const BROCHURE_FILES = {
   'app-development': [doc('Mobile App Brochure (₹9,999)', 'mobile-app-brochure-9999.pdf'), doc('Mobile App Brochure (₹19,999)', 'mobile-app-brochure-19999.pdf')],
   'graphic-designing': [doc('Graphic Design Package Brochure', 'graphic-design-brochure.png')],
 };
+
+// Our Projects page: copy from the Our Projects SEO content document; screenshots are the original
+// project images already used on the Website Development, App and Software Development pages.
+const TRAVEL = 'Travel & Transportation';
+const HEALTH = 'Healthcare & Medical';
+const AUTO = 'Automotive';
+const INDUSTRIAL = 'Industrial, Engineering & Safety';
+const IT = 'IT & Business Services';
+const EDU = 'Education & Careers';
+const HOME = 'Home, Interiors & Garment Care';
+const TRADE = 'Trade, Export & Global Business';
+const COMMUNITY = 'Community, Media & Entertainment';
+const WD = 'Website Development';
+const shot = (path, alt) => (path ? img(path, alt) : { url: '', public_id: '', type: 'image', alt });
+
+// [name, location, industry, tags, description, screenshot, alt text, case study name]
+const projectItems = [
+  ['Susee Hyundai', 'Theni', AUTO, [WD, 'SEO', 'GSC'], 'Dealership website for Theni with test drive booking, a quick quote form and WhatsApp enquiry for buyers.', 'items/Susee.png', 'Susee Hyundai dealership website in Theni with test drive booking', 'Susee Hyundai'],
+  ['Travu', 'Coimbatore', TRAVEL, [WD, 'SEO'], 'Taxi and car rental website for Coimbatore with easy online booking, ride options and call or WhatsApp contact.', 'items/Travu.png', 'Travu taxi and car rental website in Coimbatore'],
+  ['Mount Dentalcare', 'Chennai', HEALTH, [WD, 'SEO'], 'Dental clinic website for Chennai focused on easy appointment booking and building patient trust.', 'items/mountdental.png', 'Mount Dentalcare dental clinic website in Chennai'],
+  ['Dhanalakshmi Enterprises', 'Trichy', INDUSTRIAL, [WD, 'SEO'], 'Manpower and workforce solutions website for Trichy, serving factories and warehouses with quick quote enquiry.', 'items/Dana_JvlKkYs.png', 'Dhanalakshmi Enterprises manpower and workforce solutions website in Trichy'],
+  ['TrueTecs', 'Dubai', IT, [WD, 'SEO'], 'IT infrastructure and support website for Dubai offering 24/7 monitoring, cloud, cybersecurity and automation.', 'items/truetech.png', 'TrueTecs IT infrastructure and support website for Dubai'],
+  ['LIC Agency', 'Madurai', EDU, [WD, 'SEO'], 'Career website for aspiring LIC agents in Madurai, with an online agency application form and training details.', 'items/Lic.png', 'LIC Agency career website for aspiring agents in Madurai'],
+  ['TS Singing Arena', 'Chennai', COMMUNITY, [WD, 'SEO'], 'Singing competition and music events website for Chennai with event listings and an easy arena sign-up.', 'items/tsing.png', 'TS Singing Arena singing competition and music events website in Chennai', 'TS Singing Arena'],
+  ['SJR Groups', 'Kovilpatti', IT, [WD, 'SEO'], 'Business group website for Kovilpatti covering jewellery, traditional snacks, a sports ground and innovation club.', 'items/sjr.png', 'SJR Groups business group website in Kovilpatti'],
+  ['Namma Surandai', 'Surandai', COMMUNITY, [WD, 'SEO'], 'Local community portal for Surandai with news, places, events, jobs, businesses and local offers in one place.', 'items/nammasu.png', 'Namma Surandai local community portal for Surandai'],
+  ['Global Tamil University', 'Coimbatore', EDU, [WD, 'SEO'], 'University website for Coimbatore with academics, admissions, research and campus details, plus online apply.', 'items/globalim.png', 'Global Tamil University website in Coimbatore'],
+  ['NTTS', 'Chennai', TRAVEL, [WD, 'SEO'], 'Taxi booking website for Chennai covering airport, outstation, one-way and local rides with live tracking.', 'items/ntts.png', 'NTTS taxi booking website in Chennai', 'New Track India (NTTS)'],
+  ['Antex Private Limited', 'UAE', TRADE, [WD, 'SEO'], 'Global trade website for the UAE covering sourcing, quality inspection, packaging, logistics and customs support.', 'items/Antex.png', 'Antex Private Limited global trade website for the UAE'],
+  ['London Indian Tamils', 'London', COMMUNITY, [WD, 'SEO'], 'Community website connecting Tamil-speaking people across the UK, with events, membership and donations.', 'items/london.png', 'London Indian Tamils community website in the UK', 'London Indian Tamils'],
+  ['Classic & Comfort Interiors', 'Chennai', HOME, [WD, 'SEO'], 'Interior design website for Chennai covering residential and commercial spaces, with a simple quote request.', 'items/classic.png', 'Classic & Comfort Interiors interior design website in Chennai', 'Classic Comfort Interior & Exterior'],
+  ['Nagercoil Builders', 'Nagercoil', INDUSTRIAL, [WD], 'Construction website for Nagercoil with services, plan and pricing details, project showcase and enquiry form.', 'items/builders.png', 'Nagercoil Builders construction website in Nagercoil'],
+  ['Olympus Diagnostics', 'Bangalore', HEALTH, [WD], 'Diagnostic lab website for Bangalore with online test booking, home sample collection and prescription upload.', 'items/olympus.png', 'Olympus Diagnostics diagnostic lab website in Bangalore'],
+  ['Cygmagm', 'UAE', TRADE, [WD], 'Business website for medical supplies and global trade in the UAE, with product categories and enquiry option.', 'items/cygmagm.png', 'Cygmagm medical supplies and global trade website for the UAE'],
+  ['Ironmeka', '', HOME, [WD, 'SEO', 'Logo Design', 'Business Card'], 'Website and logo design for Ironmeka. A consistent look across the website and brand mark, so the business is easy to recognise.', 'items/ironmeka.png', 'Ironmeka website and logo design', 'Ironmeka'],
+  ['Imaya Mercantile', '', TRADE, [WD, 'SEO', 'Logo Design'], 'Website and logo design for Imaya Mercantile, an export business. A professional website and logo that present the business clearly to international buyers.', '', 'Imaya Mercantile export business website and logo design', 'Imaya Mercantile'],
+  ['Sashwanth Travels', '', TRAVEL, [WD, 'SEO', 'Logo Design', 'AI Chatbot'], 'Travel website and logo design created for Sashwanth Travels. Clear tour package details, enquiry forms and a smooth user journey.', 'items/saswanthtravels.png', 'Sashwanth Travels travel and tour packages website and logo design'],
+  ['Alpha & Omega', '', INDUSTRIAL, [WD, 'SEO'], 'Website for Alpha & Omega Industrial Technologies, supplying industrial equipment such as compressors. Includes product pages, services, industries and quote request options.', '', 'Alpha & Omega industrial equipment and engineering solutions website'],
+  ['CSafe', '', INDUSTRIAL, [WD, 'SEO'], 'Website for Chitra Fire and Safety Equipments, focused on reflective safety jackets. Includes product categories, industry pages, a bulk quote option and WhatsApp and call buttons.', 'items/Csafe.png', 'CSafe reflective safety jackets website', 'CSAFE'],
+  ['MedEx', '', HEALTH, [WD, 'SEO', 'Logo Design', 'AI Assistant'], 'Website for MedEx, a biomedical engineering and healthcare technology company. Covers products, services and quote requests for hospitals, diagnostic centers and clinics.', 'items/Medex.png', 'MedEx biomedical engineering and healthcare technology website', 'MedEx Biomed'],
+  ['Varahi Tours and Travels', '', TRAVEL, [WD, 'SEO'], 'Website for Varahi Tours & Travels, offering Madurai cab services and Tamil Nadu tour packages. Includes a quick enquiry form, fleet, packages, destinations and WhatsApp booking support.', 'items/varahi.png', 'Varahi Tours & Travels Madurai cab services and tour packages website'],
+  // App Development
+  ['QuickRetail POS', '', IT, ['App Development'], 'Android point-of-sale app built for retail businesses. Helps shop staff handle sales at the counter.', 'reference/app-project-1.jpg', 'QuickRetail POS Android point-of-sale app for retail businesses'],
+  ['MedPulse Telehealth', '', HEALTH, ['App Development'], 'Android telehealth app built for healthcare services. Helps patients connect with doctors remotely.', 'reference/app-project-2.jpg', 'MedPulse Telehealth Android telehealth app for healthcare'],
+  // Custom Software Development
+  ['Akash Photography', '', COMMUNITY, ['Software Development'], 'Software built for a photography business. Helps manage the studio’s work in one place.', 'items/Ak.png', 'Akash Photography software for a photography business'],
+  // Graphic Design
+  ['Vistaara Capital', '', TRADE, ['Logo Design'], 'Custom logo design created for Vistaara Capital. A clean brand mark that gives the business a professional identity.', '', 'Vistaara Capital logo design'],
+  ['Kulfi Machi', '', TRADE, ['Logo Design'], 'Custom logo design for Kulfi Machi, a kulfi brand. A fresh brand presence with a logo that gives the brand its own identity.', '', 'Kulfi Machi kulfi brand website and logo design'],
+].map(([name, location, industry, tags, description, path, alt, caseStudy]) => ({
+  name, location, industry, tags, description, image: shot(path, alt), link: liveSite(name), case_study: caseStudy || '',
+}));
+
+const caseStudy = (name, industry, industry_icon, path, alt, heading, description, features, popup_description, challenge, solution, key_features, highlights) => ({
+  name, industry, industry_icon, image: shot(path, alt), link: liveSite(name), heading, description,
+  features: features.map(([icon, label]) => ({ icon, label })), popup_description, challenge, solution, key_features, highlights,
+});
+
+const projectsPage = [
+  {
+    key: 'hero', label: 'Hero Section',
+    content: {
+      eyebrow: 'VETRI IT SYSTEMS / OUR PROJECTS',
+      title: 'Explore Our Digital Projects & Creative Solutions', highlight: 'Digital Projects', align: 'split',
+      description: 'Discover how Vetri IT Systems delivers websites, mobile applications, custom software, digital marketing and graphic design solutions for businesses across industries.',
+      button: { text: 'Talk to Our Team', link: '/contact' },
+      secondary_button: { text: 'Explore Our Expertise', link: '/#services' },
+      image: null,
+      screens: [
+        { name: 'Susee Hyundai', image: img('items/Susee.png', 'Susee Hyundai dealership website in Theni with test drive booking') },
+        { name: 'Sashwanth Travels', image: img('items/saswanthtravels.png', 'Sashwanth Travels travel and tour packages website and logo design') },
+        { name: 'Mount Dentalcare', image: img('items/mountdental.png', 'Mount Dentalcare dental clinic website in Chennai') },
+        { name: 'Classic & Comfort Interiors', image: img('items/classic.png', 'Classic & Comfort Interiors interior design website in Chennai') },
+        { name: 'Varahi Tours and Travels', image: img('items/varahi.png', 'Varahi Tours & Travels Madurai cab services and tour packages website') },
+      ],
+    },
+  },
+  { key: 'stats', label: 'Stats', content: STATS },
+  {
+    key: 'portfolio', label: 'Our Projects',
+    content: {
+      eyebrow: 'Our Work', title: 'Discover Our Digital Project Portfolio Across Five Services', highlight: 'Across Five Services',
+      description: 'Browse our website development projects, digital marketing work, application and software solutions, and graphic design portfolio—all in one place.',
+      search_placeholder: 'Search client projects...', all_label: 'All Projects',
+      filters: [
+        { icon: 'Bus', label: TRAVEL }, { icon: 'HeartPulse', label: HEALTH }, { icon: 'Car', label: AUTO },
+        { icon: 'Factory', label: INDUSTRIAL }, { icon: 'Laptop', label: IT }, { icon: 'GraduationCap', label: EDU },
+        { icon: 'House', label: HOME }, { icon: 'Globe', label: TRADE }, { icon: 'Users', label: COMMUNITY },
+      ],
+      items: projectItems,
+    },
+  },
+  {
+    key: 'case_studies', label: 'Case Study Carousel',
+    content: {
+      eyebrow: 'Client Case Studies', title: 'Digital Solutions That Address Real Business Needs', highlight: 'Real Business Needs',
+      description: 'Discover selected client case studies, explore the challenges behind each project, and see how our digital solutions address specific business requirements across Tamil Nadu and beyond.',
+      items: [
+        caseStudy('Susee Hyundai', AUTO, 'Car', 'items/Susee.png', 'Susee Hyundai dealership website in Theni with test drive booking',
+          'From Low Online Visibility to More Customer Enquiries',
+          'A modern dealership website showcasing Hyundai cars, offers and test-drive options to drive customer enquiries.',
+          [['Car', 'Car Models'], ['CalendarCheck', 'Test-Drive Requests'], ['MessageCircle', 'Enquiry Options']],
+          'A modern dealership website helping customers explore Hyundai vehicles, services and test-drive options in Theni, with SEO improvements to increase Google Search visibility.',
+          'Customers needed easy access to vehicle and dealership information, while the website needed better visibility in Google Search results.',
+          'Vetri IT Systems developed a responsive dealership website and optimised it for relevant Hyundai dealership and local search terms. Google Search Console (GSC) was used to monitor search performance and visibility.',
+          ['Hyundai vehicle information', 'Dealership service details', 'Test-drive enquiries', 'Contact and location information', 'On-page SEO optimisation', 'Local search keyword targeting'],
+          ['Modern dealership presentation', 'Organised vehicle information', 'Improved Google Search visibility for targeted queries', 'Convenient enquiry journey']),
+        caseStudy('MedEx Biomed', HEALTH, 'HeartPulse', 'items/Medex.png', 'MedEx biomedical engineering and healthcare technology website',
+          'Make Complex Biomedical Services Easy to Understand',
+          'A healthcare technology website showcasing biomedical equipment, technical services and support for medical facilities.',
+          [['Stethoscope', 'Equipment Range'], ['Wrench', 'Technical Services'], ['Phone', 'Contact Options']],
+          'A healthcare technology website presenting biomedical engineering services, telehealth products and equipment support for hospitals, diagnostic centers and clinics.',
+          'Healthcare facilities needed a clear way to understand maintenance, calibration and telehealth offerings, and to reach the team quickly when equipment support was urgent.',
+          'Vetri IT Systems built a structured website covering services, products and company information, with an AI assistant, quote form and WhatsApp contact for faster enquiries.',
+          ['Biomedical equipment information', 'Product categories', 'Maintenance services', 'Calibration and repair information', 'Service enquiry options', 'Company contact details'],
+          ['Healthcare-focused presentation', 'Organised product information', 'Structured service details', 'Accessible enquiry options']),
+        caseStudy('CSAFE', INDUSTRIAL, 'Factory', 'items/Csafe.png', 'CSafe reflective safety jackets website',
+          'Turn Safety Wear Browsing into Bulk Order Enquiries',
+          'A product-focused website showcasing reflective safety wear, custom printing and bulk order options.',
+          [['HardHat', 'Safety Wear Range'], ['Palette', 'Custom Branding'], ['Boxes', 'Bulk Enquiries']],
+          'A product-focused website presenting reflective safety jackets in multiple GSM ranges, with custom printing and bulk supply for industrial buyers.',
+          'Industrial buyers needed to compare many jacket specifications and find bulk supply and branding options without lengthy back-and-forth.',
+          'Vetri IT Systems built a catalogue-style website organised by GSM, colour and jacket type, with product-level WhatsApp enquiry, a bulk quote form and industry-wise information.',
+          ['Reflective safety jackets', 'Product specifications', 'Colour and GSM options', 'Custom printing information', 'Industry-specific product details', 'Bulk enquiry options'],
+          ['Product-focused presentation', 'Organised safety-wear catalogue', 'Customisation information', 'Business enquiry pathway']),
+        caseStudy('Classic Comfort Interior & Exterior', HOME, 'House', 'items/classic.png', 'Classic & Comfort Interiors interior design website in Chennai',
+          'Turn Design Inspiration into Real Project Enquiries',
+          'An interior design website showcasing residential, commercial and exterior solutions to attract prospective clients.',
+          [['House', 'Home Interiors'], ['Building2', 'Office Spaces'], ['FileText', 'Project Quotes']],
+          'An interior design website presenting kitchens, wardrobes, false ceilings and facade works for homeowners and businesses in Chennai.',
+          'Prospective clients needed to see the full scope of interior and exterior work in one place and feel confident in the team before sharing their space requirements.',
+          'Vetri IT Systems created a design-led website with service sections, a filterable project portfolio, a step-by-step design process and a service-based enquiry form.',
+          ['Residential interior services', 'Commercial interior solutions', 'Kitchen and wardrobe information', 'Exterior design services', 'Project portfolio', 'Enquiry options'],
+          ['Visual project showcase', 'Six-step design process', 'Single-team design-to-finish story', 'Homeowner and business testimonials']),
+        caseStudy('Ironmeka', HOME, 'Shirt', 'items/ironmeka.png', 'Ironmeka website and logo design',
+          'Discover Specialised Garment-Care Services Through a Clear Online Presence',
+          'A coordinated website and logo design giving Ironmeka a clear, professional and recognisable brand presence.',
+          [['Shirt', 'Garment-Care Services'], ['FileText', 'Service Information'], ['MessageCircle', 'Customer Enquiries']],
+          'A coordinated website and logo design project giving Ironmeka, a garment-care business, a clear and recognisable brand presence online.',
+          'Ironmeka needed customers to quickly understand its garment-care services and recognise the brand consistently across its website and visual identity.',
+          'Vetri IT Systems designed the website and logo together, presenting service details clearly with simple ways for customers to get in touch.',
+          ['Custom website design', 'Logo design', 'Business card design', 'Consistent brand visuals', 'Structured website content', 'Contact information'],
+          ['Matching website and logo identity', 'Easy-to-scan service content', 'Print-ready business card', 'Consistent brand look']),
+        caseStudy('Imaya Mercantile', TRADE, 'Ship', '', 'Imaya Mercantile export business website and logo design',
+          'Connect Global Buyers with Indian Spices and Agricultural Exports',
+          'An export-focused business website presenting Indian agricultural products, including turmeric, millets, jaggery and cardamom, to help prospective buyers explore the product range and connect with the business.',
+          [['Boxes', 'Product Catalogue'], ['Ship', 'Export Focus'], ['Mail', 'Buyer Enquiries']],
+          'An export-focused website presenting turmeric, black pepper, cardamom, jaggery and millets to international buyers, with a clear route to export enquiries.',
+          'International buyers needed product specifications, packaging options and sourcing details in one place before approaching an Indian spice and agri exporter.',
+          'Vetri IT Systems built a trade website with product overview pop-ups, a source-to-shipment process, a certification gallery section and a detailed buyer enquiry form.',
+          ['Agricultural product information', 'Spice and millet categories', 'Product range presentation', 'Export business details', 'Custom logo design', 'Buyer enquiry options'],
+          ['Spice and agri-product focus', 'Certification gallery section', 'Bulk-order buyer FAQs', 'Export-ready logo design']),
+        caseStudy('TS Singing Arena', COMMUNITY, 'Music', 'items/tsing.png', 'TS Singing Arena singing competition and music events website in Chennai',
+          'Bring Singing Talent and Event Opportunities into the Spotlight',
+          'An event website presenting singing competitions, event details and participant registration opportunities.',
+          [['Music', 'Singing Events'], ['Calendar', 'Event Information'], ['Users', 'Participation']],
+          'A music community website for Chennai presenting singing competitions, past event highlights and registration support for singers of every age.',
+          'Singers and parents needed one place to discover upcoming events, understand how online and offline competitions work and register with confidence.',
+          'Vetri IT Systems built an event website with upcoming and past event tabs, a photo gallery, community testimonials, FAQs and WhatsApp registration support.',
+          ['Singing competition information', 'Event details', 'Competition formats', 'Participant information', 'Event gallery', 'Registration and contact options'],
+          ['No-age-limit inclusive messaging', 'Awards and recognition showcase', 'Founder story and community vision', 'Singer and parent FAQs']),
+        caseStudy('London Indian Tamils', COMMUNITY, 'Users', 'items/london.png', 'London Indian Tamils community website in the UK',
+          'Create a Digital Hub for the Tamil Community in London',
+          'A community-oriented website designed to bring London-based Tamil community information, events and support opportunities together in one accessible online space.',
+          [['Users', 'Community'], ['Sparkles', 'Cultural Events'], ['HeartHandshake', 'Membership & Support']],
+          'A community website connecting Tamil-speaking Indians across London and the UK through events, networking, careers and cultural activities.',
+          'Community activity was spread across WhatsApp conversations, making it hard for newcomers to discover events, opportunities and how to join.',
+          'Vetri IT Systems built a community website with an about story, featured event bookings, founder and supporter messages, social links and a direct sign-up route.',
+          ['Community information', 'Cultural activities', 'Event information', 'Membership details', 'Community updates', 'Contact and sign-up options'],
+          ['Connect, Support, Celebrate theme', 'Founder and supporter messages', 'Instagram community moments', 'Tamil and English touches']),
+        caseStudy('New Track India (NTTS)', TRAVEL, 'Bus', 'items/ntts.png', 'NTTS taxi booking website in Chennai',
+          'Explore Local, Airport and Outstation Taxi Services in One Place',
+          'A taxi-booking website presenting local rides, airport transfers, cab services, helping customers understand available travel options and navigate the booking process.',
+          [['Car', 'Taxi Services'], ['Plane', 'Airport Transfers'], ['MapPin', 'Trip Options']],
+          'A taxi-booking website presenting airport, outstation, one-way and local cab services with upfront fares and a simple online booking form.',
+          'Travellers needed to compare vehicle types and fares and book the right ride without uncertainty about pricing or safety.',
+          'Vetri IT Systems built a booking-focused website with a ride-type form, fleet and fare comparison, a three-step booking guide and rider safety information.',
+          ['Local taxi services', 'Airport transfers', 'Outstation travel options', 'Fleet information', 'Fare and package details', 'Booking enquiry options'],
+          ['Verified-driver and safety information', 'Live tracking and SOS highlights', 'Rider reviews and FAQs', 'Corporate mobility background']),
+      ],
+    },
+  },
+  {
+    key: 'contact_cta', label: 'Final CTA',
+    content: {
+      title: 'Your Next Big Idea Starts with the Right Digital Partner', highlight: 'the Right Digital Partner',
+      description: 'From websites and applications to marketing, software and graphic design, let\'s explore the right solution for your business.',
+      button: { text: 'Talk to Our Team', link: '/contact' }, whatsapp_text: 'WhatsApp Us', show_contact: true,
+    },
+  },
+  {
+    key: 'faq', label: 'Frequently Asked Questions',
+    content: {
+      title: 'Frequently Asked Questions', highlight: 'Questions',
+      items: [
+        { question: 'What services does Vetri IT Systems offer?', answer: 'Vetri IT Systems offers website development, mobile app development, custom software development, digital marketing and graphic design services.' },
+        { question: 'What projects has Vetri IT Systems worked on?', answer: 'Our portfolio includes business websites, booking platforms, mobile applications, custom software solutions, digital marketing work and graphic design projects across different industries.' },
+        { question: 'Do you develop mobile apps?', answer: 'Yes. We develop Android applications, including solutions for retail point-of-sale and telehealth use cases.' },
+        { question: 'Do you build websites with online booking?', answer: 'Yes. We develop booking-focused websites for businesses that need customers to explore services and submit bookings or enquiries online.' },
+        { question: 'Do you build custom software for businesses?', answer: 'Yes. We develop custom software based on business requirements, including solutions designed to help organise business workflows.' },
+        { question: 'Do you offer digital marketing?', answer: 'Yes. Our digital marketing services include SEO and social media marketing, depending on the client\'s requirements.' },
+        { question: 'How can I discuss a project with Vetri IT Systems?', answer: 'Click “Talk to Our Team” to discuss your requirements with Vetri IT Systems.' },
+      ],
+    },
+  },
+];
 
 const productsPage = [
   {
@@ -382,7 +615,7 @@ const contactPage = [
   {
     key: 'faq', label: 'Contact FAQs',
     content: {
-      eyebrow: 'Quick Answers', title: 'Frequently Asked Questions About Contacting Us', highlight: 'Contacting Us',
+      eyebrow: 'QUICK ANSWERS', title: 'Frequently Asked Questions About Contacting Us', highlight: 'Contacting Us',
       items: [
         { question: 'How can I contact Vetri IT Systems Surandai?', answer: 'Call or WhatsApp 8438781327 or 7397654827, visit our office near Surandai Bus Stand, or submit the project consultation form on this page.' },
         { question: 'What are your working hours?', answer: 'We are available Monday to Saturday, 10:00 AM to 6:00 PM IST.' },
@@ -397,25 +630,160 @@ const contactPage = [
 
 export const servicePages = {
   // Placeholder until the Graphic Designing SEO content is ready; edit or add sections in the admin
+  // Graphic Designing: copy from the corrected Graphic Design SEO content document
   'graphic-designing': [
     {
-      key: 'hero', label: 'Hero Banner',
+      key: 'hero', label: 'Hero Section',
       content: {
-        title: 'Graphic Designing That Makes Your Brand Memorable', highlight: 'Memorable', align: 'center',
-        description: 'Logos, brand identity, social media creatives, brochures and marketing designs crafted to look great and communicate clearly.',
-        image: img('marketing.png', 'Graphic design team working on brand creatives'),
+        title: 'Logo, Visiting Card & Brochure Design Services for Your Business', highlight: 'Brochure Design Services', align: 'split',
+        description: 'Vetri IT Systems offers logo design services, professional visiting card design and business brochure design. Every design is created around your business name, industry and brand colours.',
+        tags: ['100% Customized Designs', 'Final Files in PDF & JPG'],
         button: { text: 'Get a Quote', link: '#enquiry' },
+        image: null,
+        art: 'hero', art_alt: 'Graphic designer creating a custom logo, visiting card and brochure design',
       },
     },
     {
-      key: 'enquiry', label: 'Enquiry Form',
+      key: 'offerings', label: 'Our Graphic Design Services',
       content: {
-        title: 'Have a Design Project in Mind?', highlight: 'Design Project',
-        description: 'Tell us what you need and our design team will get back to you with ideas and a quote.',
+        eyebrow: 'Our Graphic Design Services', title: 'Logo, Visiting Card & Brochure Design Services', highlight: 'Brochure Design Services',
+        description: 'From a recognizable logo to a professional first impression, our design services help keep your business materials visually consistent.',
+        items: [
+          {
+            art: 'logo', art_alt: 'Custom logo design for a business by Vetri IT Systems', icon: 'PenTool', title: 'Custom Logo Design',
+            description: 'Get a custom logo design created around your business name, industry and identity. Whether you need a business logo design for a new business or a company logo design for an existing one, the design is made specifically for you.',
+            features: ['Customized logo design', 'A unique design concept tailored to your business', 'Final files in PDF and JPG formats'],
+          },
+          {
+            art: 'card', art_alt: 'Professional visiting card design front and back', icon: 'BadgeCheck', title: 'Professional Visiting Card Design',
+            description: 'Make a strong first impression with a professional visiting card design. Our company visiting card design presents your business name and contact details clearly.',
+            features: ['Business card design with front and back', 'Business name and contact details', 'Design coordinated with your logo and brand colours', 'Final files in PDF and JPG formats'],
+          },
+          {
+            art: 'brochure', art_alt: 'Business brochure design in A5 four-page format', icon: 'FileText', title: 'Business Brochure Design',
+            description: 'Share your business information, products and services with a customized, professional brochure design created to present your business clearly.',
+            features: ['A5 brochure design', 'Customized layout and design', 'Business information and service highlights', 'Consistent brand colours and visual style', 'Final files in PDF and JPG formats'],
+          },
+        ],
+      },
+    },
+    {
+      key: 'packages', label: 'Design Package',
+      content: {
+        eyebrow: 'Design Package', title: 'Affordable Logo, Visiting Card & Brochure Design Package', highlight: 'Design Package',
+        description: 'Get three essential design services together in one package: a custom logo, a front-and-back visiting card and a four-page A5 brochure.',
+        layout: 'wide',
+        plans: [
+          {
+            name: 'Logo, Visiting Card & Brochure Design Package', price: '₹2,000', price_note: 'Package Price',
+            features: ['1 customized logo design', '1 business visiting card design (front and back)', '1 A5 brochure design (4 pages)', 'Final files in PDF and JPG formats'],
+            note: 'Additional charges: Extra brochure pages – ₹250 per page. Changes after final approval are charged separately. Printing charges are not included.',
+            secondary_text: 'Download Brochure', secondary_link: '/media/brochures/graphic-design-brochure.png',
+            button_text: 'Get This Package', button_link: '#enquiry', featured: true,
+            art: 'package', art_alt: 'Logo, visiting card and brochure design package',
+          },
+        ],
+      },
+    },
+    {
+      // the Graphic Design package flyer, shown as a preview with a Download Brochure button
+      key: 'brochure', label: 'Brochure Download',
+      content: {
+        title: 'Download Graphic Designing Brochure', highlight: 'Designing Brochure',
+        description: 'Explore our graphic designing services, capabilities and solutions in our company brochure.',
+        button_text: 'Download Brochure', link: '', files: BROCHURE_FILES['graphic-designing'],
+        book_label: 'VIS', book_title: 'Graphic Designing', book_caption: 'COMPANY BROCHURE',
+      },
+    },
+    {
+      key: 'why', label: 'Why Choose Vetri IT Systems?',
+      content: {
+        eyebrow: 'Why Choose Vetri IT Systems?', title: 'What You Get with Vetri IT Systems', highlight: 'Vetri IT Systems',
+        items: [
+          { icon: 'Sparkles', title: '100% Customized Designs', description: 'Designs are created to reflect your business identity, not ready-made templates.' },
+          { icon: 'Layers', title: 'Consistent Business Identity', description: 'Keep your logo, visiting card and brochure aligned with the same visual style.' },
+          { icon: 'Award', title: 'Professional Design Output', description: 'Business details and service highlights are arranged in a clear, organized layout.' },
+          { icon: 'BadgeIndianRupee', title: 'Affordable Package', description: 'Logo design, visiting card design and brochure design together for ₹2,000.' },
+          { icon: 'ClipboardCheck', title: 'Clear Scope', description: 'The package covers design services. Printing charges are not included.' },
+        ],
+      },
+    },
+    {
+      // Hidden until real, client-approved work images are uploaded (per the content document)
+      key: 'clients', label: 'Our Work', inactive: true,
+      content: {
+        eyebrow: 'Our Work', title: 'Graphic Design Work for Businesses', highlight: 'for Businesses',
+        description: 'Showcase selected logo designs, visiting card designs and brochure designs created for clients.',
+        items: [
+          // sample images (items/gd-sample-*.png) until the client-approved work is uploaded in the admin
+          ['Kulfi Machi', 'Custom Logo Design', 'Kulfi Machi logo design', 'gd-sample-kulfi-machi.png'],
+          ['Ironmeka', 'Custom Logo Design', 'Ironmeka logo design', 'ironmeka-logo.png'], // real logo
+          ['Ironmeka', 'Business Visiting Card Design', 'Ironmeka business card design', 'gd-sample-ironmeka-card.png'],
+          ['Imaya Mercantile', 'Custom Logo Design', 'Imaya Mercantile logo design', 'gd-sample-imaya-mercantile.png'],
+          ['Sashwanth Travels', 'Custom Logo Design', 'Sashwanth Travels logo design', 'gd-sample-sashwanth-travels.png'],
+          ['Vistaara Capital', 'Custom Logo Design', 'Vistaara Capital logo design', 'gd-sample-vistaara-capital.png'],
+        ].map(([name, category, alt, file]) => ({ image: img(`items/${file}`, alt), name, location: '', category, description: '', link: '' })),
+      },
+    },
+    {
+      key: 'process', label: 'Our Design Process',
+      content: {
+        eyebrow: 'Our Design Process', title: 'How Our Design Process Works', highlight: 'Design Process',
+        steps: [
+          { icon: 'Search', title: 'Discover', description: 'Understand your business, industry and design requirements.' },
+          { icon: 'FileText', title: 'Collect Details', description: 'Receive your business name, contact information, content, images and preferred brand colours.' },
+          { icon: 'Palette', title: 'Design', description: 'Create your customized logo, visiting card and brochure designs aligned with your business identity.' },
+          { icon: 'BadgeCheck', title: 'Review & Approval', description: 'Share the designs with you for review and approval.' },
+          { icon: 'Send', title: 'Finalize', description: 'Deliver the approved files in PDF and JPG formats.' },
+        ],
+      },
+    },
+    {
+      key: 'tools', label: 'Design Capabilities',
+      content: {
+        eyebrow: 'Design Capabilities', title: 'Design Solutions for Your Business', highlight: 'Your Business',
+        description: 'Our package covers logo design, visiting card design and brochure design for businesses. This includes business logo design, company logo design, business card design, professional visiting card design, business brochure design and company profile brochure design.',
+        items: ['Business Logo Design', 'Company Logo Design', 'Business Card Design', 'Professional Visiting Card Design', 'Business Brochure Design', 'Company Profile Brochure Design'],
+        art: 'profile', art_alt: 'Company profile brochure design for a business',
+      },
+    },
+    {
+      key: 'industries', label: 'Who Is This Package For?',
+      content: {
+        eyebrow: 'Who Is This Package For?', title: 'Graphic Design Services for Every Business', highlight: 'Every Business',
+        description: 'Our graphic design package is ideal for startups, small businesses, retail shops, professional service providers, IT companies, freelancers and entrepreneurs looking to build a consistent brand identity with custom logo designs, professional visiting cards and business brochures.',
+        items: ['Startups', 'Small Businesses', 'Retail Shops', 'Professional Service Providers', 'IT Companies', 'Freelancers', 'Entrepreneurs'],
+        art: 'audience', art_alt: 'Startups, shops and freelancers building a consistent brand identity',
+      },
+    },
+    {
+      key: 'faq', label: 'Frequently Asked Questions',
+      content: {
+        title: 'Frequently Asked Questions', highlight: 'Questions',
+        items: [
+          { question: 'What design services does Vetri IT Systems offer?', answer: 'Our current package includes custom logo design, front-and-back visiting card design and A5 brochure design.' },
+          { question: 'How much does the design package cost?', answer: 'The complete package costs ₹2,000. It includes one customized logo, one front-and-back business visiting card design and one four-page A5 brochure design.' },
+          { question: 'What is included in the logo design service?', answer: 'One customized logo design tailored to your business identity, with final files provided in PDF and JPG formats.' },
+          { question: 'Do you provide professional visiting card design?', answer: 'Yes. The package includes one business visiting card design with front and back layouts, your business details and styling coordinated with your logo and brand colours.' },
+          { question: 'What brochure design do you provide?', answer: 'The package includes one customized A5 brochure design with business information and service highlights.' },
+          { question: 'Do you offer brochure design and printing?', answer: 'We provide the design. Printing charges are not included in the package.' },
+          { question: 'Can I add more brochure pages?', answer: 'Yes. Additional brochure pages cost ₹250 per page.' },
+          { question: 'What if I need changes after final approval?', answer: 'Changes after final approval are charged separately.' },
+        ],
+      },
+    },
+    {
+      key: 'enquiry', label: 'Final CTA & Enquiry Form',
+      content: {
+        title: 'Ready to Give Your Business a Professional Look?', highlight: 'a Professional Look?',
+        description: 'Get custom logo design, visiting card design and brochure design from Vetri IT Systems. Contact our team to get started with the ₹2,000 design package.',
         image: img('cta.png', 'Design team discussing a project'),
-        requirements: ['Logo & Branding', 'Social Media Creatives', 'Brochure & Print Design', 'UI / Web Design', 'Other'],
-        budgets: ['Below ₹5,000', '₹5,000 – ₹15,000', '₹15,000 – ₹50,000', 'Above ₹50,000'],
-        button_text: 'Get a Quote', whatsapp_text: 'WhatsApp Us',
+        business_field: true, business_label: 'Business Name',
+        requirement_label: 'Required Design Service',
+        requirements: ['Logo, Visiting Card & Brochure Design Package', 'Custom Logo Design', 'Professional Visiting Card Design', 'Business Brochure Design', 'Extra Brochure Pages'],
+        budgets: [],
+        brochure_text: 'Download Brochure', brochure_link: '/media/brochures/graphic-design-brochure.png',
+        button_text: 'Get This Package', whatsapp_text: '',
         success_message: 'Thank you! Our team will contact you shortly.',
       },
     },
@@ -424,57 +792,161 @@ export const servicePages = {
   contact: contactPage,
   about: aboutPage,
   solutions: productsPage,
+  projects: projectsPage,
+  // Website Development: copy from the revised Website Development SEO content document
   'website-development': [
     {
       key: 'hero', label: 'Hero Banner',
       content: {
-        title: 'Transforming Ideas into Enterprise-Grade Digital Reality', highlight: '', align: 'center',
-        description: 'We design, build, and scale custom web platforms, mobile apps, and enterprise cloud software that power measurable commercial growth.',
-        image: img('sections/8b92283e-2871-4d7c-8f0d-ddc58eae6d77.png', 'Transforming Ideas into Enterprise-Grade Digital Reality'),
-        button: { text: '', link: '' },
-      },
-    },
-    { key: 'stats', label: 'Stats', content: STATS },
-    { key: 'clients', label: 'Our Clients', content: { eyebrow: '/ Project Showcase', title: 'Our Clients', highlight: 'Clients', items: webClients } },
-    { key: 'journey', label: 'How We Work', content: JOURNEY },
-    {
-      key: 'capabilities', label: 'Capabilities',
-      content: {
-        title: 'Capabilities', highlight: '', variant: 'chips',
-        items: capItems([
-          ['Search', 'SEO Ready'], ['LayoutTemplate', 'CMS'], ['CreditCard', 'Payment Gateway'], ['Gauge', 'Speed Optimised'],
-          ['MonitorSmartphone', 'Responsive Design'], ['BarChart3', 'Analytics'], ['ShieldCheck', 'Secure Hosting'], ['Languages', 'Multilingual'],
-          ['Accessibility', 'Accessibility'], ['Workflow', 'Custom Workflow'], ['Smartphone', 'Mobile First'], ['Activity', '99.9% Uptime'],
-          ['TrendingUp', 'High Conversion'], ['Database', 'Scalable Backend'],
-        ]),
-        stats: [],
+        title: 'Custom Website Development That Drives Business Growth', highlight: 'Drives Business Growth', align: 'center',
+        description: 'We design and develop professional, mobile-friendly websites that help businesses build an online presence, showcase services and generate enquiries.',
+        image: img('sections/8b92283e-2871-4d7c-8f0d-ddc58eae6d77.png', 'Team working on website development and digital solutions'),
+        button: { text: 'Get a Quote', link: '#enquiry' },
       },
     },
     {
-      key: 'pricing', label: 'Pricing Packages',
+      key: 'stats', label: 'Stats',
       content: {
-        title: 'Website Pricing Packages', highlight: 'Pricing Packages',
-        plans: [
-          { name: 'Single Page Website', subtitle: '1-PAGE', price: '₹ 3,000 + GST', features: ['1 Year Server Free', '1 Year Domain Free', 'Basic Call and Mail Integration', 'No Payment Gateway'], button_text: 'BOOK NOW ↗', button_link: '/contact' },
-          { name: 'Service Based – Commerce Website', subtitle: '3-PAGES', price: '₹ 10,000 + GST', features: ['1 Year Server Free', '1 Year Domain Free', 'Service Catalogue', 'Appointment Booking', 'Payment Gateway'], button_text: 'BOOK NOW ↗', button_link: '/contact', featured: true },
-          { name: 'Customized Website', subtitle: 'Based on Requirements', price: '₹ 10,000 – ₹15,000 + GST', features: ['1 Year Server Free', '1 Year Domain Free', 'Service Catalogue', 'Payment Gateway'], button_text: 'BOOK NOW ↗', button_link: '/contact' },
+        items: [
+          { value: '50+', label: 'Digital Solutions' },
+          { value: '99.4%', label: 'On-Time Delivery' },
+          { value: '30+', label: 'Engineers & Designers' },
+          { value: '5+', label: 'Countries Served' },
         ],
       },
     },
     {
-      key: 'brochure', label: 'Brochure Download',
+      key: 'services', label: 'Our Services',
       content: {
-        title: 'Download Web Development Brochure', highlight: 'Development Brochure',
-        description: 'Explore our website development services, capabilities and solutions in our company brochure.',
-        button_text: 'Download Brochure', link: '', files: BROCHURE_FILES['website-development'],
-        book_label: 'VIS', book_title: 'Website Development', book_caption: 'COMPANY BROCHURE',
+        eyebrow: 'Our Services', title: 'Website Development Services Built Around Your Business', highlight: 'Built Around Your Business', layout: 'tiles',
+        description: 'From simple websites to custom web applications, we build digital solutions tailored to your business needs.',
+        items: [
+          { icon: 'Briefcase', title: 'Business Website', description: 'Professional websites to showcase your business and services.' },
+          { icon: 'ShoppingCart', title: 'E-commerce Website', description: 'Online stores with product catalogues and payment integration.' },
+          { icon: 'Award', title: 'Portfolio Website', description: 'Showcase your work and achievements online.' },
+          { icon: 'LayoutTemplate', title: 'Landing Page', description: 'Focused pages designed to generate enquiries.' },
+          { icon: 'Code2', title: 'Web Application', description: 'Custom dashboards, portals and business tools.' },
+          { icon: 'Calendar', title: 'Booking Website', description: 'Online appointment and service booking solutions.' },
+        ],
       },
     },
     {
-      key: 'cta', label: 'Call To Action',
+      key: 'pricing', label: 'Website Development Pricing',
       content: {
-        eyebrow: 'Let’s Collaborate', title: 'YOUR NEXT DIGITAL EXPERIENCE STARTS HERE', subtitle: '', description: '',
-        image: img('reference/web-cta.png', ''), primary_button: { text: 'Create Your Website', link: '/contact' }, secondary_button: { text: '', link: '' },
+        eyebrow: 'Website Development Pricing', title: 'Website Development Packages & Pricing', highlight: 'Packages & Pricing', layout: 'showcase',
+        plans: [
+          {
+            tag: 'Starter', icon: 'LayoutTemplate', name: 'Single-Page Website', price: '₹3,000 + GST',
+            features: ['1 year Server Hosting', '1 year Domain Free', 'Basic contact integration', 'Mobile Responsive Design', 'No Payment Gateway'],
+            secondary_text: 'Download Brochure', secondary_link: '/media/brochures/landing-page-brochure.pdf',
+            button_text: 'Get This Package', button_link: '#enquiry',
+          },
+          {
+            tag: 'Business', icon: 'Settings2', name: 'Service-Based Website', price: 'Starting at ₹10,000 + GST',
+            features: ['Up to three pages', 'Service catalogue', 'Contact forms', 'Additional features as agreed'],
+            button_text: 'Book Now', button_link: '#enquiry', featured: true,
+          },
+          {
+            tag: 'Advanced', icon: 'Code2', name: 'Custom Website', price: '₹10,000–₹15,000 + GST',
+            features: ['Custom design and functionality', 'Service or product catalogue', 'Optional integrations based on scope'],
+            button_text: 'Get a Quote', button_link: '#enquiry',
+          },
+        ],
+      },
+    },
+    {
+      key: 'why', label: 'Why Choose Vetri IT Systems?',
+      content: {
+        eyebrow: 'Why Choose Vetri IT Systems?', title: 'Why Businesses Choose Vetri IT Systems for Web Development', highlight: 'Vetri IT Systems',
+        items: [
+          { icon: 'ClipboardCheck', title: 'Reliable Delivery', description: 'Structured development and project planning.' },
+          { icon: 'Server', title: 'Domain & Server', description: 'One year included in eligible packages.' },
+          { icon: 'MonitorSmartphone', title: 'Responsive Design', description: 'Websites for mobile, tablet and desktop.' },
+          { icon: 'Search', title: 'SEO-Friendly Structure', description: 'Search-friendly page structure and metadata.' },
+          { icon: 'LifeBuoy', title: 'Ongoing Support', description: 'Maintenance and updates based on your support plan.' },
+          { icon: 'Building2', title: 'Industry Experience', description: 'Website solutions for businesses across multiple industries.' },
+        ],
+      },
+    },
+    {
+      key: 'clients', label: 'Our Portfolio',
+      content: {
+        eyebrow: 'Our Portfolio', title: 'Website Projects Built for Businesses Across Industries', highlight: 'Across Industries',
+        description: 'Explore our website projects across travel, healthcare, IT and other industries.',
+        items: webClients,
+      },
+    },
+    {
+      key: 'journey', label: 'Our Process',
+      content: {
+        eyebrow: 'Our Process', title: 'Our Website Design and Development Process', highlight: 'Design and Development Process',
+        steps: [
+          { icon: 'Lightbulb', title: 'Discover', description: 'Understand your business goals.' },
+          { icon: 'PenTool', title: 'Design', description: 'Create an intuitive website layout.' },
+          { icon: 'Code2', title: 'Develop', description: 'Build the website and required features.' },
+          { icon: 'ClipboardCheck', title: 'Test', description: 'Check functionality and responsiveness.' },
+          { icon: 'Rocket', title: 'Launch', description: 'Publish the website and complete the handover.' },
+        ],
+      },
+    },
+    {
+      key: 'capabilities', label: 'Website Features',
+      content: {
+        eyebrow: 'Website Features', title: 'Website Features Built for Performance and Growth', highlight: 'Performance and Growth', variant: 'chips',
+        items: capItems([
+          ['MonitorSmartphone', 'Responsive Design'], ['Search', 'SEO-Friendly Structure'], ['LayoutTemplate', 'CMS'], ['CreditCard', 'Payment Gateway'],
+          ['Gauge', 'Speed Optimisation'], ['BarChart3', 'Analytics'], ['ShieldCheck', 'Secure Hosting'], ['Languages', 'Multilingual Support'],
+          ['Workflow', 'Custom Workflows'], ['Layers', 'Scalable Applications'],
+        ]),
+        cards: [
+          { icon: 'Code2', title: 'Web Application Development', description: 'Custom dashboards, portals and workflow solutions.' },
+          { icon: 'ShoppingCart', title: 'E-commerce Development', description: 'Product management, shopping cart and payment integration.' },
+        ],
+        stats: [],
+      },
+    },
+    {
+      key: 'tools', label: 'Technologies We Use',
+      content: {
+        eyebrow: 'Technologies We Use', title: 'Technologies Behind Our Web Development Services', highlight: 'Web Development Services',
+        // only technologies actively supported by the team (per the content document)
+        items: ['React', 'Node.js', 'MERN', 'PHP'],
+      },
+    },
+    {
+      key: 'industries', label: 'Industries We Serve',
+      content: {
+        eyebrow: 'Industries We Serve', title: 'Website Development Solutions for Your Industry', highlight: 'Your Industry',
+        items: ['Travel & Tourism', 'Healthcare', 'Insurance', 'Automobile', 'Real Estate', 'Education', 'IT Services', 'Entertainment', 'Retail'],
+      },
+    },
+    {
+      key: 'faq', label: 'Frequently Asked Questions',
+      content: {
+        eyebrow: 'Frequently Asked Questions', title: 'Website Development FAQs', highlight: 'FAQs',
+        items: [
+          { question: 'How much does website development cost?', answer: 'Our packages start at ₹3,000 + GST. Custom website pricing depends on your requirements.' },
+          { question: 'How long does website development take?', answer: 'The timeline depends on the website\'s size, features and content readiness.' },
+          { question: 'Is domain and hosting included?', answer: 'One year of domain and server services is included in eligible packages, subject to terms.' },
+          { question: 'Do you develop e-commerce websites?', answer: 'Yes. We develop online stores with product catalogues and suitable payment integrations.' },
+          { question: 'Will my website be mobile-friendly and SEO-friendly?', answer: 'Yes. We build responsive websites with fundamental on-page SEO practices.' },
+          { question: 'Do you provide website maintenance?', answer: 'Yes. Maintenance and support are available based on the selected service plan.' },
+        ],
+      },
+    },
+    {
+      key: 'enquiry', label: 'Final CTA & Enquiry Form',
+      content: {
+        title: 'Ready to Build a Website Around Your Business Goals?', highlight: 'Your Business Goals?',
+        description: 'Tell us about your website requirements. Our team will help you explore the right solution for your business.',
+        image: img('reference/web-cta.png', 'Business team collaborating on a website development project'),
+        requirements: [
+          'Single-Page Website', 'Service-Based Website', 'Custom Website', 'Business Website', 'E-commerce Website',
+          'Portfolio Website', 'Landing Page', 'Web Application', 'Booking Website', 'Other',
+        ],
+        budgets: BUDGETS,
+        button_text: 'Get a Quote', whatsapp_text: 'WhatsApp Us',
+        success_message: 'Thank you! Our team will contact you shortly.',
       },
     },
   ],
@@ -947,7 +1419,6 @@ const BROCHURE_BEFORE = {
   'app-development': ['App Development', 'Development Brochure', 'why'],
   'software-development': ['Software Development', 'Development Brochure', 'why'],
   'digital-marketing': ['Digital Marketing', 'Marketing Brochure', 'faq'],
-  'graphic-designing': ['Graphic Designing', 'Designing Brochure', 'enquiry'],
 };
 for (const [slug, [topic, highlight, before]] of Object.entries(BROCHURE_BEFORE)) {
   const list = servicePages[slug];

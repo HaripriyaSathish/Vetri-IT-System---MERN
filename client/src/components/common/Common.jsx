@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { ICONS } from '../../lib/icons';
 import { mediaUrl, isVideo } from '../../lib/media';
@@ -73,31 +73,41 @@ export function CountUp({ value = '', duration = 1600 }) {
 }
 
 
+// Our own images (/media/...png|jpg|webp) are requested at `width` px as WebP; the server resizes and caches them
+const sizable = (url, width) => width && /^\/media\/[^?]+\.(png|jpe?g|webp)$/i.test(url);
+
 export function Media({ m, width, className, ...rest }) {
   if (!m?.url) return null;
   if (isVideo(m))
     return <video className={className} src={mediaUrl(m.url)} autoPlay muted loop playsInline {...rest} />;
-  return <img className={className} src={mediaUrl(m.url)} alt={m.alt || ''} loading="lazy" {...rest} />;
+  const sized = sizable(m.url, width)
+    ? { src: mediaUrl(`${m.url}?w=${width}`), srcSet: `${mediaUrl(`${m.url}?w=${width}`)} 1x, ${mediaUrl(`${m.url}?w=${width * 2}`)} 2x` }
+    : { src: mediaUrl(m.url) };
+  return <img className={className} {...sized} alt={m.alt || ''} loading="lazy" decoding="async" {...rest} />;
 }
 
 // Fades children in when they scroll into view
+// The in/done state lives in React (not classList) so a re-render with a new className
+// (e.g. an FAQ item toggling "open") doesn't wipe it and hide the element again.
 export function Reveal({ as: Tag = 'div', className = '', children, ...rest }) {
   const ref = useRef(null);
+  const [phase, setPhase] = useState('');
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
-    if (!('IntersectionObserver' in window)) { el.classList.add('in'); return; }
+    if (!('IntersectionObserver' in window)) { setPhase('in'); return; }
+    let timer;
     const io = new IntersectionObserver(([e]) => {
       if (e.isIntersecting) {
-        el.classList.add('in');
+        setPhase('in');
         io.disconnect();
-        setTimeout(() => el.classList.add('done'), 2600); // drop stagger delay so hover stays snappy
+        timer = setTimeout(() => setPhase('in done'), 2600); // drop stagger delay so hover stays snappy
       }
     }, { threshold: 0.12 });
     io.observe(el);
-    return () => io.disconnect();
+    return () => { io.disconnect(); clearTimeout(timer); };
   }, []);
-  return <Tag ref={ref} className={`reveal ${className}`} {...rest}>{children}</Tag>;
+  return <Tag ref={ref} className={`reveal ${className}${phase ? ` ${phase}` : ''}`} {...rest}>{children}</Tag>;
 }
 
 export function Seo({ page }) {

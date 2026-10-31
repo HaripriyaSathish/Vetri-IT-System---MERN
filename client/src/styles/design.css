@@ -1,0 +1,196 @@
+/* ==========================================================================
+   Graphic Designing page: animated cartoon illustrations (DesignArt.jsx),
+   illustrated service cards, art layouts and the page's redesigned cards.
+   ========================================================================== */
+
+/* ---------- Cartoon illustrations ---------- */
+.dart { position: relative; width: 100%; }
+.dart svg { display: block; width: 100%; height: auto; overflow: visible; }
+.dart svg * { transform-box: fill-box; transform-origin: center; }
+
+@keyframes daFloat { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+@keyframes daFloatSm { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
+@keyframes daSpin { to { transform: rotate(360deg); } }
+@keyframes daDraw { 0% { stroke-dashoffset: 100; } 35%, 80% { stroke-dashoffset: 0; } 100% { stroke-dashoffset: -100; } }
+@keyframes daFill { 0%, 30% { opacity: 0; transform: scale(0.6); } 42%, 80% { opacity: 1; transform: scale(1); } 92%, 100% { opacity: 0; transform: scale(0.6); } }
+@keyframes daPop { 0%, 38% { transform: scale(0); } 46% { transform: scale(1.4); } 52%, 82% { transform: scale(1); } 90%, 100% { transform: scale(0); } }
+@keyframes daBlink { 0%, 92%, 100% { transform: scaleY(1); } 95% { transform: scaleY(0.1); } }
+@keyframes daArm { 0%, 100% { transform: rotate(0deg); } 25% { transform: rotate(-5deg); } 50% { transform: rotate(3deg); } 75% { transform: rotate(-3deg); } }
+@keyframes daHead { 0%, 100% { transform: rotate(0deg); } 50% { transform: rotate(4deg); } }
+@keyframes daBreathe { 0%, 100% { transform: scaleY(1); } 50% { transform: scaleY(1.015); } }
+@keyframes daSteam { 0% { opacity: 0; transform: translateY(6px); } 40% { opacity: 0.9; } 100% { opacity: 0; transform: translateY(-14px); } }
+@keyframes daTwinkle { 0%, 100% { opacity: 0.2; transform: scale(0.5) rotate(0deg); } 50% { opacity: 1; transform: scale(1.1) rotate(45deg); } }
+@keyframes daSwatch { 0%, 100% { transform: translateY(0) scale(1); } 50% { transform: translateY(-5px) scale(1.15); } }
+@keyframes daFlip { 0%, 35% { transform: scaleX(1); } 45% { transform: scaleX(0); } 55%, 85% { transform: scaleX(1); } 95% { transform: scaleX(0); } 100% { transform: scaleX(1); } }
+@keyframes daFront { 0%, 44.9% { opacity: 1; } 45%, 94.9% { opacity: 0; } 95%, 100% { opacity: 1; } }
+@keyframes daBack { 0%, 44.9% { opacity: 0; } 45%, 94.9% { opacity: 1; } 95%, 100% { opacity: 0; } }
+@keyframes daTurn { 0%, 20% { transform: scaleX(1); } 50%, 70% { transform: scaleX(-1); } 100% { transform: scaleX(1); } }
+@keyframes daPage { 0%, 30% { transform: scaleX(1); } 50%, 80% { transform: scaleX(0.15); } 100% { transform: scaleX(1); } }
+@keyframes daCursor { 0%, 100% { transform: translate(0, 0); } 30% { transform: translate(-40px, 56px); } 60% { transform: translate(10px, 64px); } }
+@keyframes daBar { 0%, 15% { transform: scaleY(0); } 45%, 85% { transform: scaleY(1); } 100% { transform: scaleY(0); } }
+@keyframes daWave { 0%, 60%, 100% { transform: rotate(0deg); } 70% { transform: rotate(-22deg); } 80% { transform: rotate(10deg); } 90% { transform: rotate(-16deg); } }
+@keyframes daRocket { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-12px); } }
+@keyframes daFlame { 0%, 100% { transform: scaleY(1); } 50% { transform: scaleY(1.5); } }
+@keyframes daShadow { 0%, 35%, 55%, 85%, 100% { transform: scaleX(1); } 45%, 95% { transform: scaleX(0.4); } }
+
+.dart .da-float { animation: daFloat 5s ease-in-out infinite; }
+.dart .da-float-sm { animation: daFloatSm 4s ease-in-out infinite; }
+.dart .da-orbit { animation: daSpin 60s linear infinite; }
+.dart .da-draw { stroke-dasharray: 100; stroke-dashoffset: 100; animation: daDraw 5s ease-in-out infinite; }
+.dart .da-draw--2 { animation-delay: 0.5s; }
+.dart .da-fill { animation: daFill 5s ease-in-out infinite; }
+.dart .da-pop { animation: daPop 5s ease-in-out infinite; }
+.dart .da-pop--2 { animation-delay: 0.2s; }
+.dart .da-blink { animation: daBlink 4.5s infinite; }
+.dart .da-arm { transform-origin: 0% 0%; animation: daArm 1.6s ease-in-out infinite; }
+.dart .da-head { transform-origin: 50% 100%; animation: daHead 5s ease-in-out infinite; }
+.dart .da-body { transform-origin: 50% 100%; animation: daBreathe 3.5s ease-in-out infinite; }
+.dart .da-steam { animation: daSteam 2.4s ease-out infinite; }
+.dart .da-steam--2 { animation-delay: 1.1s; }
+.dart .da-twinkle { animation: daTwinkle 2.6s ease-in-out infinite; }
+.dart .da-swatch { animation: daSwatch 2.4s ease-in-out infinite; }
+.dart .da-flip { animation: daFlip 5s ease-in-out infinite; }
+.dart .da-face-front { animation: daFront 5s linear infinite; }
+.dart .da-face-back { animation: daBack 5s linear infinite; }
+.dart .da-shadow { animation: daShadow 5s ease-in-out infinite; }
+.dart .da-turn { transform-origin: 0% 50%; animation: daTurn 4.5s ease-in-out infinite; }
+.dart .da-page { transform-origin: 0% 50%; animation: daPage 4s ease-in-out infinite; }
+.dart .da-cursor { transform-box: view-box; transform-origin: 0 0; animation: daCursor 5s ease-in-out infinite; }
+.dart .da-bar { transform-origin: 50% 100%; animation: daBar 4s ease-in-out infinite; }
+.dart .da-wave { transform-origin: 0% 100%; animation: daWave 3s ease-in-out infinite; }
+.dart .da-rocket { transform-box: view-box; transform-origin: 0 0; animation: daRocket 3s ease-in-out infinite; }
+.dart .da-flame { transform-origin: 50% 0%; animation: daFlame 0.4s ease-in-out infinite; }
+.dart .da-tag { font: 800 18px var(--font-head); fill: var(--orange); }
+
+/* ---------- Hero with a cartoon scene ---------- */
+.shero__art--cartoon .dart { max-width: 580px; filter: drop-shadow(0 30px 40px rgba(0, 38, 115, 0.12)); }
+.shero__art--cartoon.reveal.in .dart { animation: daEnter 1s var(--ease) both; }
+@keyframes daEnter { from { opacity: 0; transform: translateY(30px) scale(0.92) rotate(-2deg); } }
+.service-page--graphic-designing .shero__tags li { animation: daTagIn 0.6s var(--ease) backwards; }
+.service-page--graphic-designing .shero__tags li:nth-child(2) { animation-delay: 0.15s; }
+@keyframes daTagIn { from { opacity: 0; transform: translateY(10px) scale(0.9); } }
+
+/* ---------- Illustrated service cards (Offerings) ---------- */
+.poffer { display: grid; grid-template-columns: repeat(3, 1fr); gap: 26px; align-items: stretch; }
+.poffer--2 { grid-template-columns: repeat(2, 1fr); max-width: 900px; margin: 0 auto; }
+.poffer__card {
+  --acc: var(--orange); --soft: #fff1ea; --grad: linear-gradient(135deg, #ffe3d3, #fff7f2);
+  position: relative; display: flex; flex-direction: column; padding: 18px 18px 26px; border-radius: 26px; background: #fff;
+  border: 1px solid #e8eef8; box-shadow: 0 20px 44px -30px rgba(0, 38, 115, 0.45); isolation: isolate;
+  transition: transform 0.45s var(--ease), box-shadow 0.45s;
+}
+.poffer__card:nth-child(3n + 2) { --acc: var(--navy); --soft: #e8efff; --grad: linear-gradient(135deg, #dce7ff, #f5f8ff); }
+.poffer__card:nth-child(3n + 3) { --acc: #7c5cff; --soft: #efeaff; --grad: linear-gradient(135deg, #e6deff, #f8f5ff); }
+/* animated gradient ring on hover */
+.poffer__card::before {
+  content: ''; position: absolute; inset: -2px; z-index: -1; border-radius: 28px; padding: 2px; opacity: 0;
+  background: conic-gradient(from var(--angle, 0deg), var(--acc), #ffc83d, var(--acc), transparent 70%, var(--acc));
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite: xor; mask-composite: exclude;
+  transition: opacity 0.4s; animation: spin-angle 4s linear infinite;
+}
+.poffer__card:hover { transform: translateY(-10px); box-shadow: 0 34px 60px -30px rgba(0, 38, 115, 0.55); }
+.poffer__card:hover::before { opacity: 1; }
+.poffer__no {
+  position: absolute; top: 26px; left: 28px; z-index: 2; display: grid; place-items: center; width: 40px; height: 40px; border-radius: 14px;
+  background: #fff; color: var(--acc); font: 800 14px var(--font-head); box-shadow: 0 10px 20px -12px rgba(0, 38, 115, 0.5);
+}
+.poffer__visual { display: grid; place-items: center; min-height: 190px; padding: 18px 10px 6px; border-radius: 20px; background: var(--grad); overflow: hidden; }
+.poffer__visual .dart { max-width: 280px; transition: transform 0.6s var(--ease); }
+.poffer__card:hover .poffer__visual .dart { transform: scale(1.06) rotate(-1.5deg); }
+.poffer__card h3 { margin: 22px 8px 10px; font-size: 21px; font-weight: 800; }
+.poffer__card > p { margin: 0 8px; font-size: 14.5px; line-height: 1.7; }
+.poffer__list { list-style: none; display: grid; gap: 10px; margin: 18px 8px 0; padding: 16px 0 0; border-top: 1px dashed #dbe5f7; }
+.poffer__list li { display: flex; align-items: flex-start; gap: 10px; font-size: 14px; font-weight: 600; color: var(--navy-900, #001a52); }
+.poffer__list li > span { flex-shrink: 0; display: grid; place-items: center; width: 21px; height: 21px; margin-top: 1px; border-radius: 50%; background: var(--acc); color: #fff; }
+.poffer__card.reveal { opacity: 0; transform: translateY(40px) rotate(-1deg); }
+.poffer__card.reveal.in { opacity: 1; transform: none; transition: opacity 0.8s var(--ease), transform 0.8s var(--ease); transition-delay: calc(var(--i, 0) * 0.15s); }
+.poffer__card.reveal.in.done { transition: transform 0.45s var(--ease), box-shadow 0.45s; transition-delay: 0s; }
+.poffer__card.reveal.in.done:hover { transform: translateY(-10px); }
+.poffer__card.reveal.in .poffer__list li { animation: daListIn 0.5s var(--ease) backwards; }
+.poffer__card.reveal.in .poffer__list li:nth-child(1) { animation-delay: calc(var(--i, 0) * 0.15s + 0.5s); }
+.poffer__card.reveal.in .poffer__list li:nth-child(2) { animation-delay: calc(var(--i, 0) * 0.15s + 0.6s); }
+.poffer__card.reveal.in .poffer__list li:nth-child(3) { animation-delay: calc(var(--i, 0) * 0.15s + 0.7s); }
+.poffer__card.reveal.in .poffer__list li:nth-child(4) { animation-delay: calc(var(--i, 0) * 0.15s + 0.8s); }
+.poffer__card.reveal.in .poffer__list li:nth-child(5) { animation-delay: calc(var(--i, 0) * 0.15s + 0.9s); }
+@keyframes daListIn { from { opacity: 0; transform: translateX(-12px); } }
+
+/* ---------- Chips beside an illustration ---------- */
+.pchips__split { display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 48px; align-items: center; }
+.pchips__split .pchips { justify-content: flex-start; margin: 0; max-width: none; }
+.pchips__art .dart { max-width: 380px; margin: 0 auto; }
+.pchips__art.reveal { opacity: 0; transform: scale(0.9) rotate(3deg); }
+.pchips__art.reveal.in { opacity: 1; transform: none; transition: opacity 0.9s var(--ease), transform 0.9s var(--ease); }
+.pchips-section--art:nth-of-type(even) .pchips__split { grid-template-columns: 0.8fr 1.2fr; }
+.pchips-section--art:nth-of-type(even) .pchips__art { order: -1; }
+
+/* ---------- Package card with art ---------- */
+.pprice__card--art .pprice__info { position: relative; }
+.pprice__art { position: absolute; top: 16px; right: 10px; width: 170px; pointer-events: none; }
+.pprice__card--art .pprice__info > :not(.pprice__art):not(.pprice__actions):not(.pprice__price) { max-width: calc(100% - 150px); }
+
+/* ---------- Enquiry: brochure button + art ---------- */
+.penq__btns { display: flex; flex-wrap: wrap; gap: 12px; }
+.penq__btns .btn svg { margin-right: 2px; }
+.penq__art { max-width: 260px; margin-top: 26px; }
+
+/* ==========================================================================
+   Graphic Designing page: redesigned cards and extra motion
+   ========================================================================== */
+.svc-card__no { display: none; }
+.service-page--graphic-designing .svc-cards { grid-template-columns: repeat(6, 1fr); }
+.service-page--graphic-designing .svc-cards > .svc-card { grid-column: span 2; }
+.service-page--graphic-designing .svc-cards--5 > .svc-card:nth-child(4) { grid-column: 2 / span 2; }
+.service-page--graphic-designing .svc-card { padding: 30px 26px 28px; transition: transform 0.45s var(--ease), box-shadow 0.45s; }
+.service-page--graphic-designing .svc-card:hover { transform: translateY(-8px); }
+/* frame colours: orange -> yellow -> purple instead of the shared blue/orange */
+.service-page--graphic-designing .svc-card.reveal::before { background: linear-gradient(135deg, var(--orange), #ffc83d 40%, #7c5cff 75%, var(--navy)) 0 0 / 250% 250%; animation: bdShift 6s ease-in-out infinite alternate; }
+.service-page--graphic-designing .svc-card.reveal::after { background: linear-gradient(160deg, #fff 55%, #fff6f1); }
+.service-page--graphic-designing .svc-card__no {
+  display: block; position: absolute; z-index: 1; top: 16px; right: 22px;
+  font: 800 44px/1 var(--font-head); color: rgba(0, 38, 115, 0.07); transition: color 0.4s, transform 0.4s var(--ease);
+}
+.service-page--graphic-designing .svc-card:hover .svc-card__no { color: rgba(231, 81, 12, 0.22); transform: scale(1.15) rotate(-6deg); }
+.service-page--graphic-designing .svc-card .icon-box { position: relative; border-radius: 18px 18px 18px 4px; background: #fff1ea; color: var(--orange); animation: gdBlob 6s ease-in-out infinite; }
+.service-page--graphic-designing .svc-card:nth-child(even) .icon-box { background: #e8efff; color: var(--navy); animation-delay: -3s; }
+.service-page--graphic-designing .svc-card:hover .icon-box { transform: rotate(-10deg) scale(1.15); }
+@keyframes gdBlob { 0%, 100% { border-radius: 18px 18px 18px 4px; } 50% { border-radius: 26px 10px 22px 14px; } }
+
+/* process steps: colourful bubbles that bounce in */
+.service-page--graphic-designing .pjourney__icon { border-radius: 50% 50% 50% 12px; }
+.service-page--graphic-designing .pjourney__step:nth-child(3n + 2) .pjourney__icon { color: var(--orange); }
+.service-page--graphic-designing .pjourney__step:nth-child(3n + 3) .pjourney__icon { color: #7c5cff; }
+.service-page--graphic-designing .pjourney__step:nth-child(3n + 4) .pjourney__icon { color: #18b47b; }
+.service-page--graphic-designing .pjourney.in .pjourney__icon { animation: gdBounce 0.8s var(--ease) backwards; animation-delay: calc(var(--i, 0) * 0.28s + 0.3s); }
+@keyframes gdBounce { 0% { transform: scale(0) rotate(-30deg); } 60% { transform: scale(1.18) rotate(6deg); } 100% { transform: none; } }
+
+/* chips: colour dots and a springy hover */
+.service-page--graphic-designing .pchips__chip { transition: transform 0.35s var(--ease), box-shadow 0.35s, background 0.35s, color 0.35s; }
+.service-page--graphic-designing .pchips__chip:nth-child(4n + 2) i { background: var(--navy); }
+.service-page--graphic-designing .pchips__chip:nth-child(4n + 3) i { background: #7c5cff; }
+.service-page--graphic-designing .pchips__chip:nth-child(4n + 4) i { background: #18b47b; }
+.service-page--graphic-designing .pchips__chip:hover { transform: translateY(-4px) rotate(-2deg); background: var(--navy); color: #fff; box-shadow: 0 14px 26px -14px rgba(0, 38, 115, 0.6); }
+
+/* package card: orange glow and pulse on the price */
+.service-page--graphic-designing .pprice__card--wide .pprice__price { animation: gdPricePulse 2.6s ease-in-out infinite; }
+@keyframes gdPricePulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
+
+@media (max-width: 1100px) {
+  .poffer { grid-template-columns: 1fr 1fr; }
+  .service-page--graphic-designing .svc-cards { grid-template-columns: 1fr 1fr; }
+  .service-page--graphic-designing .svc-cards > .svc-card, .service-page--graphic-designing .svc-cards--5 > .svc-card:nth-child(4) { grid-column: auto; }
+  .pchips__split, .pchips-section--art:nth-of-type(even) .pchips__split { grid-template-columns: 1fr; gap: 28px; }
+  .pchips-section--art .pchips__art { order: -1; }
+  .pchips__art .dart { max-width: 300px; }
+}
+@media (max-width: 700px) {
+  .poffer, .poffer--2, .service-page--graphic-designing .svc-cards { grid-template-columns: 1fr; }
+  .pprice__art { position: static; width: 150px; margin: 0 auto 6px; }
+  .pprice__card--art .pprice__info > :not(.pprice__art):not(.pprice__actions):not(.pprice__price) { max-width: none; }
+  .poffer__visual { min-height: 160px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .dart *, .poffer__card::before, .service-page--graphic-designing .svc-card .icon-box,
+  .service-page--graphic-designing .pprice__card--wide .pprice__price { animation: none !important; }
+  .dart .da-draw { stroke-dashoffset: 0; }
+  .dart .da-face-back { opacity: 0; }
+}

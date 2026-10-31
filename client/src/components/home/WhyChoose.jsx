@@ -1,4 +1,5 @@
-import { SectionHead, Media, Icon, Reveal } from '../common/Common';
+import { SectionHead, Icon, Reveal } from '../common/Common';
+import WhyScene from './WhyScene';
 
 export default function WhyChoose({ c }) {
   return (
@@ -16,7 +17,7 @@ export default function WhyChoose({ c }) {
             ))}
           </div>
         </div>
-        {c.image?.url && <Reveal className="why__media img-wipe"><Media m={c.image} width={800} /></Reveal>}
+        <Reveal className="why__media"><WhyScene label={c.image?.alt} /></Reveal>
       </div>
     </section>
   );

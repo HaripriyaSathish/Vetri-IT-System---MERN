@@ -56,6 +56,7 @@ export default function Footer() {
               <FLink to="/">Explore VIS</FLink>
               <FLink to="/about">About</FLink>
               <FLink to="/website-development">Our Expertise</FLink>
+              <FLink to="/projects">Our Projects</FLink>
               <FLink to="/contact">Contact</FLink>
             </div>
           </div>

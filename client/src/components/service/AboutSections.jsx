@@ -1,6 +1,8 @@
 import { ArrowUpRight } from 'lucide-react';
 import { Highlight, Eyebrow, Media, Icon, Reveal, SectionHead } from '../common/Common';
 import SmartLink from '../common/SmartLink';
+import DesignArt from './DesignArt';
+import { ScreenShowcase } from './ProjectSections';
 
 const DEFAULT_BADGES = [
   { icon: 'Code2', text: 'Clean code' }, { icon: 'Rocket', text: 'Fast launch' },
@@ -19,15 +21,28 @@ export function SplitHero({ c }) {
           {c.description && <p>{c.description}</p>}
           {c.description_2 && <p>{c.description_2}</p>}
           {c.tags?.length > 0 && <ul className="shero__tags">{c.tags.map((t) => <li key={t}>{t}</li>)}</ul>}
-          {c.button?.text && <SmartLink to={c.button.link} className="btn btn--primary btn--lg">{c.button.text}<ArrowUpRight size={18} /></SmartLink>}
+          {(c.button?.text || c.secondary_button?.text) && (
+            <div className="shero__btns">
+              {c.button?.text && <SmartLink to={c.button.link} className="btn btn--primary btn--lg">{c.button.text}<ArrowUpRight size={18} /></SmartLink>}
+              {c.secondary_button?.text && <SmartLink to={c.secondary_button.link} className="btn btn--outline btn--lg">{c.secondary_button.text}<ArrowUpRight size={18} /></SmartLink>}
+            </div>
+          )}
         </Reveal>
-        <Reveal className="shero__art">
-          <span className="shero__ring" />
-          <Media m={c.image} width={900} loading="eager" />
-          {(c.badges?.length ? c.badges : DEFAULT_BADGES).slice(0, 4).map(({ icon, text }, i) => (
-            <span key={icon} className={`shero__badge shero__badge--${i + 1}`} aria-hidden="true"><Icon name={icon} size={16} />{text}</span>
-          ))}
-        </Reveal>
+        {c.screens?.some((s) => s.image?.url) ? (
+          // project screenshots cycling in a laptop + phone (Our Projects)
+          <Reveal className="shero__art shero__art--screens"><ScreenShowcase screens={c.screens} /></Reveal>
+        ) : c.art ? (
+          // animated cartoon scene instead of an image (Graphic Designing)
+          <Reveal className="shero__art shero__art--cartoon"><DesignArt name={c.art} label={c.art_alt} /></Reveal>
+        ) : (
+          <Reveal className="shero__art">
+            <span className="shero__ring" />
+            <Media m={c.image} width={900} loading="eager" />
+            {(c.badges?.length ? c.badges : DEFAULT_BADGES).slice(0, 4).map(({ icon, text }, i) => (
+              <span key={icon} className={`shero__badge shero__badge--${i + 1}`} aria-hidden="true"><Icon name={icon} size={16} />{text}</span>
+            ))}
+          </Reveal>
+        )}
       </div>
     </section>
   );

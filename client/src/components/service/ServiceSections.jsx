@@ -1,15 +1,27 @@
 import { useState } from 'react';
-import { ArrowUpRight, Check, X, Download, Plus, Send, Loader2, CheckCircle2, ChevronRight, ChevronDown, ExternalLink, CircleAlert, Lightbulb } from 'lucide-react';
+import { ArrowUpRight, ArrowRight, Check, X, Download, Plus, Send, Loader2, CheckCircle2, ChevronRight, ChevronDown, ExternalLink, CircleAlert, Lightbulb, Crown } from 'lucide-react';
 import { Highlight, Media, Icon, Reveal, CountUp, SectionHead } from '../common/Common';
 import SmartLink from '../common/SmartLink';
 import { useSite } from '../../context/SiteContext';
 import api, { errMsg } from '../../lib/api';
 import { rules, validate, digitsOnly } from '../../lib/validate';
 import { AppMockup, SoftwareMockup } from './Mockups';
-import { mediaUrl } from '../../lib/media';
+import { mediaUrl, isFileUrl, downloadUrl } from '../../lib/media';
+import { SERVICE_SECTION_TYPES } from '../../lib/sectionTypes';
+import DesignArt from './DesignArt';
+
+const sectionsOfType = (data, type) => (data?.sections || []).filter((s) => SERVICE_SECTION_TYPES[s.section_key] === type);
+
+// Service pages always get a "Get a Quote" CTA in the hero, even when none is set in the admin
+const fallbackHeroButton = (data) => {
+  if (sectionsOfType(data, 'enquiry').length) return { text: 'Get a Quote', link: '#enquiry' };
+  if (sectionsOfType(data, 'pricing').length) return { text: 'Get a Quote', link: '/contact' };
+  return null;
+};
 
 /* ---------- Page hero (image background, centered or left text) ---------- */
-export function PageHero({ c }) {
+export function PageHero({ c, data }) {
+  const button = c.button?.text ? c.button : fallbackHeroButton(data);
   return (
     <section className={`phero phero--${c.align === 'left' ? 'left' : 'center'}`}>
       <div className="phero__bg"><Media m={c.image} width={1920} loading="eager" /></div>
@@ -19,8 +31,8 @@ export function PageHero({ c }) {
         {c.eyebrow && <span className="eyebrow eyebrow--light phero__eyebrow"><i />{c.eyebrow}</span>}
         <h1><Highlight text={c.title} highlight={c.highlight} /></h1>
         {c.description && <p>{c.description}</p>}
-        {c.button?.text && (
-          <SmartLink to={c.button.link} className="btn btn--primary btn--lg phero__btn">{c.button.text}<ArrowUpRight size={18} /></SmartLink>
+        {button && (
+          <SmartLink to={button.link} className="btn btn--primary btn--lg phero__btn">{button.text}<ArrowUpRight size={18} /></SmartLink>
         )}
       </Reveal>
     </section>
@@ -68,7 +80,8 @@ export function ClientGrid({ c }) {
         <div className="pclients stagger">
           {items.map((it, i) => {
             const href = siteUrl(it.link);
-            const ext = href ? { href, target: '_blank', rel: 'noopener noreferrer', title: `Visit ${it.name} website` } : null;
+            // client sites: no ranking signal passed (same rule as the Our Projects page)
+            const ext = href ? { href, target: '_blank', rel: 'nofollow noopener', title: `Visit ${it.name} website` } : null;
             return (
               <Reveal key={i} as="article" className={`pclients__card tilt${href ? ' pclients__card--link' : ''}`}>
                 {href ? (
@@ -192,12 +205,51 @@ const PlanFeatures = ({ features }) => (
   </ul>
 );
 
+// Our own files (/media/..., e.g. a brochure PDF or PNG) download in place; anything else goes through SmartLink
+const isDownload = (link = '') => isFileUrl(link) || /^\/media\//.test(link);
+const SecondaryLink = ({ p }) => (isDownload(p.secondary_link)
+  ? <a href={downloadUrl(p.secondary_link)} download className="btn btn--outline"><Download size={16} />{p.secondary_text}</a>
+  : <SmartLink to={p.secondary_link} className="btn btn--outline"><Download size={16} />{p.secondary_text}</SmartLink>);
+
 const PlanActions = ({ p }) => (
   <div className="pprice__actions">
     {p.button_text && <SmartLink to={p.button_link} className="btn btn--primary">{p.button_text}</SmartLink>}
-    {p.secondary_text && p.secondary_link && <SmartLink to={p.secondary_link} className="btn btn--outline"><Download size={16} />{p.secondary_text}</SmartLink>}
+    {p.secondary_text && p.secondary_link && <SecondaryLink p={p} />}
   </div>
 );
+
+// "Starting at ₹10,000 + GST" -> ['Starting at', '₹10,000', '+ GST']
+const splitPrice = (price = '') => {
+  const m = String(price).match(/^(.*?)(₹\s?[\d,]+(?:\s*[–-]\s*₹?\s?[\d,]+)?)(.*)$/);
+  return m ? [m[1].trim(), m[2], m[3].trim()] : ['', price, ''];
+};
+
+// "showcase" layout: tag chip + icon, big price, filled checks, brochure + action buttons side by side
+function ShowcasePlan({ p }) {
+  const [pre, amount, post] = splitPrice(p.price);
+  return (
+    <Reveal className={`pprice__card pprice__card--showcase${p.featured ? ' pprice__card--featured' : ''}`}>
+      {p.featured && <span className="pprice__ribbon"><Crown size={15} />Most Popular</span>}
+      <div className="pprice__head">
+        {p.tag && <span className="pprice__chip">{p.tag}</span>}
+        {p.icon && <span className="pprice__icon"><Icon name={p.icon} size={24} /></span>}
+      </div>
+      <h3>{p.name}</h3>
+      {p.subtitle && <span className="pprice__sub">{p.subtitle}</span>}
+      {p.description && <p className="pprice__desc">{p.description}</p>}
+      <div className="pprice__amount">
+        {pre && <small>{pre}</small>}<strong>{amount}</strong>{post && <small>{post}</small>}
+      </div>
+      {p.price_note && <small className="pprice__note-price">{p.price_note}</small>}
+      {p.features?.length > 0 && <PlanFeatures features={p.features} />}
+      {p.note && <p className="pprice__note">{p.note}</p>}
+      <div className="pprice__actions">
+        {p.secondary_text && p.secondary_link && <SecondaryLink p={p} />}
+        {p.button_text && <SmartLink to={p.button_link} className="btn btn--primary">{p.button_text}<ArrowRight size={16} /></SmartLink>}
+      </div>
+    </Reveal>
+  );
+}
 
 // Right half of a wide card. On phones only the first 4 items show until expanded (see service.css).
 function IncludedList({ p }) {
@@ -225,16 +277,18 @@ function IncludedList({ p }) {
 // Auto: wide for 1–2 detailed packages, regular cards for 3+ plans.
 export function Pricing({ c }) {
   const plans = c.plans || [];
-  const wide = c.layout && c.layout !== 'auto' ? c.layout === 'wide' : plans.length <= 2;
+  const showcase = c.layout === 'showcase';
+  const wide = !showcase && (c.layout && c.layout !== 'auto' ? c.layout === 'wide' : plans.length <= 2);
 
   return (
     <section className="section section--tint" id="packages">
       <div className="container">
         <SectionHead c={c} />
-        <div className={`pprice ${wide ? 'pprice--wide' : `pprice--${plans.length}`} stagger`}>
-          {plans.map((p) => (wide ? (
-            <Reveal key={p.name} className={`pprice__card pprice__card--wide${p.featured ? ' pprice__card--featured' : ''}`}>
+        <div className={`pprice ${wide ? 'pprice--wide' : `pprice--${plans.length}`}${showcase ? ' pprice--showcase' : ''} stagger`}>
+          {plans.map((p) => (showcase ? <ShowcasePlan key={p.name} p={p} /> : wide ? (
+            <Reveal key={p.name} className={`pprice__card pprice__card--wide${p.featured ? ' pprice__card--featured' : ''}${p.art ? ' pprice__card--art' : ''}`}>
               <div className="pprice__info">
+                {p.art && <DesignArt name={p.art} label={p.art_alt} className="pprice__art" />}
                 {p.tag && <span className="pprice__tag">{p.tag}</span>}
                 <h3>{p.name}</h3>
                 {p.subtitle && <span className="pprice__sub">{p.subtitle}</span>}
@@ -283,8 +337,8 @@ const saveFile = (url, name) => {
 export function Brochure({ c }) {
   // brochure files uploaded in the admin (older content had a single file / link)
   const files = (c.files || []).filter((f) => f.file?.url)
-    .map((f) => ({ url: mediaUrl(f.file.url), name: downloadName(f.title || fileName(f.file.url), f.file.url) }));
-  const single = !files.length && mediaUrl(c.file?.url || c.link);
+    .map((f) => ({ url: downloadUrl(f.file.url), name: downloadName(f.title || fileName(f.file.url), f.file.url) }));
+  const single = !files.length && (c.file?.url ? downloadUrl(c.file.url) : mediaUrl(c.link));
   if (!files.length && !single) return null; // shown once a brochure file or link is added in the admin
 
   // one click downloads every brochure file, one after another
@@ -297,6 +351,8 @@ export function Brochure({ c }) {
   const linkProps = single && !/^(\/|https?:\/\/[^/]*\/media\/)/.test(single)
     ? { target: '_blank', rel: 'noreferrer' }
     : { download: files[0]?.name || fileName(single) };
+  // an image brochure (e.g. the Graphic Design flyer) is shown as a preview instead of the drawn book
+  const preview = (c.files || []).find((f) => /\.(png|jpe?g|webp)$/i.test(f.file?.url || ''));
   return (
     <section className="section" id="brochure">
       <div className="container">
@@ -308,14 +364,21 @@ export function Brochure({ c }) {
               <Download size={17} />{c.button_text || 'Download Brochure'}
             </a>
           </div>
-          <div className="pbroch__art" aria-hidden="true">
-            <span className="pbroch__circle" />
-            <div className="pbroch__book">
-              <span>{c.book_label}</span>
-              <strong>{c.book_title}</strong>
-              <small>{c.book_caption}</small>
+          {preview ? (
+            <a className="pbroch__preview" href={mediaUrl(preview.file.url)} target="_blank" rel="noreferrer" aria-label={`Open ${preview.title || 'brochure'}`}>
+              <span className="pbroch__circle" />
+              <Media m={{ ...preview.file, alt: preview.file.alt || preview.title }} width={520} />
+            </a>
+          ) : (
+            <div className="pbroch__art" aria-hidden="true">
+              <span className="pbroch__circle" />
+              <div className="pbroch__book">
+                <span>{c.book_label}</span>
+                <strong>{c.book_title}</strong>
+                <small>{c.book_caption}</small>
+              </div>
             </div>
-          </div>
+          )}
         </Reveal>
       </div>
     </section>
@@ -323,14 +386,39 @@ export function Brochure({ c }) {
 }
 
 /* ---------- Icon cards (services, why choose) ---------- */
+// "tiles" layout (Website Development › Our Services): the colourful wave cards from the home
+// "Why Choose" section — white top with icon + title, gradient panel with a wavy edge below
+function IconTiles({ c }) {
+  const items = c.items || [];
+  return (
+    <section className="section wtiles-section">
+      <span className="wtiles__orb" aria-hidden="true" />
+      <div className="container">
+        <SectionHead c={c} />
+        <div className={`wtiles wtiles--${items.length}`}>
+          {items.map((it, i) => (
+            <Reveal key={it.title} as="article" className="wtile" style={{ '--i': i }}>
+              <span className="wtile__icon"><Icon name={it.icon} size={28} /></span>
+              <h3>{it.title}</h3>
+              <p>{it.description}</p>
+            </Reveal>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
 export function IconCards({ c }) {
+  if (c.layout === 'tiles') return <IconTiles c={c} />;
   return (
     <section className="section">
       <div className="container">
         <SectionHead c={c} />
         <div className={`svc-cards svc-cards--${(c.items || []).length} stagger`}>
-          {(c.items || []).map((it) => (
+          {(c.items || []).map((it, i) => (
             <Reveal key={it.title} className="svc-card tilt">
+              <span className="svc-card__no" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
               <span className="icon-box icon-box--lg"><Icon name={it.icon} size={24} /></span>
               <h3>{it.title}</h3>
               <p>{it.description}</p>
@@ -342,18 +430,57 @@ export function IconCards({ c }) {
   );
 }
 
-/* ---------- Chip cloud (tools, industries) ---------- */
-export function Chips({ c }) {
+/* ---------- Service offerings: illustrated cards with a feature list ---------- */
+export function Offerings({ c }) {
+  const items = c.items || [];
+  if (!items.length) return null;
   return (
-    <section className="section section--tint">
+    <section className="section poffer-section" id="services">
       <div className="container">
         <SectionHead c={c} />
-        <div className="pchips stagger">
-          {(c.items || []).map((t) => {
-            const text = typeof t === 'string' ? t : t?.title || t?.label || '';
-            return <Reveal key={text} className="pchips__chip"><i />{text}</Reveal>;
-          })}
+        <div className={`poffer poffer--${items.length} stagger`}>
+          {items.map((it, i) => (
+            <Reveal key={it.title} as="article" className="poffer__card" style={{ '--i': i }}>
+              <span className="poffer__no">{String(i + 1).padStart(2, '0')}</span>
+              <div className="poffer__visual">
+                {it.art ? <DesignArt name={it.art} label={it.art_alt} /> : <span className="icon-box icon-box--lg"><Icon name={it.icon} size={26} /></span>}
+              </div>
+              <h3>{it.title}</h3>
+              {it.description && <p>{it.description}</p>}
+              {it.features?.length > 0 && (
+                <ul className="poffer__list">
+                  {it.features.map((f) => <li key={f}><span><Check size={13} /></span>{f}</li>)}
+                </ul>
+              )}
+            </Reveal>
+          ))}
         </div>
+      </div>
+    </section>
+  );
+}
+
+/* ---------- Chip cloud (tools, industries); with `art`, chips sit beside an illustration ---------- */
+export function Chips({ c }) {
+  const chips = (
+    <div className="pchips stagger">
+      {(c.items || []).map((t, i) => {
+        const text = typeof t === 'string' ? t : t?.title || t?.label || '';
+        return <Reveal key={text} className="pchips__chip" style={{ '--i': i }}><i />{text}</Reveal>;
+      })}
+    </div>
+  );
+  return (
+    <section className={`section section--tint${c.art ? ' pchips-section--art' : ''}`}>
+      <div className="container">
+        {c.art ? (
+          <div className="pchips__split">
+            <div><SectionHead c={c} center={false} />{chips}</div>
+            <Reveal className="pchips__art"><DesignArt name={c.art} label={c.art_alt} /></Reveal>
+          </div>
+        ) : (
+          <><SectionHead c={c} />{chips}</>
+        )}
       </div>
     </section>
   );
@@ -384,16 +511,34 @@ export function FaqList({ c }) {
 }
 
 /* ---------- Enquiry form with CTA (Name, Phone, Requirement, Budget) ---------- */
-const emptyForm = { name: '', phone: '', requirement: '', budget: '' };
+const emptyForm = { name: '', phone: '', business: '', requirement: '', budget: '' };
 
-export function EnquiryCta({ c, page }) {
+const normName = (v = '') => String(v).toLowerCase().replace(/[^a-z0-9]+/g, '');
+
+// Package plans on the same page, keyed by name, so a requirement like "Custom Business Mobile App"
+// shows that package's fixed price instead of the generic budget ranges
+const packagePrices = (data) => {
+  const map = {};
+  sectionsOfType(data, 'pricing').forEach((s) => (s.content?.plans || []).forEach((p) => {
+    if (p.name && p.price && /\d/.test(p.price)) map[normName(p.name)] = p.price;
+  }));
+  return map;
+};
+
+export function EnquiryCta({ c, page, data }) {
   const { settings: s } = useSite();
   const [form, setForm] = useState(emptyForm);
   const [state, setState] = useState({ loading: false, done: false, error: '' });
   const [errors, setErrors] = useState({});
+  const prices = packagePrices(data);
+  const fixedPrice = prices[normName(form.requirement)];
+  const budgets = fixedPrice ? [fixedPrice] : c.budgets || [];
   const set = (k) => (e) => {
     const v = k === 'phone' ? digitsOnly(e.target.value) : e.target.value;
-    setForm({ ...form, [k]: v });
+    const next = { ...form, [k]: v };
+    // a package requirement pre-selects its fixed price; switching away clears it
+    if (k === 'requirement') next.budget = prices[normName(v)] || '';
+    setForm(next);
     if (errors[k]) setErrors({ ...errors, [k]: rules[k](v) });
   };
   const blur = (k) => () => setErrors({ ...errors, [k]: rules[k](form[k]) });
@@ -407,7 +552,8 @@ export function EnquiryCta({ c, page }) {
     try {
       await api.post('/enquiries', {
         name: form.name, phone: form.phone, service: form.requirement,
-        message: form.budget ? `Budget: ${form.budget}` : '', source: `${page?.name || 'Service'} page`,
+        message: [form.business && `Business: ${form.business}`, form.budget && `Budget: ${form.budget}`].filter(Boolean).join('\n'),
+        source: `${page?.name || 'Service'} page`,
       });
       setForm(emptyForm);
       setState({ loading: false, done: true, error: '' });
@@ -426,7 +572,14 @@ export function EnquiryCta({ c, page }) {
           <div className="penq__copy">
             <h2><Highlight text={c.title} highlight={c.highlight} /></h2>
             {c.description && <p>{c.description}</p>}
-            {wa && <a href={wa} target="_blank" rel="noreferrer" className="btn btn--white">{c.whatsapp_text || 'WhatsApp Us'}</a>}
+            <div className="penq__btns">
+              {c.brochure_text && c.brochure_link && (isDownload(c.brochure_link)
+                ? <a href={downloadUrl(c.brochure_link)} download className="btn btn--white"><Download size={16} />{c.brochure_text}</a>
+                : <SmartLink to={c.brochure_link} className="btn btn--white"><Download size={16} />{c.brochure_text}</SmartLink>)}
+              {/* an empty WhatsApp text in the admin hides the button */}
+              {wa && c.whatsapp_text !== '' && <a href={wa} target="_blank" rel="noreferrer" className="btn btn--white">{c.whatsapp_text || 'WhatsApp Us'}</a>}
+            </div>
+            {c.art && <DesignArt name={c.art} label={c.art_alt} className="penq__art" />}
           </div>
           <form className="penq__form" onSubmit={submit} noValidate>
             {state.done ? (
@@ -444,16 +597,19 @@ export function EnquiryCta({ c, page }) {
                     placeholder="98765 43210" aria-invalid={!!errors.phone} />
                   {errors.phone && <small className="field__error" role="alert">{errors.phone}</small>}
                 </label>
+                {c.business_field && <label className="field"><span>{c.business_label || 'Business Name'}</span>
+                  <input value={form.business} onChange={set('business')} placeholder="Your business name" maxLength={120} />
+                </label>}
                 <label className="field"><span>{c.requirement_label || 'Requirement'}</span>
                   <select value={form.requirement} onChange={set('requirement')}>
                     <option value="">Select your {(c.requirement_label || 'requirement').toLowerCase()}</option>
                     {(c.requirements || []).map((r) => <option key={r}>{r}</option>)}
                   </select>
                 </label>
-                {c.budgets?.length > 0 && <label className="field"><span>Budget</span>
+                {budgets.length > 0 && <label className="field"><span>{fixedPrice ? 'Package Price' : 'Budget'}</span>
                   <select value={form.budget} onChange={set('budget')}>
-                    <option value="">Select your budget</option>
-                    {c.budgets.map((b) => <option key={b}>{b}</option>)}
+                    {!fixedPrice && <option value="">Select your budget</option>}
+                    {budgets.map((b) => <option key={b}>{b}</option>)}
                   </select>
                 </label>}
                 {state.error && <p className="form-error">{state.error}</p>}

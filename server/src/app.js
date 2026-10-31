@@ -8,6 +8,7 @@ import { publicRoutes, authRoutes, adminRoutes } from './routes/index.js';
 import { notFound, errorHandler } from './middleware/errorHandler.js';
 import { MEDIA_DIR, MEDIA_URL } from './config/storage.js';
 import { restoreFromDatabase } from './utils/mediaStore.js';
+import { resizeImage } from './middleware/resize.js';
 
 const app = express();
 app.use(helmet({ crossOriginResourcePolicy: { policy: 'cross-origin' }, contentSecurityPolicy: false }));
@@ -17,7 +18,12 @@ app.use(morgan('dev'));
 
 // images, videos and brochures from server/media; an uploaded file missing on disk
 // (fresh Render deploy) is rebuilt from the database copy on its first request
-app.use(MEDIA_URL, express.static(MEDIA_DIR, { maxAge: '30d', fallthrough: true }), restoreFromDatabase);
+// ("?w=900" serves a resized WebP copy, see middleware/resize.js; "?download=1" makes the browser save the file)
+const forceDownload = (req, res, next) => {
+  if (req.query.download) res.attachment(decodeURIComponent(path.basename(req.path)));
+  next();
+};
+app.use(MEDIA_URL, forceDownload, resizeImage,express.static(MEDIA_DIR, { maxAge: '30d', fallthrough: true }), restoreFromDatabase);
 
 app.get('/api/health', (req, res) => res.json({ status: 'ok' }));
 app.use('/api', publicRoutes);

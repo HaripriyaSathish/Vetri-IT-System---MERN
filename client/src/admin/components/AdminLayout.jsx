@@ -6,7 +6,7 @@ import {
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useAdminData } from '../context/AdminDataContext';
-import { HOME_PAGE, ABOUT, PRODUCTS, CONTACT, EXPERTISE, pageInfo, getSectionIcon } from '../schemas/pages';
+import { HOME_PAGE, ABOUT, PRODUCTS, PROJECTS, CONTACT, EXPERTISE, pageInfo, getSectionIcon } from '../schemas/pages';
 
 
 // One page in the sidebar: expands to its numbered sections
@@ -74,6 +74,7 @@ export default function AdminLayout() {
           <PageNav page={HOME_PAGE} sections={sections.home} open={!!openPages.home} onToggle={() => togglePage('home')} {...navProps} />
           <PageNav page={ABOUT} sections={sections[ABOUT.slug]} open={!!openPages[ABOUT.slug]} onToggle={() => togglePage(ABOUT.slug)} {...navProps} />
           <PageNav page={PRODUCTS} sections={sections[PRODUCTS.slug]} open={!!openPages[PRODUCTS.slug]} onToggle={() => togglePage(PRODUCTS.slug)} {...navProps} />
+          <PageNav page={PROJECTS} sections={sections[PROJECTS.slug]} open={!!openPages[PROJECTS.slug]} onToggle={() => togglePage(PROJECTS.slug)} {...navProps} />
           <PageNav page={CONTACT} sections={sections[CONTACT.slug]} open={!!openPages[CONTACT.slug]} onToggle={() => togglePage(CONTACT.slug)} {...navProps} />
 
           <p className="adm-side__group">Our Expertise</p>

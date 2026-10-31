@@ -5,3 +5,6 @@ dist/
 .DS_Store
 # admin uploads are kept in the database and rebuilt on demand
 server/media/uploads/
+
+# resized image copies (rebuilt on demand)
+server/.media-cache/
