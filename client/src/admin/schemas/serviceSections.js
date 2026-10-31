@@ -140,7 +140,7 @@ export const serviceSchemas = {
     { tab: 'Heading', fields: heading() },
     {
       tab: 'Clients', fields: [{
-        name: 'items', label: 'Client / project cards', type: 'list', itemLabel: 'Client', titleKey: 'name',
+        name: 'items', label: 'Client / project cards', type: 'list', itemLabel: 'Client', titleKey: 'name', hideable: true,
         fields: [
           { name: 'image', label: 'Screenshot', type: 'media' },
           { name: 'name', label: 'Name', type: 'text', half: true },
@@ -271,15 +271,26 @@ export const serviceSchemas = {
   portfolio: [
     { tab: 'Heading', fields: heading([{ name: 'search_placeholder', label: 'Search box placeholder', type: 'text', half: true }, { name: 'all_label', label: 'First tab label', type: 'text', half: true, placeholder: 'All Projects' }]) },
     {
+      tab: 'Service categories', fields: [{
+        name: 'categories', label: 'Service category filters', type: 'list', itemLabel: 'Category', titleKey: 'label', hideable: true,
+        hint: 'The main filter row. A project shows under a category when one of its Service tags is in that category\'s tag list.',
+        fields: [
+          { name: 'icon', label: 'Icon', type: 'icon', half: true },
+          { name: 'label', label: 'Category name', type: 'text', half: true },
+          { name: 'match_tags', label: 'Project service tags in this category', type: 'tags', hint: 'e.g. SEO, GSC for Digital Marketing' },
+        ],
+      }],
+    },
+    {
       tab: 'Industry tabs', fields: [{
-        name: 'filters', label: 'Industry filter tabs', type: 'list', itemLabel: 'Tab', titleKey: 'label',
-        hint: 'A project shows under a tab when its Industry matches the tab label exactly.',
+        name: 'filters', label: 'Industry filter tabs', type: 'list', itemLabel: 'Tab', titleKey: 'label', hideable: true,
+        hint: 'Second filter row. A project shows under a tab when its Industry matches the tab label exactly; tabs with no projects in the chosen category are not shown.',
         fields: [{ name: 'icon', label: 'Icon', type: 'icon', half: true }, { name: 'label', label: 'Label', type: 'text', half: true }],
       }],
     },
     {
       tab: 'Projects', fields: [{
-        name: 'items', label: 'Project cards', type: 'list', itemLabel: 'Project', titleKey: 'name',
+        name: 'items', label: 'Project cards', type: 'list', itemLabel: 'Project', titleKey: 'name', hideable: true,
         fields: [
           { name: 'image', label: 'Screenshot', type: 'media' },
           { name: 'name', label: 'Project name (H3)', type: 'text', half: true },
@@ -298,7 +309,7 @@ export const serviceSchemas = {
     { tab: 'Heading', fields: heading() },
     {
       tab: 'Case studies', fields: [{
-        name: 'items', label: 'Case study cards', type: 'list', itemLabel: 'Case study', titleKey: 'name',
+        name: 'items', label: 'Case study cards', type: 'list', itemLabel: 'Case study', titleKey: 'name', hideable: true,
         fields: [
           { name: 'image', label: 'Screenshot', type: 'media' },
           { name: 'name', label: 'Client name (H3)', type: 'text', half: true },

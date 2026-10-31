@@ -211,6 +211,14 @@ const projectsPage = [
       eyebrow: 'Our Work', title: 'Discover Our Digital Project Portfolio Across Five Services', highlight: 'Across Five Services',
       description: 'Browse our website development projects, digital marketing work, application and software solutions, and graphic design portfolio—all in one place.',
       search_placeholder: 'Search client projects...', all_label: 'All Projects',
+      // main filter row: a project belongs to a category when one of its tags is in match_tags
+      categories: [
+        { icon: 'Globe', label: 'Website Development', match_tags: ['Website Development'] },
+        { icon: 'Palette', label: 'Graphic Designing', match_tags: ['Logo Design', 'Business Card', 'Brochure Design', 'Graphic Design'] },
+        { icon: 'Megaphone', label: 'Digital Marketing', match_tags: ['SEO', 'GSC', 'Digital Marketing', 'Social Media'] },
+        { icon: 'Smartphone', label: 'App Development', match_tags: ['App Development'] },
+        { icon: 'Code2', label: 'Software Development', match_tags: ['Software Development', 'AI Chatbot', 'AI Assistant'] },
+      ],
       filters: [
         { icon: 'Bus', label: TRAVEL }, { icon: 'HeartPulse', label: HEALTH }, { icon: 'Car', label: AUTO },
         { icon: 'Factory', label: INDUSTRIAL }, { icon: 'Laptop', label: IT }, { icon: 'GraduationCap', label: EDU },

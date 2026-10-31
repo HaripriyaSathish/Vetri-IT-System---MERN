@@ -71,7 +71,7 @@ const siteUrl = (link = '') => {
 };
 /* ---------- Client / project showcase ---------- */
 export function ClientGrid({ c }) {
-  const items = c.items || [];
+  const items = (c.items || []).filter((it) => !it.hidden); // switched off in the admin
   if (!items.length) return null;
   return (
     <section className="section" id="clients">

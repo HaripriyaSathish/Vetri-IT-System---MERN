@@ -274,6 +274,10 @@
 .adm-list__no { font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 800; font-size: 12px; color: var(--orange); background: var(--orange-50); padding: 3px 7px; border-radius: 6px; }
 .adm-list__actions { display: flex; gap: 4px; }
 .adm-list__actions .adm-icon-btn { width: 30px; height: 30px; }
+.adm-list__actions .adm-toggle { margin-right: 10px; }
+.adm-list__item--hidden { background: #f6f8fc; border-style: dashed; }
+.adm-list__item--hidden .adm-list__head strong, .adm-list__item--hidden .adm-list__no { opacity: 0.5; }
+.adm-list__item--hidden .adm-toggle__label { color: #8a94a8; }
 .adm-list__chev { color: var(--muted); transition: transform 0.25s; }
 .adm-list__item.open .adm-list__chev { transform: rotate(180deg); }
 .adm-list__body { padding: 16px; border-top: 1px dashed var(--border); background: #fbfcfe; border-radius: 0 0 13px 13px; animation: adm-fade-up 0.25s var(--ease); }

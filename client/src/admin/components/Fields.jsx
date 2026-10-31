@@ -129,12 +129,17 @@ function ListField({ field: f, value, onChange }) {
   return (
     <div className="adm-list">
       {value.map((item, i) => (
-        <div key={i} className={`adm-list__item${open === i ? ' open' : ''}`}>
+        <div key={i} className={`adm-list__item${open === i ? ' open' : ''}${f.hideable && item.hidden ? ' adm-list__item--hidden' : ''}`}>
           <div className="adm-list__head" onClick={() => setOpen(open === i ? null : i)}>
             <GripVertical size={16} className="adm-muted" />
             <span className="adm-list__no">{String(i + 1).padStart(2, '0')}</span>
             <strong>{item[f.titleKey] || `New ${f.itemLabel || 'item'}`}</strong>
             <div className="adm-list__actions" onClick={(e) => e.stopPropagation()}>
+              {/* hideable lists: "hidden: true" keeps the item saved but off the website */}
+              {f.hideable && (
+                <Toggle checked={!item.hidden} label={item.hidden ? 'Hidden' : 'Visible'}
+                  onChange={(on) => { const { hidden, ...rest } = item; update(i, on ? rest : { ...rest, hidden: true }); }} />
+              )}
               <button type="button" className="adm-icon-btn" disabled={i === 0} onClick={() => move(i, -1)} title="Move up"><ChevronUp size={16} /></button>
               <button type="button" className="adm-icon-btn" disabled={i === value.length - 1} onClick={() => move(i, 1)} title="Move down"><ChevronDown size={16} /></button>
               <button type="button" className="adm-icon-btn adm-icon-btn--danger" onClick={() => { onChange(value.filter((_, j) => j !== i)); setOpen(null); }} title="Remove"><Trash2 size={16} /></button>

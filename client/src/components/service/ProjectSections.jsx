@@ -58,46 +58,82 @@ export function ScreenShowcase({ screens = [] }) {
   );
 }
 
-/* ---------- Project grid with search and industry filter tabs ---------- */
+/* ---------- Project grid with search, service categories and industry filters ---------- */
+// used until categories are saved in the admin (a project matches when one of its tags is listed)
+const DEFAULT_CATEGORIES = [
+  { icon: 'Globe', label: 'Website Development', match_tags: ['Website Development'] },
+  { icon: 'Palette', label: 'Graphic Designing', match_tags: ['Logo Design', 'Business Card', 'Brochure Design', 'Graphic Design'] },
+  { icon: 'Megaphone', label: 'Digital Marketing', match_tags: ['SEO', 'GSC', 'Digital Marketing', 'Social Media'] },
+  { icon: 'Smartphone', label: 'App Development', match_tags: ['App Development'] },
+  { icon: 'Code2', label: 'Software Development', match_tags: ['Software Development', 'AI Chatbot', 'AI Assistant'] },
+];
+const inCategory = (it, cat) => {
+  if (!cat) return true;
+  const wanted = new Set([cat.label, ...(cat.match_tags || [])].map((t) => t.trim().toLowerCase()));
+  return (it.tags || []).some((t) => wanted.has(String(t).trim().toLowerCase()));
+};
+
 export function Portfolio({ c, data }) {
-  const items = c.items || [];
-  const filters = c.filters || [];
+  const items = (c.items || []).filter((it) => !it.hidden); // switched off in the admin
+  const categories = (c.categories?.length ? c.categories : DEFAULT_CATEGORIES).filter((x) => !x.hidden && x.label);
+  const [service, setService] = useState('');
   const [active, setActive] = useState('');
   const [q, setQ] = useState('');
+  const cat = categories.find((x) => x.label === service);
+  const inService = items.filter((it) => inCategory(it, cat));
+  // industry chips: only the visible ones that have projects in the chosen service
+  const filters = (c.filters || []).filter((f) => !f.hidden && inService.some((it) => it.industry === f.label));
+  const pickService = (label) => {
+    setService(label);
+    const next = categories.find((x) => x.label === label);
+    if (active && !items.some((it) => inCategory(it, next) && it.industry === active)) setActive('');
+  };
   // project cards whose case study is on this page open it; otherwise the arrow opens the live site
   const caseNames = useMemo(() => new Set((data?.sections || [])
     .filter((s) => SERVICE_SECTION_TYPES[s.section_key] === 'casestudies')
-    .flatMap((s) => (s.content?.items || []).map((it) => it.name))), [data]);
+    .flatMap((s) => (s.content?.items || []).filter((it) => !it.hidden).map((it) => it.name))), [data]);
 
   const term = q.trim().toLowerCase();
-  const shown = items.filter((it) => (!active || it.industry === active)
+  const shown = inService.filter((it) => (!active || it.industry === active)
     && (!term || [it.name, it.location, it.description, it.industry, ...(it.tags || [])].join(' ').toLowerCase().includes(term)));
-  const count = (label) => items.filter((it) => it.industry === label).length;
+  const reset = () => { setQ(''); setActive(''); setService(''); };
 
   return (
     <section className="section proj-section" id="projects">
       <div className="container">
-        <SectionHead c={c} center={false} />
-        <Reveal className="proj__tools">
+        <div className="proj__head">
+          <SectionHead c={c} center={false} />
           <label className="proj__search">
             <Search size={18} />
             <input type="search" value={q} onChange={(e) => setQ(e.target.value)} placeholder={c.search_placeholder || 'Search client projects...'} aria-label="Search projects" />
-            <span className="proj__count">{shown.length} / {items.length}</span>
           </label>
-          <div className="proj__tabs" role="group" aria-label="Filter projects by industry">
-            <button type="button" className={`proj__tab${!active ? ' on' : ''}`} aria-pressed={!active} onClick={() => setActive('')}>
-              <Icon name={c.all_icon || 'LayoutGrid'} size={17} />{c.all_label || 'All Projects'}<em>{items.length}</em>
+        </div>
+        <Reveal className="proj__tools">
+          <div className="proj__services" role="group" aria-label="Filter projects by service">
+            <button type="button" className={`proj__svc${!service ? ' on' : ''}`} aria-pressed={!service} onClick={() => pickService('')}>
+              <span className="proj__svc-ic"><Icon name={c.all_icon || 'LayoutGrid'} size={18} /></span>{c.all_label || 'All Projects'}
             </button>
-            {filters.map((f) => (
-              <button key={f.label} type="button" className={`proj__tab${active === f.label ? ' on' : ''}`} aria-pressed={active === f.label} onClick={() => setActive(active === f.label ? '' : f.label)}>
-                <Icon name={f.icon} size={17} />{f.label}<em>{count(f.label)}</em>
+            {categories.map((x) => (
+              <button key={x.label} type="button" className={`proj__svc${service === x.label ? ' on' : ''}`} aria-pressed={service === x.label} onClick={() => pickService(x.label)}>
+                <span className="proj__svc-ic"><Icon name={x.icon || 'Layers'} size={18} /></span>{x.label}
               </button>
             ))}
           </div>
+          {filters.length > 0 && (
+            <div className="proj__tabs" role="group" aria-label="Filter projects by industry">
+              <span className="proj__tabs-label">Industry</span>
+              <button type="button" className={`proj__tab${!active ? ' on' : ''}`} aria-pressed={!active} onClick={() => setActive('')}>All</button>
+              {filters.map((f) => (
+                <button key={f.label} type="button" className={`proj__tab${active === f.label ? ' on' : ''}`} aria-pressed={active === f.label} onClick={() => setActive(active === f.label ? '' : f.label)}>
+                  <Icon name={f.icon} size={15} />{f.label}
+                </button>
+              ))}
+            </div>
+          )}
         </Reveal>
 
         {shown.length ? (
-          <div className="proj__grid" key={`${active}|${term}`}>
+          <div className="proj__grid" key={`${service}|${active}|${term}`}>
             {shown.map((it, n) => {
               const href = siteUrl(it.link);
               const hasCase = it.case_study && caseNames.has(it.case_study);
@@ -127,7 +163,12 @@ export function Portfolio({ c, data }) {
             })}
           </div>
         ) : (
-          <p className="proj__empty">No projects match “{q}”. <button type="button" onClick={() => { setQ(''); setActive(''); }}>Show all projects</button></p>
+          <div className="proj__empty">
+            <span className="proj__empty-ic"><Icon name={cat?.icon || 'Search'} size={26} /></span>
+            <h3>{term ? `No projects match “${q.trim()}”` : `${cat?.label || 'New'} projects are coming soon`}</h3>
+            <p>{term ? 'Try another name, place or service.' : 'We are adding this work to the portfolio. Ask us for samples in the meantime.'}</p>
+            <button type="button" className="btn btn--outline" onClick={reset}>Show all projects</button>
+          </div>
         )}
       </div>
     </section>
@@ -196,7 +237,7 @@ function CaseModal({ item, onClose }) {
 const AUTOPLAY_MS = 5500;
 
 export function CaseStudies({ c }) {
-  const items = c.items || [];
+  const items = (c.items || []).filter((it) => !it.hidden); // switched off in the admin
   const track = useRef(null);
   const [open, setOpen] = useState(-1);
   const [active, setActive] = useState(0);
